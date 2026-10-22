@@ -1,2 +1,2 @@
 # Rifas-project
-Test de paginad e rifas
+Test de pagina de rifas
