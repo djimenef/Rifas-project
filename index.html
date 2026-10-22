@@ -188,16 +188,19 @@
     .register p { color: var(--muted); }
     .perks { list-style: none; padding: 0; display: grid; gap: 10px; }
     .perks li::before { content: "✓"; color: var(--ok); font-weight: 700; margin-right: 10px; }
-    form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: grid; gap: 14px; }
-    label { font-size: .85rem; font-weight: 600; display: grid; gap: 6px; }
-    input[type="text"], input[type="email"], input[type="tel"] {
-      font: inherit; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text);
+    .register-cta { display: flex; justify-content: center; }
+    .register-cta .btn { padding: 16px 40px; font-size: 1.1rem; }
+
+    /* Menú "Participar" */
+    .join { position: relative; }
+    .join-menu {
+      position: absolute; right: 0; top: calc(100% + 10px); min-width: 210px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 10px; box-shadow: var(--shadow); display: grid; gap: 8px;
     }
-    input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; color: var(--muted); }
-    .form-ok { display: none; color: var(--ok); font-weight: 600; text-align: center; }
+    .join-menu[hidden] { display: none; }
+    .nav-links .join-menu a.btn-primary { color: var(--accent-ink); }
+    .nav-links .join-menu a.btn-ghost { color: var(--text); }
 
     /* FAQ */
     .faq { max-width: 760px; margin: 0 auto; display: grid; gap: 10px; }
@@ -233,7 +236,13 @@
       <a href="#sorteos">Sorteos</a>
       <a href="#comprar">Comprar</a>
       <a href="#faq">Preguntas</a>
-      <a href="#registro" class="btn btn-primary btn-sm">Inscribirme</a>
+      <div class="join">
+        <button type="button" class="btn btn-primary btn-sm" id="join-btn" aria-haspopup="true" aria-expanded="false" aria-controls="join-menu">Participar</button>
+        <div class="join-menu" id="join-menu" hidden>
+          <a href="#" class="btn btn-ghost">Iniciar sesión</a>
+          <a href="crear-cuenta.html" class="btn btn-primary">Crear cuenta</a>
+        </div>
+      </div>
     </nav>
   </div>
 </header>
@@ -380,20 +389,9 @@
           <li>Sorteos transmitidos en vivo</li>
         </ul>
       </div>
-      <form id="form">
-        <div class="two">
-          <label>Nombres<input type="text" required placeholder="Juan"></label>
-          <label>Apellidos<input type="text" required placeholder="Pérez"></label>
-        </div>
-        <div class="two">
-          <label>DNI<input type="text" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required placeholder="12345678"></label>
-          <label>Celular<input type="tel" pattern="9[0-9]{8}" maxlength="9" required placeholder="987654321"></label>
-        </div>
-        <label>Correo electrónico<input type="email" required placeholder="tucorreo@ejemplo.com"></label>
-        <label class="check"><input type="checkbox" required> Soy mayor de 18 años y acepto los términos y condiciones.</label>
-        <button class="btn btn-primary" type="submit">Crear mi cuenta</button>
-        <div class="form-ok" id="form-ok">¡Listo! Tu cuenta fue creada (demo).</div>
-      </form>
+      <div class="register-cta">
+        <a href="crear-cuenta.html" class="btn btn-primary">Crear mi cuenta</a>
+      </div>
     </div>
   </section>
 
@@ -481,11 +479,16 @@
   }
   tick(); setInterval(tick, 1000);
 
-  document.getElementById('form').addEventListener('submit', e => {
-    e.preventDefault();
-    document.getElementById('form-ok').style.display = 'block';
-    e.target.reset();
-  });
+  // Mini pop-up del botón "Participar"
+  const joinBtn = document.getElementById('join-btn');
+  const joinMenu = document.getElementById('join-menu');
+  function setJoin(open) {
+    joinMenu.hidden = !open;
+    joinBtn.setAttribute('aria-expanded', open);
+  }
+  joinBtn.addEventListener('click', e => { e.stopPropagation(); setJoin(joinMenu.hidden); });
+  document.addEventListener('click', e => { if (!joinMenu.contains(e.target)) setJoin(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') setJoin(false); });
 </script>
 </body>
 </html>
