@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DaleChance · Iniciar sesión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fbf8f3;
+      --surface: #ffffff;
+      --surface-2: #f3eee6;
+      --text: #1d1a16;
+      --muted: #6b645a;
+      --border: #e6dfd3;
+      --accent: #12935a;
+      --accent-ink: #ffffff;
+      --ok: #1f8a5b;
+      --error: #c2412d;
+      --radius: 18px;
+      --shadow: 0 10px 30px -12px rgba(40, 25, 10, .18);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #14120f;
+        --surface: #1e1b17;
+        --surface-2: #27231e;
+        --text: #f4efe7;
+        --muted: #a9a195;
+        --border: #352f28;
+        --accent: #2fc77f;
+        --ok: #3cc488;
+        --error: #f0765f;
+        --shadow: 0 10px 30px -12px rgba(0, 0, 0, .6);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Outfit", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .logo { font-weight: 800; font-size: 1.4rem; text-decoration: none; letter-spacing: -.02em; color: var(--accent); }
+    .logo span { color: #fff; }
+    .back { text-decoration: none; color: var(--muted); font-weight: 500; }
+    .back:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      border: 0; cursor: pointer; font: inherit; font-weight: 600;
+      padding: 12px 22px; border-radius: 999px; text-decoration: none;
+      transition: transform .15s, box-shadow .15s, background .15s;
+    }
+    .btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 8px 20px -8px var(--accent); }
+    .btn-primary:hover { transform: translateY(-1px); }
+
+    /* Formulario */
+    main { padding: 56px 0; }
+    .login { max-width: 440px; margin: 0 auto; }
+    .login h1 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); letter-spacing: -.02em; margin: 0 0 8px; }
+    .login > p { color: var(--muted); margin: 0 0 24px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: grid; gap: 18px; }
+    form { display: grid; gap: 14px; }
+    label { font-size: .85rem; font-weight: 600; display: grid; gap: 6px; }
+    input[type="text"], input[type="password"] {
+      font: inherit; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); width: 100%;
+    }
+    input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .pass { position: relative; }
+    .pass input { padding-right: 76px; }
+    .pass button {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      border: 0; background: none; color: var(--muted); font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; padding: 6px 8px;
+    }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: .9rem; }
+    .check { display: flex; gap: 8px; align-items: center; font-weight: 400; color: var(--muted); }
+    .row a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .msg { display: none; font-weight: 600; text-align: center; margin: 0; }
+    .msg.ok { display: block; color: var(--ok); }
+    .msg.error { display: block; color: var(--error); }
+
+    /* Separador y Google */
+    .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: .85rem; }
+    .or::before, .or::after { content: ""; flex: 1; border-top: 1px solid var(--border); }
+    .google {
+      display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+      padding: 11px 22px; border-radius: 999px; border: 1px solid #dadce0;
+      background: #fff; color: #1f1f1f; font: inherit; font-weight: 500; cursor: pointer;
+      transition: background .15s, box-shadow .15s;
+    }
+    .google:hover { background: #f8faff; box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+    .google svg { width: 18px; height: 18px; flex: none; }
+    #google-official { display: flex; justify-content: center; min-height: 44px; }
+    #google-official:empty { display: none; }
+
+    .alt { text-align: center; color: var(--muted); margin: 18px 0 0; }
+    .alt a { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+    footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--muted); font-size: .9rem; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    @media (max-width: 520px) {
+      .wrap { padding: 0 16px; }
+      .card { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="logo">Dale<span>Chance</span></a>
+    <a href="index.html" class="back">← Volver al inicio</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap login">
+    <h1>Inicia sesión</h1>
+    <p>Revisa tus cupones y participa en los sorteos.</p>
+    <div class="card">
+      <!-- Botón oficial de Google (se muestra cuando hay un Client ID configurado) -->
+      <div id="google-official"></div>
+      <button type="button" class="google" id="google-btn">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Continuar con Google
+      </button>
+
+      <div class="or">o con tu cuenta</div>
+
+      <form id="form" novalidate>
+        <label>Correo electrónico o DNI<input type="text" id="user" autocomplete="username" required placeholder="tucorreo@ejemplo.com"></label>
+        <label>Contraseña
+          <span class="pass">
+            <input type="password" id="password" autocomplete="current-password" required minlength="6" placeholder="••••••••">
+            <button type="button" id="toggle-pass" aria-label="Mostrar contraseña">Mostrar</button>
+          </span>
+        </label>
+        <div class="row">
+          <label class="check"><input type="checkbox"> Recordarme</label>
+          <a href="#">¿Olvidaste tu contraseña?</a>
+        </div>
+        <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+      </form>
+      <p class="msg" id="msg" role="status"></p>
+    </div>
+    <p class="alt">¿No tienes cuenta? <a href="crear-cuenta.html">Crear cuenta</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 DaleChance · Perú</span>
+    <span>Términos · Privacidad · Contacto</span>
+  </div>
+</footer>
+
+<script>
+  // Pega aquí el Client ID de Google Cloud (OAuth 2.0, tipo "Aplicación web") para activar el inicio de sesión real con Google.
+  const GOOGLE_CLIENT_ID = '';
+
+  const msg = document.getElementById('msg');
+  function show(text, type) {
+    msg.textContent = text;
+    msg.className = 'msg ' + type;
+  }
+
+  // Formulario (demo: aún no hay servidor que valide las credenciales)
+  const form = document.getElementById('form');
+  const user = document.getElementById('user');
+  const password = document.getElementById('password');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const u = user.value.trim();
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u);
+    const isDni = /^[0-9]{8}$/.test(u);
+    if (!isEmail && !isDni) return show('Ingresa un correo válido o un DNI de 8 dígitos.', 'error');
+    if (password.value.length < 6) return show('La contraseña debe tener al menos 6 caracteres.', 'error');
+    show('¡Bienvenido de nuevo! Sesión iniciada (demo).', 'ok');
+    form.reset();
+  });
+
+  const togglePass = document.getElementById('toggle-pass');
+  togglePass.addEventListener('click', () => {
+    const hidden = password.type === 'password';
+    password.type = hidden ? 'text' : 'password';
+    togglePass.textContent = hidden ? 'Ocultar' : 'Mostrar';
+    togglePass.setAttribute('aria-label', hidden ? 'Ocultar contraseña' : 'Mostrar contraseña');
+  });
+
+  // Inicio de sesión con Google (Google Identity Services)
+  const googleBtn = document.getElementById('google-btn');
+
+  function onGoogleCredential(response) {
+    // OJO: en producción este token (JWT) se envía al servidor para verificarlo; aquí solo se lee para la demo.
+    const payload = JSON.parse(decodeURIComponent(escape(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))));
+    show(`¡Hola, ${payload.given_name || payload.name}! Iniciaste sesión con Google.`, 'ok');
+  }
+
+  if (GOOGLE_CLIENT_ID) {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.async = true;
+    s.onload = () => {
+      google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: onGoogleCredential });
+      google.accounts.id.renderButton(document.getElementById('google-official'), {
+        theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', locale: 'es', width: 320
+      });
+      googleBtn.hidden = true;
+    };
+    document.head.appendChild(s);
+  } else {
+    googleBtn.addEventListener('click', () =>
+      show('El inicio con Google aún no está configurado (falta el Client ID).', 'error'));
+  }
+</script>
+</body>
+</html>
