@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Layout del panel de administración (/admin/*).
+   Misma paleta, tipografía, radios y botones del sitio: todo sale de los tokens.
+   Menú lateral fijo; en móvil se convierte en menú desplegable.
+   ========================================================================== */
+
+.admin-header .nav { padding: 0 var(--gutter); }
+.admin-marca { display: flex; align-items: center; gap: var(--sp-12); min-width: 0; }
+.admin-modo {
+  padding: var(--sp-4) var(--sp-10); border-radius: var(--radius-pill); white-space: nowrap;
+  font-size: var(--fs-sm); font-weight: var(--fw-semibold);
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--text);
+}
+
+.admin-cuerpo { display: grid; grid-template-columns: 248px 1fr; align-items: start; min-height: calc(100vh - var(--header-h)); }
+
+.admin-menu {
+  position: sticky; top: calc(var(--header-h) + 1px); align-self: start;
+  height: calc(100vh - var(--header-h) - 1px); overflow-y: auto;
+  padding: var(--sp-20) var(--sp-14); background: var(--surface); border-right: 1px solid var(--border);
+}
+.admin-menu ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-4); }
+.admin-menu a {
+  display: flex; align-items: center; gap: var(--sp-10); padding: var(--sp-10) var(--sp-12);
+  border-radius: var(--radius-12); color: var(--muted); font-weight: var(--fw-medium); text-decoration: none;
+}
+.admin-menu a:hover { background: var(--surface-2); color: var(--text); }
+.admin-menu a[aria-current="page"] {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface)); color: var(--text); font-weight: var(--fw-semibold);
+}
+.admin-menu a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.admin-menu-boton { display: none; width: 100%; justify-content: flex-start; }
+
+.admin-contenido { padding: var(--sp-32) var(--gutter) var(--sp-56); min-width: 0; }
+.admin-contenido .pagina { padding: 0; }
+.admin-contenido .wrap { max-width: none; padding: 0; }
+
+@media (max-width: 900px) {
+  .admin-cuerpo { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .admin-menu {
+    position: static; height: auto; overflow: visible;
+    padding: var(--sp-12) var(--gutter); border-right: 0; border-bottom: 1px solid var(--border);
+  }
+  .admin-menu-boton { display: inline-flex; }
+  .admin-menu nav { display: none; padding-top: var(--sp-10); }
+  .admin-menu[data-abierto] nav { display: block; }
+}
+@media (min-width: 521px) {
+  .admin-modo-corto { display: none; }
+}
+@media (max-width: 520px) {
+  .admin-header .nav { padding: 0 var(--gutter-mobile); }
+  .admin-contenido { padding: var(--sp-24) var(--gutter-mobile) var(--sp-40); }
+  .admin-menu { padding: var(--sp-12) var(--gutter-mobile); }
+  .admin-modo-largo { display: none; }
+}

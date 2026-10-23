@@ -11,8 +11,10 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="password
   font: inherit; padding: var(--sp-12) var(--sp-14); border-radius: var(--radius-12); border: 1px solid var(--border);
   background: var(--bg); color: var(--text);
 }
-.two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-12); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-12); align-items: start; }
 .field-error { color: var(--error); font-weight: var(--fw-medium); font-size: var(--fs-label); }
+.field-hint { color: var(--muted); font-weight: var(--fw-regular); font-size: var(--fs-sm); }
+.form-error { margin: 0; color: var(--error); font-weight: var(--fw-semibold); text-align: center; }
 input[aria-invalid="true"] { border-color: var(--error); }
 
 /* --- Enlace alterno bajo un formulario ("¿Ya tienes cuenta?") --- */
@@ -139,8 +141,28 @@ input[aria-invalid="true"] { border-color: var(--error); }
 .toast-error .toast-icono { background: var(--error); }
 @keyframes entrar { from { opacity: 0; transform: translateY(var(--sp-10)); } }
 
+/* --- Panel de demo (solo Fase 0) --- */
+.demo { position: fixed; left: var(--sp-16); bottom: var(--sp-16); z-index: 30; }
+.demo-boton {
+  font: inherit; font-size: var(--fs-label); font-weight: var(--fw-semibold); color: var(--muted); cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-pill);
+  padding: var(--sp-6) var(--sp-12); box-shadow: var(--shadow);
+}
+.demo-boton:hover { color: var(--text); }
+.demo-panel {
+  position: absolute; left: 0; bottom: calc(100% + var(--sp-10)); width: min(300px, calc(100vw - 2 * var(--sp-16)));
+  display: grid; gap: var(--sp-14); padding: var(--sp-16);
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-16); box-shadow: var(--shadow);
+}
+.demo-panel[hidden] { display: none; }
+.demo-nota { margin: 0; font-size: var(--fs-label); color: var(--muted); }
+.demo-grupo { display: grid; gap: var(--sp-6); }
+.demo-titulo { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--muted); text-transform: uppercase; letter-spacing: var(--ls-caps); }
+.demo-opciones { display: flex; flex-wrap: wrap; gap: var(--sp-6); }
+.demo .btn-sm { padding: var(--sp-6) var(--sp-12); font-size: var(--fs-label); box-shadow: none; }
+
 /* --- Foco visible en controles nuevos (los existentes mantienen el foco del navegador) --- */
-.tab:focus-visible, .modal-cerrar:focus-visible {
+.tab:focus-visible, .modal-cerrar:focus-visible, .demo-boton:focus-visible {
   outline: var(--focus-ring); outline-offset: var(--focus-offset);
 }
 

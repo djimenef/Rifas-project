@@ -86,7 +86,7 @@ El proyecto avanza separando **cómo se ve**, **qué significa** y **cómo funci
 ┌───────────────────────────────────────────────────────────────┐
 │ CAPA 1 · VISUAL (Fase 0 — AHORA)                              │
 │ Mockups navegables con datos falsos. Sin backend.             │
-│ Vive en: apps/web  ·  Datos en: apps/web/src/mocks            │
+│ Vive en: web/  ·  Datos en: web/src/mocks                     │
 ├───────────────────────────────────────────────────────────────┤
 │ CAPA 2 · SEMÁNTICA (en paralelo a la Fase 0)                  │
 │ Qué entidades existen, qué estados tienen, qué acciones       │
@@ -97,7 +97,7 @@ El proyecto avanza separando **cómo se ve**, **qué significa** y **cómo funci
 │ CAPA 3 · FUNCIONAL (Fase 1 — DESPUÉS)                         │
 │ Implementación real: API, base de datos, pagos, jobs.         │
 │ Se construye traduciendo la Capa 2 a código.                  │
-│ Vive en: apps/api  ·  Referencia en la sección 9              │
+│ Vive en: api/  ·  Referencia en la sección 9                  │
 └───────────────────────────────────────────────────────────────┘
 ```
 
@@ -180,33 +180,32 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 │   └── decisiones/               (ADR: un archivo por decisión importante)
 │       └── 0001-billetera-con-ledger.md
 │
-├── apps/
-│   ├── web/                      ← CAPA 1: frontend (mockups ahora, real después)
-│   │   ├── public/
-│   │   └── src/
-│   │       ├── app/ o pages/     rutas (según el framework actual)
-│   │       ├── components/
-│   │       │   ├── ui/           botón, input, tarjeta, modal, badge, barra de progreso
-│   │       │   └── layout/       header, footer, contenedores, menú móvil
-│   │       ├── features/         una carpeta por dominio
-│   │       │   ├── auth/         login, registro, verificación
-│   │       │   ├── billetera/    saldo, recarga, historial
-│   │       │   ├── rifas/        listado, detalle, compromiso, compra
-│   │       │   ├── sorteos/      ganadores, transparencia
-│   │       │   ├── perfil/
-│   │       │   ├── admin/
-│   │       │   └── propuestas/   (Fase 2)
-│   │       ├── domain/           tipos y enums derivados de docs/semantica
-│   │       ├── services/
-│   │       │   ├── interfaces/   contratos (RifasService, BilleteraService…)
-│   │       │   ├── mock/         implementación Fase 0
-│   │       │   └── http/         implementación Fase 1
-│   │       ├── mocks/            datos falsos (JSON / TS)
-│   │       ├── hooks/
-│   │       ├── lib/              utilidades (formato de moneda, fechas)
-│   │       └── styles/
-│   │           └── tokens        colores, tipografía, espaciado
-│   └── api/                      (Fase 1)
+├── web/                          ← CAPA 1: frontend (mockups ahora, real después)
+│   ├── public/
+│   └── src/
+│       ├── app/ o pages/     rutas (según el framework actual)
+│       ├── components/
+│       │   ├── ui/           botón, input, tarjeta, modal, badge, barra de progreso
+│       │   └── layout/       header, footer, contenedores, menú móvil
+│       ├── features/         una carpeta por dominio
+│       │   ├── auth/         login, registro, verificación
+│       │   ├── billetera/    saldo, recarga, historial
+│       │   ├── rifas/        listado, detalle, compromiso, compra
+│       │   ├── sorteos/      ganadores, transparencia
+│       │   ├── perfil/
+│       │   ├── admin/
+│       │   └── propuestas/   (Fase 2)
+│       ├── domain/           tipos y enums derivados de docs/semantica
+│       ├── services/
+│       │   ├── interfaces/   contratos (RifasService, BilleteraService…)
+│       │   ├── mock/         implementación Fase 0
+│       │   └── http/         implementación Fase 1
+│       ├── mocks/            datos falsos (JSON / TS)
+│       ├── hooks/
+│       ├── lib/              utilidades (formato de moneda, fechas)
+│       └── styles/
+│           └── tokens        colores, tipografía, espaciado
+├── api/                          ← CAPA 3: backend (Fase 1)
 │
 └── .github/
     ├── pull_request_template.md
@@ -216,7 +215,7 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 > **Fase 0 (estado actual):** el sitio es HTML, CSS y JavaScript estáticos y vive en la raíz del repositorio, con todo lo compartido en `assets/` (ver "Organización de carpetas" en `CLAUDE.md`).
 > **Fase 1:** el frontend se moverá a `web/` y el backend irá en `api/`. Las pantallas no cambian: solo se reemplaza `services/mock` por `services/http`.
 
-> Si el repositorio actual no es un monorepo, `apps/web/src` equivale a la carpeta `src/` existente. No es obligatorio mover lo que ya está construido: basta con que lo nuevo siga esta organización y lo existente se migre gradualmente.
+> Si el repositorio actual no es un monorepo, `web/src` equivale a la carpeta `src/` existente. No es obligatorio mover lo que ya está construido: basta con que lo nuevo siga esta organización y lo existente se migre gradualmente.
 
 ---
 
@@ -605,7 +604,7 @@ La compra del premio **se hace fuera de la plataforma** (en la tienda, con los m
 
 ## 8. Datos de ejemplo para los mockups
 
-Los mocks viven en `apps/web/src/mocks/` y deben cubrir **todos los estados**. Ejemplo mínimo:
+Los mocks viven en `web/src/mocks/` (en la Fase 0, `assets/js/mocks/`) y deben cubrir **todos los estados**. Ejemplo mínimo:
 
 ```ts
 // src/domain/rifa.ts

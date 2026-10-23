@@ -41,6 +41,23 @@ header {
 .nav-links .join-menu a.btn-primary { color: var(--accent-ink); }
 .nav-links .join-menu a.btn-ghost { color: var(--text); }
 
+/* Header con sesión: saldo, Recargar y menú de usuario */
+.nav-links > a.btn { font-weight: var(--fw-semibold); }
+.nav-links > a.btn-primary { color: var(--accent-ink); }
+.nav-links > a.btn-ghost { color: var(--text); }
+.saldo { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.usuario-icono, .saldo-corto { display: none; }
+.usuario-apodo { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-links .join-menu.menu-usuario { gap: var(--sp-4); }
+.nav-links .join-menu.menu-usuario a,
+.menu-usuario button {
+  display: block; width: 100%; text-align: left; padding: var(--sp-10) var(--sp-12); border: 0; border-radius: var(--radius-12);
+  background: none; color: var(--text); font: inherit; font-weight: var(--fw-medium); text-decoration: none; cursor: pointer;
+}
+.nav-links .join-menu.menu-usuario a:hover, .menu-usuario button:hover { background: var(--surface-2); }
+.nav-links .join-menu.menu-usuario .solo-movil { display: none; }
+.menu-usuario button:focus-visible, .nav-links .join-menu.menu-usuario a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+
 /* Botones */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-8);
@@ -60,10 +77,24 @@ input:focus { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
 /* Footer */
 footer { border-top: 1px solid var(--border); padding: var(--sp-32) 0; color: var(--muted); font-size: var(--fs-small); }
 footer .wrap { display: flex; justify-content: space-between; gap: var(--sp-16); flex-wrap: wrap; }
+.footer-links { display: flex; flex-wrap: wrap; gap: var(--sp-6) var(--sp-16); }
+.footer-links a { text-decoration: none; }
+.footer-links a:hover { color: var(--text); }
+
+/* Contenedor y título de las pantallas internas */
+.pagina { padding: var(--sp-56) 0; }
+.pagina-titulo { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-8); }
+.pagina-sub { color: var(--muted); margin: 0 0 var(--sp-24); }
 
 @media (max-width: 900px) {
   .nav-links a:not(.btn) { display: none; }
+  .nav-links .join-menu.menu-usuario .solo-movil { display: block; }
 }
 @media (max-width: 520px) {
   .wrap { padding: 0 var(--gutter-mobile); }
+  .nav-links { gap: var(--sp-10); }
+  .solo-escritorio { display: none; }
+  .saldo-unidad, .usuario-apodo { display: none; }
+  .usuario-icono, .saldo-corto { display: inline; }
+  .pagina { padding: var(--sp-40) 0; }
 }

@@ -186,6 +186,7 @@ Commit: `docs(semantica): separar semántica funcional por dominio`.
 | `/admin/propuestas` | Moderar propuestas (F2) | Admin |
 
 > Adapta la sintaxis de rutas dinámicas al stack (por ejemplo, `?slug=` en HTML estático).
+> **Adaptación aplicada (sitio estático):** `/r/[slug]` → `r/?slug=…` · `/mis-rifas/[codigo]` → `mis-rifas/tickets/?codigo=…` · `/admin/rifas/[codigo]/sorteo` → `admin/sorteo/?codigo=…` · `/admin/rifas/[codigo]/entrega` → `admin/entrega/?codigo=…`. La tabla completa vive en `assets/js/lib/rutas.js`.
 
 ## Flujos (conexiones entre pantallas)
 

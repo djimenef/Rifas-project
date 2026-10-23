@@ -79,10 +79,11 @@ Regla desde el Paso 3 en adelante:
 │   ├── css/
 │   │   ├── tokens.css            colores, tipografía, espaciado, radios, sombras
 │   │   ├── base.css              reset, contenedor, header, footer, botones
-│   │   ├── components.css        componentes reutilizables
+│   │   ├── components.css        componentes reutilizables (incluye el panel de demo)
+│   │   ├── admin.css             layout del panel de administración (solo páginas /admin)
 │   │   └── paginas/<pantalla>.css   estilos propios de cada pantalla
 │   └── js/
-│       ├── layout.js             dibuja el header y el footer comunes
+│       ├── layout.js             protege la ruta, dibuja header/footer o el panel admin y el panel de demo
 │       ├── session.js            sesión simulada (localStorage)
 │       ├── components/           un módulo por componente (badge, barra-avance, modal…)
 │       ├── paginas/<pantalla>.js lógica de presentación de cada pantalla
@@ -92,7 +93,7 @@ Regla desde el Paso 3 en adelante:
 │       │   ├── interfaces/       contratos (auth, billetera, rifas, admin)
 │       │   └── mock/             implementación Fase 0 (motor.js = reglas, db.js = persistencia)
 │       ├── mocks/                datos falsos; solo los lee services/mock
-│       └── lib/                  utilidades (formato, ids, hash, rutas, html)
+│       └── lib/                  utilidades: rutas.js (MAPA DE RUTAS y acceso), formato, ids, hash, html, demo
 ├── docs/                         documentación (Paso 7)
 ├── README.md · CLAUDE.md · PROMPT-FASE0.md
 └── .gitignore
@@ -104,6 +105,14 @@ Regla desde el Paso 3 en adelante:
 - El nombre `<pantalla>` es la ruta con guiones: `billetera-historial.css`, `admin-rifas.js`. Las páginas de `dev/` usan el prefijo `dev-`.
 - Las pantallas importan datos **solo** desde `services/index.js`; nunca desde `services/mock/` ni `mocks/`.
 - **Excepción por decisión del proyecto:** login y registro se quedan como archivos sueltos en la raíz, `iniciar-sesion.html` y `crear-cuenta.html`, y con esos nombres se enlazan (también en `?volver=`). Sus estilos y scripts siguen la regla: `paginas/iniciar-sesion.*` y `paginas/crear-cuenta.*`.
+
+**Cómo se arma una pantalla**
+- `<body data-ruta="<id>">`, donde `<id>` es la clave de la ruta en `assets/js/lib/rutas.js` (ahí se define su archivo, nombre, acceso y layout).
+- Estructura mínima: `<header data-layout="header"></header>`, `<main></main>`, `<footer data-layout="footer"></footer>`.
+- El script de la pantalla empieza con `const { permitido, usuario } = await listo;` (importado de `layout.js`) y solo dibuja si `permitido`.
+- Las secciones que cargan datos usan `cargarSeccion()` (`components/estados.js`): muestra cargando, vacío o error y respeta el estado forzado desde el panel de demo.
+- Enlaces internos siempre con `url('<id>', { parametros })`, nunca rutas escritas a mano en el JS.
+- Mientras no se construye, una pantalla usa `paginas/en-construccion.js` (marcador "En construcción").
 
 **Convención de nombres**
 - Carpetas y archivos en **español**, **minúsculas** y con **guiones**: `barra-avance.js`, `crear-cuenta.html`, `billetera/historial/`.
