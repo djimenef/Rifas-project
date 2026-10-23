@@ -52,8 +52,96 @@ input[aria-invalid="true"] { border-color: var(--error); }
 }
 .qty-unidad { color: var(--muted); }
 
+/* --- Atajos de recarga y resumen (extraídos tal cual de la calculadora de inicio) --- */
+.packs { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-10); margin: var(--sp-18) 0; }
+.pack {
+  border: 2px solid var(--border); background: var(--bg); border-radius: var(--radius-14); padding: var(--sp-14) var(--sp-6);
+  text-align: center; cursor: pointer; font: inherit; color: var(--text); transition: border-color .15s;
+}
+.pack b { display: block; font-size: var(--fs-2xl); }
+.pack span { font-size: var(--fs-sm); color: var(--muted); }
+.pack.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); }
+.qty-aviso { margin: var(--sp-8) 0 0; }
+.summary { background: var(--surface-2); border-radius: var(--radius-20); padding: var(--sp-28); }
+.summary .row { display: flex; justify-content: space-between; padding: var(--sp-8) 0; color: var(--muted); }
+.summary .total { border-top: 1px dashed var(--border); margin-top: var(--sp-8); padding-top: var(--sp-16); color: var(--text); font-size: var(--fs-md); }
+.summary .total b { font-size: var(--fs-5xl); color: var(--accent); }
+
 /* --- Tarjeta genérica --- */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-28); }
+
+/* --- Tarjeta de rifa (extraída tal cual de la página de inicio) --- */
+.draws { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-20); }
+.draw {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; display: flex; flex-direction: column; transition: border-color .2s, transform .2s, opacity .2s;
+}
+.draw-img { height: 150px; display: grid; place-items: center; font-size: var(--fs-ilustracion); }
+.draw:nth-child(3n + 1) .draw-img { background: var(--grad-menta); }
+.draw:nth-child(3n + 2) .draw-img { background: var(--grad-cielo); }
+.draw:nth-child(3n) .draw-img { background: var(--grad-jade); }
+.draw-body { padding: var(--sp-22); flex: 1; display: flex; flex-direction: column; gap: var(--sp-8); }
+.draw-body h3 { margin: 0; font-size: var(--fs-xl); }
+.draw-body p { margin: 0; color: var(--muted); font-size: var(--fs-body-sm); }
+.req {
+  margin-top: auto; padding-top: var(--sp-14); display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border); font-size: var(--fs-small);
+}
+.draw-body h3 a { color: inherit; text-decoration: none; }
+.draw-body h3 a:hover { text-decoration: underline; }
+.draw-body h3 a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+/* Agregados de la tarjeta en listados (Paso 4): tiempo restante, mis Chances e ID en letra pequeña */
+.draw-body .draw-tiempo { color: var(--text); font-weight: var(--fw-medium); font-size: var(--fs-small); }
+.draw-mio {
+  margin: 0; padding: var(--sp-8) var(--sp-12); border-radius: var(--radius-12);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface)); font-size: var(--fs-small); font-weight: var(--fw-medium);
+}
+.draw-pie { display: flex; flex-wrap: wrap; gap: var(--sp-8); }
+.draw-body .draw-id { color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+.req .badge-estado { white-space: normal; text-align: right; }
+
+/* --- Campos adicionales (mismo aspecto que los inputs de texto) --- */
+input[type="search"], input[type="url"], input[type="datetime-local"], input.campo-numero, select, textarea {
+  font: inherit; padding: var(--sp-12) var(--sp-14); border-radius: var(--radius-12); border: 1px solid var(--border);
+  background: var(--bg); color: var(--text); width: 100%;
+}
+textarea { resize: vertical; min-height: 96px; }
+select:focus, textarea:focus { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--error); }
+
+/* --- Barra de filtros de un listado --- */
+.filtros { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--sp-12); margin-bottom: var(--sp-24); align-items: end; }
+.filtros-total { color: var(--muted); font-size: var(--fs-small); margin: 0 0 var(--sp-16); }
+
+/* --- Aviso destacado (reutiliza el estilo del aviso de crear cuenta, en verde o neutro) --- */
+.aviso {
+  display: flex; gap: var(--sp-12); align-items: flex-start; margin: 0;
+  padding: var(--sp-14) var(--sp-16); border-radius: var(--radius-14); font-size: var(--fs-body-sm);
+  background: var(--surface-2); color: var(--text);
+}
+.aviso-icono { flex: none; font-size: var(--fs-lg); line-height: var(--lh-snug); }
+.aviso p { margin: 0; }
+.aviso-ok { background: color-mix(in srgb, var(--ok) 12%, var(--surface)); }
+.aviso-oro { background: color-mix(in srgb, var(--gold) 14%, var(--surface)); }
+.aviso-error { background: color-mix(in srgb, var(--error) 12%, var(--surface)); }
+
+/* --- Lista de datos (etiqueta · valor) --- */
+.datos { display: grid; gap: 0; margin: 0; }
+.datos > div { display: flex; justify-content: space-between; gap: var(--sp-16); padding: var(--sp-10) 0; border-bottom: 1px dashed var(--border); }
+.datos > div:last-child { border-bottom: 0; }
+.datos dt { color: var(--muted); }
+.datos dd { margin: 0; font-weight: var(--fw-semibold); text-align: right; overflow-wrap: anywhere; }
+.texto-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: var(--fs-sm); overflow-wrap: anywhere; }
+
+/* --- Texto solo para lectores de pantalla --- */
+.sr-solo { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* --- Enlace de texto --- */
+.enlace { color: var(--accent); font-weight: var(--fw-semibold); text-decoration: none; }
+.enlace:hover { text-decoration: underline; }
+.enlace:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+button.enlace { border: 0; background: none; padding: 0; font: inherit; cursor: pointer; }
+button.enlace:disabled { color: var(--lock); cursor: not-allowed; text-decoration: none; }
 
 /* --- Barra de avance (0–100 %, rojo → verde) --- */
 .barra { display: flex; align-items: center; gap: var(--sp-10); }
@@ -78,6 +166,14 @@ input[aria-invalid="true"] { border-color: var(--error); }
   background: var(--surface-2); color: var(--text); font: inherit; font-size: var(--fs-2xl); cursor: pointer;
 }
 .modal-acciones { display: flex; gap: var(--sp-12); justify-content: flex-end; flex-wrap: wrap; margin-top: var(--sp-24); }
+.modal-cuerpo { display: grid; gap: var(--sp-14); }
+.modal-cuerpo .modal-acciones { margin-top: var(--sp-10); }
+.modal-rifa, .modal-texto, .modal-saldo, .modal-quedan, .modal-nota { margin: 0; }
+.modal-texto, .modal-quedan, .modal-nota { color: var(--muted); }
+.modal-nota { font-size: var(--fs-small); }
+.modal-cantidad { display: grid; gap: var(--sp-8); font-size: var(--fs-label); font-weight: var(--fw-semibold); }
+.modal-recargar { margin-top: var(--sp-8); }
+.modal-cuerpo input:not([type="checkbox"]):not([type="radio"]):not([type="number"]) { width: 100%; min-width: 0; }
 
 /* --- Pestañas --- */
 .tabs {
@@ -169,7 +265,14 @@ input[aria-invalid="true"] { border-color: var(--error); }
 @media (prefers-reduced-motion: reduce) {
   .spinner, .skeleton, .toast { animation: none; }
 }
+@media (max-width: 900px) {
+  .draws { grid-template-columns: 1fr; }
+  .filtros { grid-template-columns: 1fr 1fr; }
+  .filtros > :first-child { grid-column: 1 / -1; }
+}
 @media (max-width: 520px) {
   .two { grid-template-columns: 1fr; }
   .modal { padding: var(--sp-22); }
+  .filtros { grid-template-columns: 1fr; }
+  .packs { grid-template-columns: repeat(2, 1fr); }
 }

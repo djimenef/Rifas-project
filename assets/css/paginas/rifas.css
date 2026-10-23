@@ -1,0 +1,6 @@
+/* Listado de rifas: estilos propios. Todo sale de los tokens. */
+
+/* En tablet, dos tarjetas por fila */
+@media (min-width: 521px) and (max-width: 900px) {
+  .listado-rifas .draws { grid-template-columns: repeat(2, 1fr); }
+}

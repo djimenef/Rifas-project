@@ -822,9 +822,9 @@ Puntos técnicos obligatorios:
 - [x] Mockup de inicio
 - [x] Mockup de inicio de sesión
 - [x] Mockup de creación de cuenta
-- [ ] Tokens de diseño y `components/ui` extraídos de las pantallas existentes
-- [ ] Tipos de dominio (`src/domain`) y servicios mock (`src/services/mock`)
-- [ ] Mockups P1 del inventario (sección 6)
+- [x] Tokens de diseño y `components/ui` extraídos de las pantallas existentes
+- [x] Tipos de dominio (`src/domain`) y servicios mock (`src/services/mock`)
+- [x] Mockups P1 del inventario (sección 6)
 - [ ] Mockups P2 del inventario
 - [ ] Documentos de `docs/semantica/` completos y revisados por negocio
 - [ ] Demo navegable del flujo completo: registro → recarga → comprometer → rifa abierta → ganador

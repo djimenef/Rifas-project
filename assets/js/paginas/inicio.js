@@ -2,10 +2,8 @@
 import { listo } from '../layout.js';
 import { rifasService, billeteraService } from '../services/index.js';
 import { url } from '../lib/rutas.js';
-import { esc } from '../lib/html.js';
 import { soles, puntos } from '../lib/formato.js';
-import { barraAvance } from '../components/barra-avance.js';
-import { badgeEstado } from '../components/badge.js';
+import { tarjetaRifa } from '../components/tarjeta-rifa.js';
 import { cargarSeccion } from '../components/estados.js';
 
 const PRECIO_PUNTO = 1;                      // 1 Chance = S/ 1
@@ -66,17 +64,6 @@ function iniciarCuentaRegresiva(fechaIso) {
   tick(); setInterval(tick, 1000);
 }
 
-const tarjetaRifa = r => `
-  <article class="draw">
-    <div class="draw-img" aria-hidden="true">${r.producto.emoji}</div>
-    <div class="draw-body">
-      <h3><a href="${url('rifa', { slug: r.slug })}">${esc(r.producto.nombre)}</a></h3>
-      <p>${esc(r.categoria)} · Precio referencial: ${soles(r.producto.precioTienda)}</p>
-      ${barraAvance(r.progreso)}
-      <div class="req"><span>👥 ${r.participantes} personas</span>${badgeEstado(r.estado)}</div>
-    </div>
-  </article>`;
-
 const { usuario } = await listo;
 
 // Límites de recarga configurados (los define el admin).
@@ -95,7 +82,7 @@ cargarSeccion(document.getElementById('rifas-destacadas'), {
   mostrar: rifas => {
     const armando = rifas.filter(r => r.estado === 'ARMANDO');
     document.getElementById('rifas-destacadas').innerHTML =
-      `<div class="draws">${(armando.length ? armando : rifas).slice(0, 3).map(tarjetaRifa).join('')}</div>`;
+      `<div class="draws">${(armando.length ? armando : rifas).slice(0, 3).map(r => tarjetaRifa(r)).join('')}</div>`;
 
     document.getElementById('stat-personas').textContent = rifas.reduce((t, r) => t + r.participantes, 0).toLocaleString('es-PE');
     document.getElementById('stat-rifas').textContent = armando.length;

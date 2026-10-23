@@ -3,22 +3,63 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DaleChance · Recargar puntos</title>
+  <title>DaleChance · Recargar Chances</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/paginas/billetera-recargar.css">
 </head>
 <body data-ruta="recargar">
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <div class="wrap pagina">
+    <a class="enlace recargar-volver" id="volver" href="../">← Mi billetera</a>
+    <h1 class="pagina-titulo">Recargar Chances</h1>
+    <p class="pagina-sub">1 Chance = S/ 1 = 1 opción de ganar. Elige un atajo o escribe la cantidad, de 5 a 500.</p>
+
+    <div class="recarga" id="recarga">
+      <form class="card recarga-form" id="form" novalidate>
+        <fieldset>
+          <legend>¿Cuántas Chances quieres?</legend>
+          <div class="packs" id="packs"></div>
+          <div class="qty">
+            <button type="button" id="menos" aria-label="Una Chance menos">−</button>
+            <input type="number" id="cantidad" value="10" min="5" max="500" step="1" aria-label="Chances a recargar" aria-describedby="cantidad-aviso">
+            <button type="button" id="mas" aria-label="Una Chance más">+</button>
+            <span class="qty-unidad">Chances</span>
+          </div>
+          <p class="field-error qty-aviso" id="cantidad-aviso" role="status" hidden></p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Medio de pago</legend>
+          <div class="medios">
+            <label class="medio"><input type="radio" name="medioPago" value="YAPE" checked> <span><b>Yape</b><small>Pago con tu celular</small></span></label>
+            <label class="medio"><input type="radio" name="medioPago" value="TARJETA"> <span><b>Tarjeta</b><small>Débito o crédito</small></span></label>
+          </div>
+          <p class="field-hint">Fase 0 (demo): el pago es simulado. No ingreses datos reales.</p>
+          <label class="check recarga-demo"><input type="checkbox" id="simular-rechazo"> <span>Simular pago rechazado (solo demo)</span></label>
+        </fieldset>
+      </form>
+
+      <div class="summary recarga-resumen" id="resumen" aria-live="polite">
+        <div class="row"><span>Chances</span><span id="res-cantidad">10</span></div>
+        <div class="row"><span>Precio por Chance</span><span>S/ 1.00</span></div>
+        <div class="row total"><span>Total</span><b id="res-total">S/ 10.00</b></div>
+        <button type="submit" form="form" class="btn btn-primary btn-block recarga-pagar" id="pagar">Pagar S/ 10.00</button>
+        <p class="recarga-nota">Las Chances se suman a tu saldo disponible apenas se apruebe el pago.</p>
+      </div>
+    </div>
+  </div>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../../assets/js/paginas/billetera-recargar.js"></script>
 </body>
 </html>
