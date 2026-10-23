@@ -48,6 +48,9 @@ Stack: HTML, CSS y JavaScript estáticos con módulos ES, sin dependencias. Los 
 | Lint / formato | No hay configurado (Node no está instalado; no se instalan herramientas sin permiso) |
 
 Catálogo de componentes: http://localhost:8000/dev/componentes/
+Pruebas de reglas de negocio (servicios mock): http://localhost:8000/dev/pruebas/ — al terminar restauran los datos de ejemplo.
+
+Credenciales de demo: `lucia@dalechance.pe` / `demo123` (participante) · `admin@dalechance.pe` / `admin123` (admin) · código de verificación `123456`.
 
 ## Estructura de estilos y componentes
 
@@ -57,3 +60,11 @@ Catálogo de componentes: http://localhost:8000/dev/componentes/
 - `assets/js/layout.js`: dibuja `<header data-layout="header" data-variante="…">` y `<footer data-layout="footer">`.
 - `assets/js/components/`: un módulo por componente.
 - Cada pantalla conserva en su `<style>` solo sus reglas propias, escritas con tokens.
+
+## Capas de datos (Paso 2)
+
+- `assets/js/domain/`: tipos (JSDoc) y reglas puras: estados y transiciones de rifa, configuración por defecto, validaciones de usuario, errores.
+- `assets/js/mocks/`: datos falsos. Solo los lee `services/mock/`.
+- `assets/js/services/interfaces/`: contratos de AuthService, BilleteraService, RifasService y AdminService.
+- `assets/js/services/mock/`: implementación de la Fase 0. `motor.js` concentra las reglas; `db.js` persiste en localStorage, simula latencia y revierte operaciones fallidas.
+- `assets/js/services/index.js`: **único punto que importan las pantallas**.
