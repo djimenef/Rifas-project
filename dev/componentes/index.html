@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DaleChance · Componentes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/paginas/dev-componentes.css">
+</head>
+<body data-ruta="devComponentes">
+
+<header data-layout="header"></header>
+
+<main>
+  <div class="wrap">
+    <h1>Componentes</h1>
+    <p class="intro">Catálogo interno de la Fase 0. Todo sale de <code>assets/css/tokens.css</code>. Cambia el tema del sistema (claro/oscuro) para revisar ambos.</p>
+
+    <section class="bloque">
+      <h2>Botones</h2>
+      <p>Extraídos de la página de inicio.</p>
+      <div class="fila">
+        <button class="btn btn-primary" type="button">Primario</button>
+        <button class="btn btn-ghost" type="button">Secundario</button>
+        <button class="btn btn-primary btn-sm" type="button">Pequeño</button>
+        <button class="btn btn-primary" type="button" disabled>Deshabilitado</button>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <h2>Campos</h2>
+      <p>Extraídos de crear cuenta e iniciar sesión.</p>
+      <div class="card muestra-form">
+        <div class="two">
+          <label>Nombres<input type="text" placeholder="Juan"></label>
+          <label>Fecha de nacimiento<input type="date"></label>
+        </div>
+        <label>DNI<input type="text" value="1234" aria-invalid="true" aria-describedby="err-dni"></label>
+        <span class="field-error" id="err-dni">El DNI debe tener 8 dígitos.</span>
+        <p class="alt">¿Ya tienes cuenta? <a href="#">Iniciar sesión</a></p>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <h2>Badge de estado de rifa</h2>
+      <p>Una variante por estado; BORRADOR y DESCARTADA no tienen badge público.</p>
+      <div class="fila" id="badges"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Barra de avance</h2>
+      <p>Solo porcentaje; rojo al inicio, verde al llegar a 100 %.</p>
+      <div class="barras" id="barras"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Selector de cantidad</h2>
+      <p>Mismo aspecto que el de la página de inicio. Valor actual: <b id="valor-qty">5</b></p>
+      <div id="selector"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Pestañas</h2>
+      <p>Se navegan con clic o con las flechas del teclado.</p>
+      <div id="tabs"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Estados de pantalla</h2>
+      <p>Vacío, error y cargando.</p>
+      <div class="rejilla" id="estados"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Modal y toast</h2>
+      <p>El modal se cierra con Esc, con la × o al hacer clic fuera.</p>
+      <div class="fila">
+        <button class="btn btn-primary" type="button" id="abrir-modal">Abrir modal</button>
+        <button class="btn btn-ghost" type="button" id="toast-ok">Toast de éxito</button>
+        <button class="btn btn-ghost" type="button" id="toast-error">Toast de error</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer data-layout="footer"></footer>
+
+<script type="module" src="../../assets/js/paginas/dev-componentes.js"></script>
+</body>
+</html>

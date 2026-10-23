@@ -1,0 +1,100 @@
+/* ==========================================================================
+   Base y layout compartidos: reset, contenedor, header, footer y botones.
+   Reglas idénticas a las que tenían las 3 pantallas originales.
+   ========================================================================== */
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: var(--lh-body);
+}
+a { color: inherit; }
+.wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* Header */
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--glass);
+  backdrop-filter: var(--blur-glass);
+  border-bottom: 1px solid var(--border);
+}
+.nav { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
+.logo { font-weight: var(--fw-extrabold); font-size: var(--fs-2xl); text-decoration: none; letter-spacing: var(--ls-tight); color: var(--accent); }
+.logo span { color: var(--logo-ink); }
+.nav-links { display: flex; gap: var(--sp-28); align-items: center; }
+.nav-links a { text-decoration: none; color: var(--muted); font-weight: var(--fw-medium); }
+.nav-links a:hover { color: var(--text); }
+.back { text-decoration: none; color: var(--muted); font-weight: var(--fw-medium); }
+.back:hover { color: var(--text); }
+
+/* Menú "Participar" (y menú de usuario con sesión) */
+.join { position: relative; }
+.join-menu {
+  position: absolute; right: 0; top: calc(100% + var(--sp-10)); min-width: 210px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-16);
+  padding: var(--sp-10); box-shadow: var(--shadow); display: grid; gap: var(--sp-8);
+}
+.join-menu[hidden] { display: none; }
+.nav-links .join-menu a.btn-primary { color: var(--accent-ink); }
+.nav-links .join-menu a.btn-ghost { color: var(--text); }
+
+/* Header con sesión: saldo, Recargar y menú de usuario */
+.nav-links > a.btn { font-weight: var(--fw-semibold); }
+.nav-links > a.btn-primary { color: var(--accent-ink); }
+.nav-links > a.btn-ghost { color: var(--text); }
+.saldo { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.usuario-icono { display: none; }
+.usuario-apodo { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-links .join-menu.menu-usuario { gap: var(--sp-4); }
+.nav-links .join-menu.menu-usuario a,
+.menu-usuario button {
+  display: block; width: 100%; text-align: left; padding: var(--sp-10) var(--sp-12); border: 0; border-radius: var(--radius-12);
+  background: none; color: var(--text); font: inherit; font-weight: var(--fw-medium); text-decoration: none; cursor: pointer;
+}
+.nav-links .join-menu.menu-usuario a:hover, .menu-usuario button:hover { background: var(--surface-2); }
+.nav-links .join-menu.menu-usuario .solo-movil { display: none; }
+.menu-usuario button:focus-visible, .nav-links .join-menu.menu-usuario a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+
+/* Botones */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-8);
+  border: 0; cursor: pointer; font: inherit; font-weight: var(--fw-semibold);
+  padding: var(--sp-12) var(--sp-22); border-radius: var(--radius-pill); text-decoration: none;
+  transition: transform .15s, box-shadow .15s, background .15s;
+}
+.btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: var(--shadow-accent); }
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-ghost { background: var(--surface-2); color: var(--text); }
+.btn-sm { padding: var(--sp-9) var(--sp-18); }
+.btn-block { width: 100%; }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .65; cursor: not-allowed; transform: none; }
+
+input:focus { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+
+/* Footer */
+footer { border-top: 1px solid var(--border); padding: var(--sp-32) 0; color: var(--muted); font-size: var(--fs-small); }
+footer .wrap { display: flex; justify-content: space-between; gap: var(--sp-16); flex-wrap: wrap; }
+.footer-links { display: flex; flex-wrap: wrap; gap: var(--sp-6) var(--sp-16); }
+.footer-links a { text-decoration: none; }
+.footer-links a:hover { color: var(--text); }
+
+/* Contenedor y título de las pantallas internas */
+.pagina { padding: var(--sp-56) 0; }
+.pagina-titulo { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-8); }
+.pagina-sub { color: var(--muted); margin: 0 0 var(--sp-24); }
+
+@media (max-width: 900px) {
+  .nav-links a:not(.btn) { display: none; }
+  .nav-links .join-menu.menu-usuario .solo-movil { display: block; }
+}
+@media (max-width: 520px) {
+  .wrap { padding: 0 var(--gutter-mobile); }
+  .nav-links { gap: var(--sp-10); }
+  .solo-escritorio { display: none; }
+  .usuario-apodo { display: none; }
+  .usuario-icono { display: inline; }
+  .pagina { padding: var(--sp-40) 0; }
+}

@@ -1,0 +1,10 @@
+/* Pruebas de reglas de negocio (desarrollo): estilos propios. Todo sale de los tokens. */
+main { padding: var(--sp-40) 0; }
+h1 { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-8); }
+.aviso { color: var(--muted); margin: 0 0 var(--sp-24); }
+#resumen { font-weight: var(--fw-bold); font-size: var(--fs-md); margin: 0 0 var(--sp-16); }
+#lista { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--sp-6); font-size: var(--fs-body-sm); }
+#lista .ok::before { content: "✓ "; color: var(--ok); font-weight: var(--fw-bold); }
+#lista .falla { color: var(--error); }
+#lista .falla::before { content: "✗ "; font-weight: var(--fw-bold); }
+#resultado { display: none; }

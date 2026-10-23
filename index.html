@@ -3,274 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DaleChance · Sorteos</title>
+  <title>DaleChance · Rifas a demanda</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #fbf8f3;
-      --surface: #ffffff;
-      --surface-2: #f3eee6;
-      --text: #1d1a16;
-      --muted: #6b645a;
-      --border: #e6dfd3;
-      --accent: #12935a;
-      --accent-ink: #ffffff;
-      --gold: #f2b631;
-      --ok: #1f8a5b;
-      --lock: #a59c8f;
-      --radius: 18px;
-      --shadow: 0 10px 30px -12px rgba(40, 25, 10, .18);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #14120f;
-        --surface: #1e1b17;
-        --surface-2: #27231e;
-        --text: #f4efe7;
-        --muted: #a9a195;
-        --border: #352f28;
-        --accent: #2fc77f;
-        --gold: #f5c04a;
-        --ok: #3cc488;
-        --lock: #6f675c;
-        --shadow: 0 10px 30px -12px rgba(0, 0, 0, .6);
-      }
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: "Outfit", system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-    a { color: inherit; }
-    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-
-    /* Header */
-    header {
-      position: sticky; top: 0; z-index: 10;
-      background: color-mix(in srgb, var(--bg) 85%, transparent);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
-    .logo { font-weight: 800; font-size: 1.4rem; text-decoration: none; letter-spacing: -.02em; color: var(--accent); }
-    .logo span { color: #fff; }
-    .nav-links { display: flex; gap: 28px; align-items: center; }
-    .nav-links a { text-decoration: none; color: var(--muted); font-weight: 500; }
-    .nav-links a:hover { color: var(--text); }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      border: 0; cursor: pointer; font: inherit; font-weight: 600;
-      padding: 12px 22px; border-radius: 999px; text-decoration: none;
-      transition: transform .15s, box-shadow .15s, background .15s;
-    }
-    .btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 8px 20px -8px var(--accent); }
-    .btn-primary:hover { transform: translateY(-1px); }
-    .btn-ghost { background: var(--surface-2); color: var(--text); }
-    .btn-sm { padding: 9px 18px; }
-
-    /* Hero */
-    .hero { padding: 64px 0 40px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
-    .pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 6px 14px; border-radius: 999px; font-size: .9rem; color: var(--muted);
-    }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: pulse 1.6s infinite; }
-    @keyframes pulse { 50% { opacity: .3; } }
-    h1 { font-size: clamp(2.3rem, 5vw, 3.8rem); line-height: 1.05; letter-spacing: -.03em; margin: 18px 0 16px; }
-    h1 em { font-style: normal; color: var(--accent); }
-    .lead { font-size: 1.15rem; color: var(--muted); max-width: 520px; margin: 0 0 28px; }
-    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
-    .stats { display: flex; gap: 32px; margin-top: 36px; flex-wrap: wrap; }
-    .stats strong { display: block; font-size: 1.6rem; }
-    .stats span { color: var(--muted); font-size: .9rem; }
-
-    .ticket {
-      position: relative;
-      background: linear-gradient(135deg, #0f7a4b, #22b573);
-      color: #fff; border-radius: 24px; padding: 32px;
-      box-shadow: var(--shadow); transform: rotate(-2deg);
-    }
-    .ticket::before, .ticket::after {
-      content: ""; position: absolute; top: 62%; width: 34px; height: 34px;
-      background: var(--bg); border-radius: 50%;
-    }
-    .ticket::before { left: -17px; }
-    .ticket::after { right: -17px; }
-    .ticket small { opacity: .85; text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; }
-    .ticket h3 { font-size: 1.9rem; margin: 6px 0 4px; line-height: 1.1; }
-    .ticket .price { font-size: 3.2rem; font-weight: 800; margin-top: 18px; }
-    .ticket .price sup { font-size: 1.2rem; vertical-align: top; position: relative; top: 14px; }
-    .ticket .divider { border-top: 2px dashed rgba(255,255,255,.5); margin: 26px 0 18px; }
-    .countdown { display: flex; gap: 12px; }
-    .countdown div { background: rgba(0,0,0,.18); border-radius: 12px; padding: 8px 12px; text-align: center; min-width: 62px; }
-    .countdown b { display: block; font-size: 1.4rem; }
-    .countdown span { font-size: .7rem; opacity: .85; text-transform: uppercase; }
-
-    /* Sections */
-    section { padding: 56px 0; }
-    .section-head { text-align: center; max-width: 620px; margin: 0 auto 40px; }
-    .section-head h2 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); letter-spacing: -.02em; margin: 0 0 10px; }
-    .section-head p { color: var(--muted); margin: 0; }
-
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
-    .step .num {
-      width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
-      background: var(--surface-2); color: var(--accent); font-weight: 800; font-size: 1.2rem; margin-bottom: 16px;
-    }
-    .step h3 { margin: 0 0 6px; }
-    .step p { margin: 0; color: var(--muted); }
-
-    /* Draws */
-    .draws { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .draw {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      overflow: hidden; display: flex; flex-direction: column; transition: border-color .2s, transform .2s, opacity .2s;
-    }
-    .draw-img { height: 150px; display: grid; place-items: center; font-size: 4rem; }
-    .draw:nth-child(1) .draw-img { background: linear-gradient(135deg, #d4f5e2, #9fe3bd); }
-    .draw:nth-child(2) .draw-img { background: linear-gradient(135deg, #c9e8ff, #8cc8f5); }
-    .draw:nth-child(3) .draw-img { background: linear-gradient(135deg, #c6efd9, #6fd3a0); }
-    .draw-body { padding: 22px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .draw-body h3 { margin: 0; font-size: 1.25rem; }
-    .draw-body p { margin: 0; color: var(--muted); font-size: .95rem; }
-    .req {
-      margin-top: auto; padding-top: 14px; display: flex; justify-content: space-between; align-items: center;
-      border-top: 1px solid var(--border); font-size: .9rem;
-    }
-    .badge { padding: 4px 10px; border-radius: 999px; font-weight: 600; font-size: .8rem; background: var(--surface-2); color: var(--lock); }
-    .draw.unlocked { border-color: var(--ok); }
-    .draw.unlocked .badge { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
-    .draw.locked { opacity: .65; }
-
-    /* Calculator */
-    .buy { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; padding: 40px; box-shadow: var(--shadow); }
-    .buy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-    .packs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0; }
-    .pack {
-      border: 2px solid var(--border); background: var(--bg); border-radius: 14px; padding: 14px 6px;
-      text-align: center; cursor: pointer; font: inherit; color: var(--text); transition: border-color .15s;
-    }
-    .pack b { display: block; font-size: 1.4rem; }
-    .pack span { font-size: .8rem; color: var(--muted); }
-    .pack.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); }
-    .qty { display: flex; align-items: center; gap: 12px; }
-    .qty button {
-      width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border);
-      background: var(--surface-2); color: var(--text); font-size: 1.4rem; cursor: pointer;
-    }
-    .qty input {
-      width: 90px; height: 44px; text-align: center; font: inherit; font-size: 1.2rem; font-weight: 700;
-      border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text);
-    }
-    .summary { background: var(--surface-2); border-radius: 20px; padding: 28px; }
-    .summary .row { display: flex; justify-content: space-between; padding: 8px 0; color: var(--muted); }
-    .summary .total { border-top: 1px dashed var(--border); margin-top: 8px; padding-top: 16px; color: var(--text); font-size: 1.1rem; }
-    .summary .total b { font-size: 2rem; color: var(--accent); }
-    .unlock-list { list-style: none; padding: 0; margin: 14px 0 22px; display: grid; gap: 8px; }
-    .unlock-list li { display: flex; gap: 10px; align-items: center; font-size: .95rem; }
-    .unlock-list li.off { color: var(--lock); }
-    .unlock-list .ic { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: .75rem; flex: none; }
-    .unlock-list li.on .ic { background: var(--ok); color: #fff; }
-    .unlock-list li.off .ic { background: var(--border); color: var(--muted); }
-
-    /* Register */
-    .register { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-    .register h2 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); margin: 0 0 12px; letter-spacing: -.02em; }
-    .register p { color: var(--muted); }
-    .perks { list-style: none; padding: 0; display: grid; gap: 10px; }
-    .perks li::before { content: "✓"; color: var(--ok); font-weight: 700; margin-right: 10px; }
-    .register-cta { display: flex; justify-content: center; }
-    .register-cta .btn { padding: 16px 40px; font-size: 1.1rem; }
-
-    /* Menú "Participar" */
-    .join { position: relative; }
-    .join-menu {
-      position: absolute; right: 0; top: calc(100% + 10px); min-width: 210px;
-      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-      padding: 10px; box-shadow: var(--shadow); display: grid; gap: 8px;
-    }
-    .join-menu[hidden] { display: none; }
-    .nav-links .join-menu a.btn-primary { color: var(--accent-ink); }
-    .nav-links .join-menu a.btn-ghost { color: var(--text); }
-
-    /* FAQ */
-    .faq { max-width: 760px; margin: 0 auto; display: grid; gap: 10px; }
-    details { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 22px; }
-    summary { cursor: pointer; font-weight: 600; }
-    details p { color: var(--muted); margin: 10px 0 0; }
-
-    footer { border-top: 1px solid var(--border); padding: 32px 0; color: var(--muted); font-size: .9rem; }
-    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-
-    @media (max-width: 900px) {
-      .hero, .buy-grid, .register { grid-template-columns: 1fr; }
-      .steps, .draws { grid-template-columns: 1fr; }
-      .nav-links a:not(.btn) { display: none; }
-      .ticket { transform: none; }
-    }
-    @media (max-width: 520px) {
-      .wrap { padding: 0 16px; }
-      .buy { padding: 22px; }
-      .packs { grid-template-columns: repeat(2, 1fr); }
-      .two { grid-template-columns: 1fr; }
-      .countdown div { min-width: 0; flex: 1; }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/paginas/inicio.css">
 </head>
-<body>
+<body data-ruta="inicio">
 
-<header>
-  <div class="wrap nav">
-    <a href="#" class="logo">Dale<span>Chance</span></a>
-    <nav class="nav-links">
-      <a href="#como-funciona">Cómo funciona</a>
-      <a href="#sorteos">Sorteos</a>
-      <a href="#comprar">Comprar</a>
-      <a href="#faq">Preguntas</a>
-      <div class="join">
-        <button type="button" class="btn btn-primary btn-sm" id="join-btn" aria-haspopup="true" aria-expanded="false" aria-controls="join-menu">Participar</button>
-        <div class="join-menu" id="join-menu" hidden>
-          <a href="iniciar-sesion.html" class="btn btn-ghost">Iniciar sesión</a>
-          <a href="crear-cuenta.html" class="btn btn-primary">Crear cuenta</a>
-        </div>
-      </div>
-    </nav>
-  </div>
-</header>
+<header data-layout="header"></header>
 
 <main>
   <!-- Hero -->
   <div class="wrap hero">
     <div>
-      <span class="pill"><span class="dot"></span> Sorteos activos esta semana</span>
-      <h1>Cada cupón a <em>S/ 5</em>.<br>Más cupones, más sorteos.</h1>
-      <p class="lead">Inscríbete gratis, compra tus cupones y desbloquea sorteos con premios cada vez más grandes. Mientras más cupones tengas, más oportunidades de ganar.</p>
+      <span class="pill"><span class="dot"></span> Rifas armándose esta semana</span>
+      <h1>Cada Chance a <em>S/ 1</em>.<br>Tú eliges qué rifa va.</h1>
+      <p class="lead">Recarga Chances y ponlas en la rifa que quieras. Si la rifa se arma, tus Chances se vuelven opciones para el sorteo. Si no se arma, vuelven completas a tu billetera.</p>
       <div class="hero-cta">
-        <a href="#registro" class="btn btn-primary">Inscribirme gratis</a>
-        <a href="#sorteos" class="btn btn-ghost">Ver premios</a>
+        <a href="rifas/" class="btn btn-primary">Ver rifas</a>
+        <a href="#como-funciona" class="btn btn-ghost">Cómo funciona</a>
       </div>
       <div class="stats">
-        <div><strong>2,340+</strong><span>participantes</span></div>
-        <div><strong>48</strong><span>ganadores</span></div>
-        <div><strong>S/ 5</strong><span>por cupón</span></div>
+        <div><strong id="stat-personas">—</strong><span>personas participando</span></div>
+        <div><strong id="stat-rifas">—</strong><span>rifas armándose</span></div>
+        <div><strong>S/ 1</strong><span>por Chance</span></div>
       </div>
     </div>
 
-    <div class="ticket" aria-label="Premio mayor">
-      <small>Premio mayor · Sorteo Oro</small>
-      <h3>PlayStation 5 + GTA VI</h3>
-      <div>Necesitas 10 cupones o más para participar</div>
+    <div class="ticket" aria-label="Rifa destacada">
+      <small id="destacada-etiqueta">Armando Rifa</small>
+      <h3><a id="destacada-enlace" href="rifas/">Cargando rifa destacada…</a></h3>
+      <div id="destacada-detalle">&nbsp;</div>
       <div class="divider"></div>
-      <small>El sorteo se realiza en</small>
+      <small>La rifa se cierra en</small>
       <div class="countdown" id="countdown">
         <div><b id="cd-d">00</b><span>días</span></div>
         <div><b id="cd-h">00</b><span>horas</span></div>
@@ -290,87 +59,63 @@
       <div class="steps">
         <div class="step">
           <div class="num">1</div>
-          <h3>Inscríbete</h3>
-          <p>Crea tu cuenta gratis con tu nombre, DNI y celular.</p>
+          <h3>Regístrate</h3>
+          <p>Crea tu cuenta gratis con tu DNI. Solo para mayores de 18 años.</p>
         </div>
         <div class="step">
           <div class="num">2</div>
-          <h3>Compra cupones</h3>
-          <p>Cada cupón cuesta S/ 5. Paga con Yape, Plin o tarjeta.</p>
+          <h3>Recarga Chances</h3>
+          <p>Elige 5, 10, 15 o 20 Chances, o la cantidad que quieras. 1 Chance = S/ 1. Paga con Yape o tarjeta.</p>
         </div>
         <div class="step">
           <div class="num">3</div>
-          <h3>Participa y gana</h3>
-          <p>Según tus cupones, entras automáticamente a uno o más sorteos.</p>
+          <h3>Pon Chances y gana</h3>
+          <p>Pon tus Chances en la rifa que quieras. Si la rifa se arma, cada Chance es una opción de ganar.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Sorteos -->
+  <!-- Rifas armándose -->
   <section id="sorteos">
     <div class="wrap">
       <div class="section-head">
-        <h2>Sorteos disponibles</h2>
-        <p>Cada nivel se desbloquea con una cantidad mínima de cupones. Al alcanzar un nivel, también participas en los anteriores.</p>
+        <h2>Rifas armándose</h2>
+        <p>Cada rifa necesita juntar Chances para confirmarse. Mientras se arma, tus Chances quedan retenidas y no se gastan.</p>
       </div>
-      <div class="draws" id="draws">
-        <article class="draw" data-min="1">
-          <div class="draw-img">🎧</div>
-          <div class="draw-body">
-            <h3>Sorteo Bronce</h3>
-            <p>Audífonos inalámbricos + parlante Bluetooth.</p>
-            <div class="req"><span>Desde <b>1 cupón</b> (S/ 5)</span><span class="badge">Bloqueado</span></div>
-          </div>
-        </article>
-        <article class="draw" data-min="5">
-          <div class="draw-img">📱</div>
-          <div class="draw-body">
-            <h3>Sorteo Plata</h3>
-            <p>Smartphone de última generación.</p>
-            <div class="req"><span>Desde <b>5 cupones</b> (S/ 25)</span><span class="badge">Bloqueado</span></div>
-          </div>
-        </article>
-        <article class="draw" data-min="10">
-          <div class="draw-img">🎮</div>
-          <div class="draw-body">
-            <h3>Sorteo Oro</h3>
-            <p>Consola PlayStation 5 + juego GTA VI.</p>
-            <div class="req"><span>Desde <b>10 cupones</b> (S/ 50)</span><span class="badge">Bloqueado</span></div>
-          </div>
-        </article>
-      </div>
+      <div id="rifas-destacadas"></div>
     </div>
   </section>
 
-  <!-- Comprar -->
+  <!-- Recargar -->
   <section id="comprar">
     <div class="wrap">
       <div class="buy">
         <div class="buy-grid">
           <div>
-            <h2 style="margin:0 0 6px;font-size:2rem;letter-spacing:-.02em">¿Cuántos cupones quieres?</h2>
-            <p style="color:var(--muted);margin:0">Elige un paquete o ajusta la cantidad. Cada cupón vale S/ 5.</p>
+            <h2 class="buy-title">¿Cuántas Chances quieres?</h2>
+            <p class="buy-sub">Elige un atajo o escribe la cantidad, de 5 a 500. 1 Chance = S/ 1 = 1 opción de ganar.</p>
             <div class="packs" id="packs">
-              <button class="pack" data-qty="1"><b>1</b><span>S/ 5</span></button>
-              <button class="pack" data-qty="5"><b>5</b><span>S/ 25</span></button>
-              <button class="pack active" data-qty="10"><b>10</b><span>S/ 50</span></button>
-              <button class="pack" data-qty="20"><b>20</b><span>S/ 100</span></button>
+              <button class="pack" data-qty="5"><b>5</b><span>S/ 5</span></button>
+              <button class="pack active" data-qty="10"><b>10</b><span>S/ 10</span></button>
+              <button class="pack" data-qty="15"><b>15</b><span>S/ 15</span></button>
+              <button class="pack" data-qty="20"><b>20</b><span>S/ 20</span></button>
             </div>
             <div class="qty">
-              <button type="button" id="minus" aria-label="Quitar cupón">−</button>
-              <input type="number" id="qty" value="10" min="1" max="500" aria-label="Cantidad de cupones">
-              <button type="button" id="plus" aria-label="Agregar cupón">+</button>
-              <span style="color:var(--muted)">cupones</span>
+              <button type="button" id="minus" aria-label="Una Chance menos">−</button>
+              <input type="number" id="qty" value="10" min="5" max="500" step="1" aria-label="Chances a recargar" aria-describedby="qty-aviso">
+              <button type="button" id="plus" aria-label="Una Chance más">+</button>
+              <span class="qty-unidad">Chances</span>
             </div>
+            <p class="field-error qty-aviso" id="qty-aviso" role="status" hidden></p>
           </div>
 
           <div class="summary">
-            <div class="row"><span>Cupones</span><span id="sum-qty">10</span></div>
-            <div class="row"><span>Precio unitario</span><span>S/ 5.00</span></div>
-            <div class="row total"><span>Total</span><b id="sum-total">S/ 50.00</b></div>
+            <div class="row"><span>Chances</span><span id="sum-qty">10</span></div>
+            <div class="row"><span>Precio por Chance</span><span>S/ 1.00</span></div>
+            <div class="row total"><span>Total</span><b id="sum-total">S/ 10.00</b></div>
             <ul class="unlock-list" id="unlock-list"></ul>
-            <a href="#registro" class="btn btn-primary" style="width:100%">Comprar cupones</a>
+            <a href="billetera/recargar/" class="btn btn-primary btn-block" id="recargar-cta">Recargar 10 Chances</a>
           </div>
         </div>
       </div>
@@ -382,15 +127,15 @@
     <div class="wrap register">
       <div>
         <h2>Inscríbete y empieza a participar</h2>
-        <p>Tu cuenta es gratis. Solo pagas por los cupones que compres.</p>
+        <p>Tu cuenta es gratis. Solo pagas las Chances que recargues.</p>
         <ul class="perks">
-          <li>Revisa tus cupones y números en cualquier momento</li>
+          <li>Revisa tus Chances y opciones en cualquier momento</li>
           <li>Recibe aviso por WhatsApp si ganas</li>
           <li>Sorteos transmitidos en vivo</li>
         </ul>
       </div>
       <div class="register-cta">
-        <a href="crear-cuenta.html" class="btn btn-primary">Crear mi cuenta</a>
+        <a href="crear-cuenta.html" class="btn btn-primary" id="registro-cta">Crear mi cuenta</a>
       </div>
     </div>
   </section>
@@ -401,16 +146,16 @@
       <div class="section-head"><h2>Preguntas frecuentes</h2></div>
       <div class="faq">
         <details open>
-          <summary>¿Cuánto cuesta cada cupón?</summary>
-          <p>Cada cupón cuesta S/ 5. Puedes comprar la cantidad que quieras.</p>
+          <summary>¿Cuánto cuesta una Chance?</summary>
+          <p>1 Chance = S/ 1 = 1 opción de ganar. Recarga con los atajos de 5, 10, 15 o 20 Chances, o cualquier cantidad de 5 a 500, con Yape o tarjeta.</p>
         </details>
         <details>
-          <summary>¿Cómo se desbloquean los sorteos?</summary>
-          <p>Con 1 cupón entras al Sorteo Bronce, con 5 o más también al Plata y con 10 o más participas en los tres, incluido el Oro.</p>
+          <summary>¿Qué significa "Armando Rifa"?</summary>
+          <p>Cada rifa necesita juntar suficientes Chances para confirmarse. Mientras tanto, tus Chances quedan retenidas: no se gastan hasta que la rifa va.</p>
         </details>
         <details>
-          <summary>¿Más cupones aumentan mis probabilidades?</summary>
-          <p>Sí. Cada cupón es un número más dentro de cada sorteo al que tienes acceso.</p>
+          <summary>¿Y si la rifa no se arma?</summary>
+          <p>Tus Chances vuelven completas a tu billetera para que las uses en otra rifa.</p>
         </details>
         <details>
           <summary>¿Cómo sé si gané?</summary>
@@ -421,74 +166,8 @@
   </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <span>© 2026 DaleChance · Perú</span>
-    <span>Términos · Privacidad · Contacto</span>
-  </div>
-</footer>
+<footer data-layout="footer"></footer>
 
-<script>
-  const PRICE = 5;
-  const draws = [...document.querySelectorAll('.draw')];
-  const qtyInput = document.getElementById('qty');
-  const packs = [...document.querySelectorAll('.pack')];
-  const list = document.getElementById('unlock-list');
-
-  function update() {
-    let q = Math.max(1, Math.min(500, parseInt(qtyInput.value) || 1));
-    qtyInput.value = q;
-    document.getElementById('sum-qty').textContent = q;
-    document.getElementById('sum-total').textContent = 'S/ ' + (q * PRICE).toFixed(2);
-    packs.forEach(p => p.classList.toggle('active', +p.dataset.qty === q));
-
-    list.innerHTML = '';
-    draws.forEach(d => {
-      const min = +d.dataset.min;
-      const on = q >= min;
-      d.classList.toggle('unlocked', on);
-      d.classList.toggle('locked', !on);
-      d.querySelector('.badge').textContent = on ? 'Participas' : 'Bloqueado';
-
-      const li = document.createElement('li');
-      li.className = on ? 'on' : 'off';
-      const name = d.querySelector('h3').textContent;
-      li.innerHTML = `<span class="ic">${on ? '✓' : '🔒'}</span>` +
-        (on ? `${name}` : `${name} — te faltan ${min - q} cupón${min - q > 1 ? 'es' : ''}`);
-      list.appendChild(li);
-    });
-  }
-
-  packs.forEach(p => p.addEventListener('click', () => { qtyInput.value = p.dataset.qty; update(); }));
-  document.getElementById('minus').onclick = () => { qtyInput.value = +qtyInput.value - 1; update(); };
-  document.getElementById('plus').onclick = () => { qtyInput.value = +qtyInput.value + 1; update(); };
-  qtyInput.addEventListener('input', update);
-  update();
-
-  // Cuenta regresiva al próximo domingo 8 p.m.
-  const target = new Date();
-  target.setDate(target.getDate() + ((7 - target.getDay()) % 7 || 7));
-  target.setHours(20, 0, 0, 0);
-  const pad = n => String(n).padStart(2, '0');
-  function tick() {
-    let s = Math.max(0, Math.floor((target - new Date()) / 1000));
-    document.getElementById('cd-d').textContent = pad(Math.floor(s / 86400)); s %= 86400;
-    document.getElementById('cd-h').textContent = pad(Math.floor(s / 3600)); s %= 3600;
-    document.getElementById('cd-m').textContent = pad(Math.floor(s / 60));
-    document.getElementById('cd-s').textContent = pad(s % 60);
-  }
-  tick(); setInterval(tick, 1000);
-
-  // Mini pop-up del botón "Participar"
-  const joinBtn = document.getElementById('join-btn');
-  const joinMenu = document.getElementById('join-menu');
-  function setJoin(open) {
-    joinMenu.hidden = !open;
-    joinBtn.setAttribute('aria-expanded', open);
-  }
-  joinBtn.addEventListener('click', e => { e.stopPropagation(); setJoin(joinMenu.hidden); });
-  document.addEventListener('click', e => { if (!joinMenu.contains(e.target)) setJoin(false); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') setJoin(false); });
-</script>
+<script type="module" src="assets/js/paginas/inicio.js"></script>
 </body>
 </html>

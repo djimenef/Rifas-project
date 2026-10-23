@@ -1,0 +1,12 @@
+/* Catálogo interno de componentes (desarrollo): estilos propios. Todo sale de los tokens. */
+main { padding: var(--sp-56) 0; }
+h1 { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-8); }
+.intro { color: var(--muted); margin: 0 0 var(--sp-40); }
+.bloque { margin-bottom: var(--sp-48); }
+.bloque > h2 { font-size: var(--fs-2xl); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-6); }
+.bloque > p { color: var(--muted); margin: 0 0 var(--sp-18); font-size: var(--fs-body-sm); }
+.fila { display: flex; flex-wrap: wrap; gap: var(--sp-12); align-items: center; }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-20); }
+.barras { display: grid; gap: var(--sp-14); max-width: 520px; }
+.muestra-form { display: grid; gap: var(--sp-14); max-width: 560px; }
+code { font-size: var(--fs-label); color: var(--muted); }
