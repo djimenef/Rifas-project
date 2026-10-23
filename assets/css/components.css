@@ -146,6 +146,13 @@ select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(-
   background: var(--surface-2); color: var(--text); font: inherit; font-size: var(--fs-2xl); cursor: pointer;
 }
 .modal-acciones { display: flex; gap: var(--sp-12); justify-content: flex-end; flex-wrap: wrap; margin-top: var(--sp-24); }
+.modal-cuerpo { display: grid; gap: var(--sp-14); }
+.modal-cuerpo .modal-acciones { margin-top: var(--sp-10); }
+.modal-rifa, .modal-texto, .modal-saldo, .modal-quedan, .modal-nota { margin: 0; }
+.modal-texto, .modal-quedan, .modal-nota { color: var(--muted); }
+.modal-nota { font-size: var(--fs-small); }
+.modal-cantidad { display: grid; gap: var(--sp-8); font-size: var(--fs-label); font-weight: var(--fw-semibold); }
+.modal-recargar { margin-top: var(--sp-8); }
 
 /* --- Pestañas --- */
 .tabs {
