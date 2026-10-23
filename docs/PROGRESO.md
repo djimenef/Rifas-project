@@ -7,10 +7,10 @@
 
 | | |
 |---|---|
-| **Paso actual** | Pasos 0 a 3 terminados y fusionados en `main` (PR #4). **Siguiente: Paso 4 (pantallas P1)**, todavía no empezado. |
+| **Paso actual** | **Paso 4 (pantallas P1) terminado** en `feature/paso4-pantallas-p1`, pendiente de Pull Request hacia `main`. Siguiente: Paso 5 (pantallas P2). |
 | **Responsable del Paso 4** | **David** |
 | **Rama del Paso 4** | `feature/paso4-pantallas-p1` (creada desde `main` actualizado, ya publicada en GitHub) |
-| **Revisión** | Al terminar el Paso 4, David abre un Pull Request hacia `main` y lo revisa el otro integrante del equipo. |
+| **Revisión** | David abre el Pull Request hacia `main` y lo revisa el otro integrante del equipo. |
 | **Última actualización** | 2026-10-23 |
 
 > **Excepción temporal (23/10/2026):** el PR #4 (Fase 0, Pasos 0–3) se fusionó en `main` **sin la revisión del compañero**, por acuerdo del equipo. David puede revisar la Fase 0 directamente en `main`. A partir del Paso 4 vuelve la regla normal: todo PR lo revisa la otra persona.
@@ -34,19 +34,53 @@
 | Ajustes | Chances, nombres de estados, precio referencial y recarga libre | `66f0cac` |
 | Docs | Flujo de equipo, esta bitácora, diagramas y propuesta | `2f6c9dd` |
 | Merge | PR #4 "Fase 0: especificación, base de diseño, dominio, estructura y navegación (Pasos 0–3)" fusionado en `main` | `896d494` |
-| Docs | Traspaso del Paso 4 a David | el commit que agregó esta fila |
+| Docs | Traspaso del Paso 4 a David | `dfa1a81` |
+| 4 | Listado de rifas con búsqueda y filtros; tarjeta de rifa compartida (`components/tarjeta-rifa.js`) | `5971e26` |
+| 4 | Detalle de rifa por estado y modal Poner Chances / Comprar opciones | `051f309` |
+| 4 | Cómo funciona y enlace del header | `b1c8f72` |
+| 4 | Verificar cuenta | `9764a37` |
+| 4 | Mi billetera e historial | `06aa93e` |
+| 4 | Recargar Chances | `14a28c3` |
+| 4 | Mis rifas | `2f92ec3` |
+| 4 | Admin: Rifas (listado, detalle, nueva) y Cola de revisión; arreglo de margen lateral de `.pagina` | `6c7d725` |
+| 4 | Cierre del Paso 4: esta bitácora | el commit que agregó esta fila |
 
-Verificación al cierre: **50/50 pruebas** en `dev/pruebas/` y 12/12 flujos de navegación revisados en Chrome.
+Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos revisados en Chrome a 1280 px y 360 px (visitante → login → regresa con el modal abierto → poner Chances; saldo insuficiente → recargar → volver; recarga con éxito y rechazo; verificar con código incorrecto y correcto; admin: aporte simulado → rifa confirmada → cerrar → aprobar y programar; crear borrador).
+
+### Paso 4: qué se construyó
+
+| Pantalla | Ruta | Estados |
+|----------|------|---------|
+| Listado de rifas | `/rifas/?q=&estado=&categoria=` | Con resultados · vacío · sin resultados con filtros · cargando · error. Nunca muestra rifas solo por enlace. |
+| Detalle de rifa | `/r/?slug=` | Una variante por estado · visitante (lleva a login/registro y vuelve con `?accion=poner\|comprar`) · participante con sus Chances, opciones y retiro · admin (enlace al panel) · compartir · transparencia (hash, semilla, ganador) · seguimiento del premio · no encontrada |
+| Modal Poner Chances / Comprar opciones | dentro del detalle | Selector · saldo insuficiente con Recargar (vuelve al modal) · máximo por persona alcanzado · confirmación con saldo antes y después · éxito (con aviso si la rifa se armó) · error. También modal de retiro. |
+| Cómo funciona | `/como-funciona` | Seis pasos y casos (no se arma, cancelada, comunidad, lo que no mostramos) |
+| Verificar cuenta | `/verificar/?volver=` | Ingresar código · incorrecto · reenviar (espera de 30 s) · verificada · ya verificada |
+| Mi billetera | `/billetera` | Disponible, retenidas y en qué rifas · sin retenidas · sin movimientos |
+| Mi historial | `/billetera/historial/?tipo=&rifa=` | Movimientos con rifa y n.º de operación · filtro por tipo y rifa · vacío |
+| Recargar | `/billetera/recargar/?cantidad=&volver=` | Atajos y monto libre 5–500 con aviso · medio de pago simulado · procesando · éxito · rechazado |
+| Mis rifas | `/mis-rifas/?pestana=` | Pestañas Armando · Abiertas · Finalizadas con contador · vacío por pestaña y general |
+| Admin · Rifas | `/admin/rifas/?q=&estado=` y `?codigo=` | Tabla con filtros y acciones por fila · detalle con datos internos, configuración, link, fechas e historial · acciones por estado |
+| Admin · Nueva rifa | `/admin/rifas/nueva` | Formulario con configuración por defecto (§7.9) y meta calculada · errores por campo |
+| Admin · Cola de revisión | `/admin/revision` | Rifas cerradas o en revisión · aprobar y programar · cancelar con motivo · vacía |
+
+**Decisiones del Paso 4**
+- Al volver del login o de recargar, el detalle abre el modal con `?accion=poner` o `?accion=comprar` (luego se quita de la URL).
+- El selector del modal permite pasar del saldo para mostrar "saldo insuficiente"; si lo que limita es el máximo por persona o el tope, el selector no deja pasarlo.
+- Los estilos de la tarjeta de rifa, los atajos de recarga y el resumen pasaron de `inicio.css` a `components.css` sin cambios (Inicio se ve igual).
+- Las acciones del panel que simulan procesos automáticos (aporte, vencer ventana, cerrar) se marcan con "Demo".
+- Recargar tiene una casilla "Simular pago rechazado (solo demo)" para mostrar el estado rechazado.
 
 ## Sigue
 
-1. **Paso 4 — Pantallas P1** (ver `PROMPT-FASE0.md`), a cargo de **David** en `feature/paso4-pantallas-p1`: listado de rifas, detalle por estado, modal Poner Chances / Comprar opciones, Cómo funciona, Verificar cuenta, Billetera, Historial, Recargar, Mis rifas y Admin (Rifas y Cola de revisión).
-2. Al terminar: `docs/PROGRESO.md` actualizado en el mismo commit, `dev/pruebas/` en verde, push y **Pull Request hacia `main`** con la plantilla. Lo revisa el otro integrante del equipo.
+1. **Pull Request del Paso 4** hacia `main` con la plantilla; lo revisa el otro integrante del equipo.
+2. **Paso 5 — Pantallas P2** (ver `PROMPT-FASE0.md`) en una rama nueva `feature/paso5-pantallas-p2` creada desde `main` actualizado.
 
-### Pendientes anotados para el Paso 4
-- **Header de Inicio:** hoy "Cómo funciona" y "Preguntas" bajan a `#como-funciona` y `#faq` de la misma página porque sus páginas están en construcción. Cuando se construyan `/como-funciona` y `/preguntas-frecuentes`, cambiarlo en `assets/js/components/header.js` (buscar `PENDIENTE`).
-- **Recargar (`/billetera/recargar`):** atajos 5/10/15/20 + monto libre de 5 a 500 con el mismo comportamiento que Inicio. Leer `?cantidad=` (lo manda Inicio) y usar `billeteraService.opcionesRecarga()`.
-- **Verificar (`/verificar`):** el registro ya llega aquí con `?volver=`; el código de demo es `123456`.
+### Pendientes anotados para el Paso 5
+- **Header de Inicio:** "Preguntas" todavía baja a `#faq` de la misma página porque `/preguntas-frecuentes` está en construcción. Al construirla, cambiarlo en `assets/js/components/header.js` (buscar `PENDIENTE`). "Cómo funciona" ya va a su página.
+- **Enlaces que ya apuntan a pantallas P2:** "Ver mis tickets" (`/mis-rifas/tickets/?codigo=`), "Ejecutar sorteo" (`/admin/sorteo/?codigo=`) y "Registrar compra y entrega" (`/admin/entrega/?codigo=`) muestran "En construcción" hasta el Paso 5.
+- **Header con sesión a 360 px:** con barra de desplazamiento visible, el header de participante desborda unos 5 px (saldo + botón de usuario). En móviles reales la barra no ocupa espacio; revisar si hace falta ajustarlo.
+- **Toast detrás del modal:** el aviso "¡Listo!" queda detrás del fondo del modal abierto; el modal ya muestra el éxito, así que no se pierde información.
 
 ## Traspaso: cómo arrancar el Paso 4 (David)
 
