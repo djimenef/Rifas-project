@@ -41,10 +41,10 @@ function menuUsuario(usuario, enPanel = false) {
 }
 
 function headerPublico(usuario, idRuta) {
-  // PENDIENTE (docs/PROGRESO.md): en Inicio, "Cómo funciona" y "Preguntas" bajan a su sección mientras
-  // sus páginas estén en construcción. Al construirlas en el Paso 4, usar url('comoFunciona') y url('preguntas') también aquí.
+  // PENDIENTE (docs/PROGRESO.md): en Inicio, "Preguntas" baja a su sección mientras /preguntas-frecuentes
+  // esté en construcción (Paso 5). Al construirla, usar url('preguntas') también aquí.
   const enInicio = idRuta === 'inicio';
-  const comoFunciona = enInicio ? '#como-funciona' : url('comoFunciona');
+  const comoFunciona = url('comoFunciona');
   const preguntas = enInicio ? '#faq' : url('preguntas');
   let enlaces;
   if (!usuario) {
