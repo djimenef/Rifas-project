@@ -35,6 +35,69 @@
 .admin-contenido .pagina { padding: 0; }
 .admin-contenido .wrap { max-width: none; padding: 0; }
 
+/* --- Encabezado de cada sección del panel --- */
+.admin-titulo { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-16); flex-wrap: wrap; margin-bottom: var(--sp-24); }
+.admin-titulo .pagina-titulo { margin: 0; }
+.admin-titulo .pagina-sub { margin: var(--sp-6) 0 0; }
+.admin-volver { display: inline-block; margin-bottom: var(--sp-16); }
+.admin-filtros { grid-template-columns: 2fr 1fr; }
+
+/* --- Tablas del panel: filtros, acciones por fila; en móvil se desplazan en horizontal --- */
+.tabla-scroll { position: relative; overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.tabla { width: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+.tabla caption { text-align: left; padding: var(--sp-14) var(--sp-16) 0; color: var(--muted); font-size: var(--fs-sm); }
+.tabla th, .tabla td { padding: var(--sp-12) var(--sp-16); text-align: left; vertical-align: middle; border-bottom: 1px solid var(--border); }
+.tabla th {
+  color: var(--muted); font-size: var(--fs-xs); font-weight: var(--fw-semibold); text-transform: uppercase;
+  letter-spacing: var(--ls-wide); white-space: nowrap;
+}
+.tabla tbody tr:last-child td { border-bottom: 0; }
+.tabla tbody tr:hover { background: color-mix(in srgb, var(--surface-2) 60%, transparent); }
+.tabla .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tabla-rifa { display: flex; gap: var(--sp-10); align-items: center; min-width: 200px; }
+.tabla-rifa span[aria-hidden] { font-size: var(--fs-xl); }
+.tabla-rifa a { color: var(--text); font-weight: var(--fw-semibold); text-decoration: none; }
+.tabla-rifa a:hover { text-decoration: underline; }
+.tabla-rifa a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.tabla-rifa small { display: block; color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+.tabla-acciones { display: flex; gap: var(--sp-6); justify-content: flex-end; flex-wrap: wrap; }
+.tabla .btn-sm { padding: var(--sp-6) var(--sp-12); font-size: var(--fs-label); box-shadow: none; white-space: nowrap; }
+.tabla .barra { min-width: 120px; }
+
+/* --- Vista de detalle --- */
+.admin-detalle { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-20); }
+.admin-detalle .card { display: grid; gap: var(--sp-12); align-content: start; padding: var(--sp-24); }
+.admin-detalle h2 { margin: 0; font-size: var(--fs-lg); }
+.admin-detalle .ancho { grid-column: 1 / -1; }
+.admin-acciones { display: flex; gap: var(--sp-10); flex-wrap: wrap; }
+.admin-acciones p { margin: 0; color: var(--muted); }
+.admin-nota { margin: 0; color: var(--muted); font-size: var(--fs-sm); }
+.badge-demo { font-size: var(--fs-2xs); color: var(--muted); text-transform: uppercase; letter-spacing: var(--ls-caps); }
+
+/* --- Formularios del panel --- */
+.admin-form { display: grid; gap: var(--sp-20); max-width: 760px; }
+.admin-form .card { display: grid; gap: var(--sp-14); padding: var(--sp-24); }
+.admin-form h2 { margin: 0; font-size: var(--fs-lg); }
+.admin-form .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-12); align-items: start; }
+.admin-form .check { display: flex; gap: var(--sp-8); align-items: center; font-weight: var(--fw-regular); }
+.admin-form-acciones { display: flex; gap: var(--sp-12); flex-wrap: wrap; }
+
+/* --- Cola de revisión --- */
+.cola { display: grid; gap: var(--sp-16); }
+.cola-item { display: grid; grid-template-columns: 1fr auto; gap: var(--sp-16) var(--sp-24); padding: var(--sp-24); }
+.cola-item h2 { margin: 0; font-size: var(--fs-lg); display: flex; gap: var(--sp-10); align-items: center; flex-wrap: wrap; }
+.cola-checklist { margin: 0; padding-left: var(--sp-20); color: var(--muted); font-size: var(--fs-small); display: grid; gap: var(--sp-4); }
+.cola-item .admin-acciones { flex-direction: column; align-items: stretch; justify-content: center; }
+
+@media (max-width: 900px) {
+  .admin-detalle { grid-template-columns: 1fr; }
+  .cola-item { grid-template-columns: 1fr; }
+  .cola-item .admin-acciones { flex-direction: row; }
+}
+@media (max-width: 520px) {
+  .admin-filtros, .admin-form .tres { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 900px) {
   .admin-cuerpo { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
   .admin-menu {

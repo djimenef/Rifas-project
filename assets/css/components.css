@@ -133,6 +133,9 @@ select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(-
 .datos dd { margin: 0; font-weight: var(--fw-semibold); text-align: right; overflow-wrap: anywhere; }
 .texto-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: var(--fs-sm); overflow-wrap: anywhere; }
 
+/* --- Texto solo para lectores de pantalla --- */
+.sr-solo { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
 /* --- Enlace de texto --- */
 .enlace { color: var(--accent); font-weight: var(--fw-semibold); text-decoration: none; }
 .enlace:hover { text-decoration: underline; }
@@ -170,6 +173,7 @@ button.enlace:disabled { color: var(--lock); cursor: not-allowed; text-decoratio
 .modal-nota { font-size: var(--fs-small); }
 .modal-cantidad { display: grid; gap: var(--sp-8); font-size: var(--fs-label); font-weight: var(--fw-semibold); }
 .modal-recargar { margin-top: var(--sp-8); }
+.modal-cuerpo input:not([type="checkbox"]):not([type="radio"]):not([type="number"]) { width: 100%; min-width: 0; }
 
 /* --- Pestañas --- */
 .tabs {

@@ -82,7 +82,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: var(--sp-16);
 .footer-links a:hover { color: var(--text); }
 
 /* Contenedor y título de las pantallas internas */
-.pagina { padding: var(--sp-56) 0; }
+.pagina { padding-top: var(--sp-56); padding-bottom: var(--sp-56); }   /* solo vertical: el lateral lo da .wrap */
 .pagina-titulo { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-8); }
 .pagina-sub { color: var(--muted); margin: 0 0 var(--sp-24); }
 
@@ -96,5 +96,5 @@ footer .wrap { display: flex; justify-content: space-between; gap: var(--sp-16);
   .solo-escritorio { display: none; }
   .usuario-apodo { display: none; }
   .usuario-icono { display: inline; }
-  .pagina { padding: var(--sp-40) 0; }
+  .pagina { padding-top: var(--sp-40); padding-bottom: var(--sp-40); }
 }

@@ -16,10 +16,57 @@
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <div class="wrap pagina">
+    <a class="enlace admin-volver" id="volver" href="../">← Todas las rifas</a>
+    <div class="admin-titulo">
+      <div>
+        <h1 class="pagina-titulo">Nueva rifa</h1>
+        <p class="pagina-sub">Nace como borrador: revísala y publícala cuando esté lista.</p>
+      </div>
+    </div>
+
+    <form class="admin-form" id="form" novalidate>
+      <section class="card" aria-labelledby="producto-titulo">
+        <h2 id="producto-titulo">Producto</h2>
+        <label>Link del producto<input type="url" name="link" required placeholder="https://www.tienda.pe/producto/…"></label>
+        <label>Nombre del producto<input type="text" name="nombre" required maxlength="80" placeholder="PlayStation 5 Slim">
+          <span class="field-hint">Es el título visible de la rifa. Quita códigos, emojis y palabras de marketing.</span></label>
+        <div class="tres">
+          <label>Precio según la tienda (S/)<input type="text" name="precioTienda" inputmode="decimal" required placeholder="2200"></label>
+          <label>Categoría<select name="categoriaId" required><option value="">Elige una categoría</option></select></label>
+          <label>Ícono (Fase 0)<input type="text" name="emoji" maxlength="4" placeholder="🎁"></label>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="config-titulo">
+        <h2 id="config-titulo">Configuración</h2>
+        <p class="admin-nota">Valores por defecto de README §7.9. Solo los administradores pueden cambiarlos.</p>
+        <div class="tres">
+          <label>Margen (%)<input type="text" name="margenPct" inputmode="numeric" required></label>
+          <label>Ventana de armado (días)<input type="text" name="ventanaArmadoDias" inputmode="numeric" required></label>
+          <label>Tiempo abierta (días)<input type="text" name="tiempoAbiertaDias" inputmode="numeric" required></label>
+        </div>
+        <div class="tres">
+          <label>Máximo por persona (% de la meta)<input type="text" name="maxPorParticipantePct" inputmode="numeric" required></label>
+          <label>Tope de opciones<input type="text" name="topeTickets" inputmode="numeric" placeholder="Sin tope"></label>
+          <label>Mínimo por persona<input type="text" name="minPorParticipante" inputmode="numeric" required></label>
+        </div>
+        <label class="check"><input type="checkbox" name="permiteRetiro"> Permitir retirar Chances mientras se arma</label>
+        <p class="aviso aviso-oro" id="meta" role="status" aria-live="polite"><span class="aviso-icono" aria-hidden="true">🎯</span><span>Ingresa el precio para calcular la meta.</span></p>
+      </section>
+
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+      <div class="admin-form-acciones">
+        <button type="submit" class="btn btn-primary" id="enviar">Crear borrador</button>
+        <a class="btn btn-ghost" id="cancelar" href="../">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../../../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../../../assets/js/paginas/admin-rifas-nueva.js"></script>
 </body>
 </html>
