@@ -31,3 +31,23 @@ export function badgeEstado(estado, datos = {}) {
 }
 
 export const ESTADOS_CON_BADGE = Object.keys(ESTADOS);
+
+/** Nombre corto de cada estado, sin emoji ni datos variables (filtros y tablas). */
+export const NOMBRE_ESTADO = Object.freeze({
+  BORRADOR: 'Borrador',
+  REVISION_LINK: 'Link en revisión',
+  CAPTANDO: 'Calentando Rifa',
+  PROPUESTA: 'En moderación',
+  ARMANDO: 'Armando Rifa',
+  ABIERTA: '¡Va! Rifa confirmada',
+  CERRADA: 'Cerrada',
+  EN_REVISION: 'En revisión',
+  PROGRAMADA: 'Sorteo programado',
+  SORTEADA: 'Sorteada',
+  COMPRANDO: 'Comprando el premio',
+  EN_CAMINO: 'En camino',
+  ENTREGADA: 'Entregada',
+  NO_SE_ARMO: 'No se armó la Rifa',
+  CANCELADA: 'Cancelada',
+  DESCARTADA: 'Descartada',
+});
