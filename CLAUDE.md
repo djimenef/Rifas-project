@@ -50,6 +50,17 @@ Stack: HTML, CSS y JavaScript estáticos con módulos ES, sin dependencias. Los 
 Catálogo de componentes: http://localhost:8000/dev/componentes/
 Pruebas de reglas de negocio (servicios mock): http://localhost:8000/dev/pruebas/ — al terminar restauran los datos de ejemplo.
 
+## Panel de administración (`/admin/*`)
+
+Regla desde el Paso 3 en adelante:
+
+- **Layout propio de panel de gestión**, distinto al del sitio público.
+- **Menú lateral fijo** con estas secciones, en este orden: Dashboard (`/admin`) · Rifas (`/admin/rifas`) · Revisión (`/admin/revision`) · Sorteos (`/admin/sorteos`) · Compras y entregas (`/admin/entregas`) · Productos (`/admin/productos`) · Categorías (`/admin/categorias`) · Usuarios (`/admin/usuarios`) · Propuestas (`/admin/propuestas`). La sección actual se marca como activa.
+- **Header del panel:** logo, la etiqueta "Modo administrador", un enlace "Ver sitio" que vuelve a la web pública (`/`) y el menú de usuario (Cerrar sesión).
+- **Listados en tablas** con filtros por estado y búsqueda, **acciones por fila** y **vista de detalle**.
+- **Siempre con la misma paleta, tipografía, radios y botones** de las pantallas existentes, todo desde los tokens. No se inventan colores.
+- **En móvil**, el menú lateral se convierte en un **menú desplegable**.
+
 ## Organización de carpetas
 
 ```

@@ -80,7 +80,7 @@ En cualquier caso, respeta la **separación por capas** de `README.md` §3: pant
 
 1. Implementa el **mapa de rutas** completo (tabla de abajo). Las pantallas que aún no existan muestran un marcador "En construcción" con el nombre de la pantalla, para que **ningún enlace quede roto**.
 2. **Header** con dos variantes:
-   - Sin sesión: logo → `/`, Rifas, Cómo funciona, botones Iniciar sesión / Crear cuenta.
+   - Sin sesión: logo → `/`, Rifas, Cómo funciona y el menú **"Participar"** (Iniciar sesión / Crear cuenta), idéntico al actual.
    - Con sesión: logo, Rifas, Mis rifas, **saldo visible** (disponible) que lleva a `/billetera`, botón Recargar, menú de usuario (Perfil, Mi historial, Cerrar sesión). Si el usuario es admin, enlace a `/admin`.
 3. **Footer** con: Cómo funciona, Preguntas frecuentes, Términos, Privacidad, Reglamento, Libro de Reclamaciones.
 4. **Protección de rutas simulada:**
@@ -88,8 +88,15 @@ En cualquier caso, respeta la **separación por capas** de `README.md` §3: pant
    - Tras iniciar sesión o crear cuenta → regresa a `volver` (o a `/rifas` si no hay).
    - Rutas `/admin/*` con usuario no admin → página "No tienes acceso".
 5. **Panel de demo** (solo en Fase 0): un botón flotante discreto que permita cambiar entre *visitante / participante / admin* y forzar el estado de la pantalla actual (*cargando / vacío / error*). Así se revisan todos los estados sin tocar código.
-6. Conecta las 3 pantallas existentes al nuevo layout y rutas (login y registro deben respetar `volver`).
-7. Commit: `feat(navegacion): rutas, layout, sesión simulada y panel de demo`.
+6. Conecta las 3 pantallas existentes al nuevo layout y rutas (login y registro deben respetar `volver` y mantienen su header "← Volver al inicio").
+7. **Layout del panel de administración** para todas las rutas `/admin/*`:
+   - **Layout propio de panel de gestión**, distinto al del sitio público.
+   - **Menú lateral fijo** con estas secciones, en este orden: Dashboard (`/admin`) · Rifas (`/admin/rifas`) · Revisión (`/admin/revision`) · Sorteos (`/admin/sorteos`) · Compras y entregas (`/admin/entregas`) · Productos (`/admin/productos`) · Categorías (`/admin/categorias`) · Usuarios (`/admin/usuarios`) · Propuestas (`/admin/propuestas`). La sección actual se marca como activa.
+   - **Header del panel:** logo, la etiqueta "Modo administrador", un enlace "Ver sitio" que vuelve a la web pública (`/`) y el menú de usuario (Cerrar sesión).
+   - **Listados en tablas** con filtros por estado y búsqueda, **acciones por fila** y **vista de detalle**.
+   - **Siempre con la misma paleta, tipografía, radios y botones** de las pantallas existentes, todo desde los tokens. No se inventan colores.
+   - **En móvil**, el menú lateral se convierte en un **menú desplegable**.
+8. Commit: `feat(navegacion): rutas, layout, sesión simulada y panel de demo`.
 
 ---
 
@@ -106,7 +113,7 @@ Construye cada pantalla con **todos sus estados** (columna "Estados" de `README.
 7. Mi historial de puntos `/billetera/historial`.
 8. Recargar `/billetera/recargar` (paquetes 5/10/15/20, medio de pago simulado, procesando, éxito, rechazado).
 9. Mis rifas `/mis-rifas` (pestañas Armando · Abiertas · Finalizadas).
-10. Admin: Rifas `/admin/rifas` y Cola de revisión `/admin/revision`.
+10. Admin: Rifas `/admin/rifas` y Cola de revisión `/admin/revision`, dentro del layout del panel de administración (Paso 3, punto 7).
 
 Al terminar el Paso 4, el **flujo completo del Objetivo** debe poder recorrerse con clics.
 
@@ -114,7 +121,7 @@ Al terminar el Paso 4, el **flujo completo del Objetivo** debe poder recorrerse 
 
 ## Paso 5 — Pantallas P2
 
-Ganadores, Preguntas frecuentes, Legales, Libro de Reclamaciones, Recuperar contraseña, Mis tickets en una rifa, Perfil, Admin: Dashboard, Productos, Ejecutar sorteo, Compra y entrega, Categorías, Usuarios.
+Ganadores, Preguntas frecuentes, Legales, Libro de Reclamaciones, Recuperar contraseña, Mis tickets en una rifa, Perfil, Admin: Dashboard, Productos, Sorteos (listado y Ejecutar sorteo), Compras y entregas (listado y registro de compra, envío y entrega según README §7.12), Categorías, Usuarios.
 
 ---
 
@@ -154,8 +161,8 @@ Commit: `docs(semantica): separar semántica funcional por dominio`.
 | `/preguntas-frecuentes` | FAQ | Público |
 | `/legal/terminos` · `/legal/privacidad` · `/legal/reglamento` | Legales | Público |
 | `/libro-de-reclamaciones` | Libro de Reclamaciones | Público |
-| `/login` | Iniciar sesión (existente) | Solo sin sesión |
-| `/registro` | Crear cuenta (existente) | Solo sin sesión |
+| `/login` → `iniciar-sesion.html` | Iniciar sesión (existente, archivo suelto por decisión del proyecto) | Solo sin sesión |
+| `/registro` → `crear-cuenta.html` | Crear cuenta (existente, archivo suelto por decisión del proyecto) | Solo sin sesión |
 | `/verificar` | Verificar correo/celular | Recién registrado |
 | `/recuperar` | Recuperar contraseña | Solo sin sesión |
 | `/billetera` | Mi billetera | Participante |
@@ -169,7 +176,9 @@ Commit: `docs(semantica): separar semántica funcional por dominio`.
 | `/admin` | Dashboard | Admin |
 | `/admin/rifas` · `/admin/rifas/nueva` | Rifas | Admin |
 | `/admin/revision` | Cola de revisión | Admin |
+| `/admin/sorteos` | Sorteos (programados y realizados) | Admin |
 | `/admin/rifas/[codigo]/sorteo` | Ejecutar sorteo | Admin |
+| `/admin/entregas` | Compras y entregas (sorteadas, comprando, en camino) | Admin |
 | `/admin/rifas/[codigo]/entrega` | Compra y entrega | Admin |
 | `/admin/productos` | Productos | Admin |
 | `/admin/categorias` | Categorías | Admin |
