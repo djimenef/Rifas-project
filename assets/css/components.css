@@ -52,6 +52,21 @@ input[aria-invalid="true"] { border-color: var(--error); }
 }
 .qty-unidad { color: var(--muted); }
 
+/* --- Atajos de recarga y resumen (extraídos tal cual de la calculadora de inicio) --- */
+.packs { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-10); margin: var(--sp-18) 0; }
+.pack {
+  border: 2px solid var(--border); background: var(--bg); border-radius: var(--radius-14); padding: var(--sp-14) var(--sp-6);
+  text-align: center; cursor: pointer; font: inherit; color: var(--text); transition: border-color .15s;
+}
+.pack b { display: block; font-size: var(--fs-2xl); }
+.pack span { font-size: var(--fs-sm); color: var(--muted); }
+.pack.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); }
+.qty-aviso { margin: var(--sp-8) 0 0; }
+.summary { background: var(--surface-2); border-radius: var(--radius-20); padding: var(--sp-28); }
+.summary .row { display: flex; justify-content: space-between; padding: var(--sp-8) 0; color: var(--muted); }
+.summary .total { border-top: 1px dashed var(--border); margin-top: var(--sp-8); padding-top: var(--sp-16); color: var(--text); font-size: var(--fs-md); }
+.summary .total b { font-size: var(--fs-5xl); color: var(--accent); }
+
 /* --- Tarjeta genérica --- */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-28); }
 
@@ -255,4 +270,5 @@ button.enlace:disabled { color: var(--lock); cursor: not-allowed; text-decoratio
   .two { grid-template-columns: 1fr; }
   .modal { padding: var(--sp-22); }
   .filtros { grid-template-columns: 1fr; }
+  .packs { grid-template-columns: repeat(2, 1fr); }
 }
