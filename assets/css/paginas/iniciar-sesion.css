@@ -30,8 +30,6 @@ input[type="text"], input[type="password"] { width: 100%; }
 }
 .google:hover { background: var(--google-bg-hover); box-shadow: var(--google-shadow-hover); }
 .google svg { width: var(--sp-18); height: var(--sp-18); flex: none; }
-#google-official { display: flex; justify-content: center; min-height: var(--size-control); }
-#google-official:empty { display: none; }
 
 @media (max-width: 520px) {
   .card { padding: var(--sp-22); }

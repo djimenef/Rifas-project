@@ -12,17 +12,15 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/paginas/iniciar-sesion.css">
 </head>
-<body>
+<body data-ruta="login">
 
-<header data-layout="header" data-variante="volver"></header>
+<header data-layout="header"></header>
 
 <main>
   <div class="wrap login">
     <h1>Inicia sesión</h1>
-    <p>Revisa tus cupones y participa en los sorteos.</p>
+    <p>Revisa tus puntos y participa en las rifas.</p>
     <div class="card">
-      <!-- Botón oficial de Google (se muestra cuando hay un Client ID configurado) -->
-      <div id="google-official"></div>
       <button type="button" class="google" id="google-btn">
         <svg viewBox="0 0 48 48" aria-hidden="true">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -45,13 +43,13 @@
         </label>
         <div class="row">
           <label class="check"><input type="checkbox"> Recordarme</label>
-          <a href="#">¿Olvidaste tu contraseña?</a>
+          <a href="recuperar/" id="enlace-recuperar">¿Olvidaste tu contraseña?</a>
         </div>
-        <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+        <button class="btn btn-primary" type="submit" id="enviar">Iniciar sesión</button>
       </form>
       <p class="msg" id="msg" role="status"></p>
     </div>
-    <p class="alt">¿No tienes cuenta? <a href="crear-cuenta.html">Crear cuenta</a></p>
+    <p class="alt">¿No tienes cuenta? <a href="crear-cuenta.html" id="enlace-registro">Crear cuenta</a></p>
   </div>
 </main>
 

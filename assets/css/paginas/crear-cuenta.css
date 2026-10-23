@@ -17,4 +17,3 @@ main { padding: var(--sp-56) 0; }
 .notice p { margin: 0; color: var(--text); font-size: var(--fs-body-sm); }
 form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-28); display: grid; gap: var(--sp-14); }
 .check { display: flex; gap: var(--sp-10); align-items: flex-start; font-weight: var(--fw-regular); color: var(--muted); }
-.form-ok { display: none; color: var(--ok); font-weight: var(--fw-semibold); text-align: center; }

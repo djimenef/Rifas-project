@@ -12,9 +12,9 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/paginas/crear-cuenta.css">
 </head>
-<body>
+<body data-ruta="registro">
 
-<header data-layout="header" data-variante="volver"></header>
+<header data-layout="header"></header>
 
 <main>
   <div class="wrap signup">
@@ -26,22 +26,31 @@
       </div>
     </div>
     <h1>Crea tu cuenta</h1>
-    <p>Completa tus datos para empezar a participar en los sorteos.</p>
-    <form id="form">
+    <p>Completa tus datos para empezar a participar en las rifas.</p>
+    <form id="form" novalidate>
       <div class="two">
-        <label>Nombres<input type="text" required placeholder="Juan"></label>
-        <label>Apellidos<input type="text" required placeholder="Pérez"></label>
+        <label>Nombres<input type="text" name="nombres" autocomplete="given-name" required placeholder="Juan"></label>
+        <label>Apellidos<input type="text" name="apellidos" autocomplete="family-name" required placeholder="Pérez"></label>
       </div>
       <div class="two">
-        <label>DNI<input type="text" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required placeholder="12345678"></label>
-        <label>Celular<input type="tel" pattern="9[0-9]{8}" maxlength="9" required placeholder="987654321"></label>
+        <label>DNI<input type="text" name="dni" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required placeholder="12345678"></label>
+        <label>Celular<input type="tel" name="celular" autocomplete="tel-national" pattern="9[0-9]{8}" maxlength="9" required placeholder="987654321"></label>
       </div>
-      <label>Correo electrónico<input type="email" required placeholder="tucorreo@ejemplo.com"></label>
-      <label class="check"><input type="checkbox" required> Soy mayor de 18 años y acepto los términos y condiciones.</label>
-      <button class="btn btn-primary" type="submit">Crear mi cuenta</button>
-      <div class="form-ok" id="form-ok">¡Listo! Tu cuenta fue creada (demo).</div>
+      <div class="two">
+        <label>Fecha de nacimiento<input type="date" name="fechaNacimiento" autocomplete="bday" required></label>
+        <label>Apodo público<input type="text" name="apodo" autocomplete="nickname" maxlength="20" required placeholder="juan_p">
+          <span class="field-hint">Así te verán los demás, por ejemplo en la lista de ganadores.</span></label>
+      </div>
+      <label>Correo electrónico<input type="email" name="correo" autocomplete="email" required placeholder="tucorreo@ejemplo.com"></label>
+      <div class="two">
+        <label>Contraseña<input type="password" name="contrasena" autocomplete="new-password" minlength="6" required placeholder="Mínimo 6 caracteres"></label>
+        <label>Confirmar contraseña<input type="password" name="confirmacionContrasena" autocomplete="new-password" required placeholder="Repite tu contraseña"></label>
+      </div>
+      <label class="check"><input type="checkbox" name="aceptaTerminos" required> <span>Soy mayor de 18 años y acepto los <a href="legal/terminos/" target="_blank" rel="noopener">términos y condiciones</a>.</span></label>
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+      <button class="btn btn-primary" type="submit" id="enviar">Crear mi cuenta</button>
     </form>
-    <p class="alt">¿Ya tienes cuenta? <a href="iniciar-sesion.html">Iniciar sesión</a></p>
+    <p class="alt">¿Ya tienes cuenta? <a href="iniciar-sesion.html" id="enlace-login">Iniciar sesión</a></p>
   </div>
 </main>
 
