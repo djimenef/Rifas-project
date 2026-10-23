@@ -294,10 +294,17 @@
     esperar(r.estado === 'PROGRAMADA' && r.fechaSorteo, 'programar');
     r = await adminService.sortear(nueva.id);
     esperar(r.estado === 'SORTEADA' && r.sorteo.ticketGanador >= 1 && r.sorteo.ticketGanador <= 270 && r.ganadorApodo, 'sortear');
-    await esperarError(adminService.registrarCompra(nueva.id, ''), 'DATOS_INCOMPLETOS');
-    r = await adminService.registrarCompra(nueva.id, 'Boleta B001-1');
-    r = await adminService.registrarEnvio(nueva.id, 'Courier');
-    r = await adminService.registrarEntrega(nueva.id, 'Foto de entrega');
+    const ec = await esperarError(adminService.registrarCompra(nueva.id, { fecha: new Date().toISOString(), tienda: 'Tienda', esEquivalente: true }), 'VALIDACION');
+    esperar(['justificacion', 'montoPagado', 'numeroComprobante', 'archivoComprobante', 'aNombreDe'].every(k => ec.campos[k]), 'campos ' + Object.keys(ec.campos));
+    r = await adminService.registrarCompra(nueva.id, { fecha: new Date().toISOString(), tienda: 'Tienda', montoPagado: 200, numeroComprobante: 'B001-1', archivoComprobante: 'boleta.pdf', aNombreDe: { nombres: 'Ana', apellidos: 'Paz', dni: '41234567' } });
+    await esperarError(adminService.registrarEnvio(nueva.id, { modalidad: 'COURIER', fechaEstimada: new Date().toISOString() }), 'VALIDACION');
+    r = await adminService.registrarEnvio(nueva.id, { modalidad: 'COURIER', courier: 'Courier', codigoSeguimiento: 'X1', fechaEstimada: new Date().toISOString() });
+    const ee = await esperarError(adminService.registrarEntrega(nueva.id, { fecha: new Date().toISOString(), recibidoPor: 'Ana Paz', archivoEvidencia: 'foto.jpg' }), 'VALIDACION');
+    esperar(ee.campos.dniVerificado, 'debía exigir el DNI verificado');
+    r = await adminService.registrarEntrega(nueva.id, { fecha: new Date().toISOString(), recibidoPor: 'Ana Paz', dniVerificado: true, archivoEvidencia: 'foto.jpg' });
+    esperar(r.registros.compra.numeroComprobante === 'B001-1' && r.registros.entrega.dniVerificado, 'registros');
+    const pub = await rifasService.obtenerPorSlug(nueva.slug);
+    esperar(pub.entrega.compradoEl && pub.entrega.entregadoEl && !('registros' in pub) && !JSON.stringify(pub).includes('B001-1') && !JSON.stringify(pub).includes('41234567'), 'el público ve datos internos');
     esperar(r.estado === 'ENTREGADA' && r.historial.length >= 9, `${r.estado}, ${r.historial.length} cambios`);
     await esperarError(adminService.sortear(nueva.id), 'TRANSICION_INVALIDA');
   });
@@ -311,6 +318,8 @@
     await adminService.aprobarYProgramar(TV, new Date(Date.now() + 36e5).toISOString());
     const r = await adminService.sortear(TV, { ticketGanador: 2152 });
     esperar(r.ganadorApodo === 'lucia_q', r.ganadorApodo);
+    const c = await adminService.registrarCompra(TV, { fecha: new Date().toISOString(), tienda: 'Tienda', montoPagado: 1599, numeroComprobante: 'B001-9', archivoComprobante: 'b.pdf' });
+    esperar(c.registros.compra.aNombreDe.dni === '45871236', 'debía comprarse a nombre de la titular de la cuenta');
     esperar((await rifasService.ganadores()).some(g => g.id === TV), 'no figura en ganadores');
   });
   await prueba('Cancelar una rifa armándose: libera los puntos retenidos', async () => {

@@ -24,9 +24,17 @@
  *   Libera lo retenido y reembolsa lo consumido. Error: MOTIVO_OBLIGATORIO.
  * @property {(rifaId: string, opciones?: { ticketGanador?: number }) => Promise<RifaAdmin>} sortear
  *   `ticketGanador` existe solo en la Fase 0 para poder mostrar "Ganaste".
- * @property {(rifaId: string, comprobante: string) => Promise<RifaAdmin>} registrarCompra   SORTEADA → COMPRANDO.
- * @property {(rifaId: string, detalle: string) => Promise<RifaAdmin>} registrarEnvio   COMPRANDO → EN_CAMINO.
- * @property {(rifaId: string, evidencia: string) => Promise<RifaAdmin>} registrarEntrega   EN_CAMINO → ENTREGADA.
+ *
+ * Compra, envío y entrega: la compra se hace FUERA de la web; aquí solo se registra (README §7.12).
+ * Errores: VALIDACION con `campos` por cada dato que falte.
+ * @property {(rifaId: string, datos: { fecha: string, tienda: string, productoComprado?: string, esEquivalente?: boolean, justificacion?: string,
+ *   montoPagado: number, numeroComprobante: string, archivoComprobante: string,
+ *   aNombreDe?: import('../../domain/rifa.js').TitularPremio }) => Promise<RifaAdmin>} registrarCompra
+ *   SORTEADA → COMPRANDO. `aNombreDe` se toma de la cuenta ganadora; solo se ingresa si el ganador no tiene cuenta en los datos de ejemplo.
+ * @property {(rifaId: string, datos: { modalidad: 'RECOJO'|'COURIER', courier?: string, codigoSeguimiento?: string, fechaEstimada: string }) => Promise<RifaAdmin>} registrarEnvio
+ *   COMPRANDO → EN_CAMINO.
+ * @property {(rifaId: string, datos: { fecha: string, recibidoPor: string, dniVerificado: boolean, archivoEvidencia: string, observaciones?: string }) => Promise<RifaAdmin>} registrarEntrega
+ *   EN_CAMINO → ENTREGADA. Exige `dniVerificado: true` (invariante 11).
  * @property {(rifaId: string, decision: { accion: 'APROBAR'|'REEMPLAZAR'|'RECHAZAR', nuevoLink?: string, motivo?: string }) => Promise<RifaAdmin>} validarLink
  * @property {(rifaId: string, decision: { accion: 'APROBAR'|'RECHAZAR', margenPct?: number, motivo?: string }) => Promise<RifaAdmin>} moderarPropuesta
  * @property {() => Promise<RifaAdmin[]>} listarPropuestas   REVISION_LINK y PROPUESTA.

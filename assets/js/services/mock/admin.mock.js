@@ -7,7 +7,8 @@ import {
 } from './motor.js';
 import { codigoUnico, slugUnico } from './rifas.mock.js';
 import { ErrorDominio } from '../../domain/errores.js';
-import { ESTADOS_RIFA, ESTADOS_COMPROMISO, CONFIG_POR_DEFECTO, calcularMeta } from '../../domain/rifa.js';
+import { ESTADOS_RIFA, ESTADOS_COMPROMISO, CONFIG_POR_DEFECTO, MODALIDADES_ENVIO, calcularMeta } from '../../domain/rifa.js';
+import { esDniValido } from '../../domain/usuario.js';
 import { sha256 } from '../../lib/hash.js';
 import { nuevoId } from '../../lib/ids.js';
 
@@ -15,6 +16,25 @@ const exigirTexto = (valor, codigo = 'MOTIVO_OBLIGATORIO') => {
   const texto = String(valor ?? '').trim();
   if (!texto) throw new ErrorDominio(codigo);
   return texto;
+};
+
+const texto = valor => String(valor ?? '').trim();
+const fechaIso = valor => {
+  const f = new Date(valor);
+  return valor && !Number.isNaN(f.getTime()) ? f.toISOString() : null;
+};
+
+/** El premio se compra a nombre del ganador: sus datos salen de su cuenta (o los ingresa el admin si es un participante de relleno). */
+function titularDelPremio(db, rifa, ingresado, campos) {
+  const u = rifa.ganador?.usuarioId ? db.usuarios.find(x => x.id === rifa.ganador.usuarioId) : null;
+  if (u) return { nombres: u.nombres, apellidos: u.apellidos, dni: u.dni };
+  const t = { nombres: texto(ingresado?.nombres), apellidos: texto(ingresado?.apellidos), dni: texto(ingresado?.dni) };
+  if (!t.nombres || !t.apellidos || !esDniValido(t.dni)) campos.aNombreDe = 'Indica nombres, apellidos y DNI del ganador.';
+  return t;
+}
+
+const sinErrores = campos => {
+  if (Object.keys(campos).length) throw new ErrorDominio('VALIDACION', { campos });
 };
 
 const exigirEstado = (rifa, ...estados) => {
@@ -89,7 +109,7 @@ export const adminServiceMock = {
         estado: 'BORRADOR', visibilidad: 'LISTADA', config, meta: calcularMeta(precio, config.margenPct),
         puntosExternos: 0, participantesExternos: 0, ticketsExternos: 0, siguienteTicket: 1,
         puntosAlCierre: null, participantesAlCierre: null, fechas: { creada: ahora() },
-        apodosFijos: {}, ganador: null, sorteo: null, hashLista: null, entrega: {}, motivo: null,
+        apodosFijos: {}, ganador: null, sorteo: null, hashLista: null, registros: {}, motivo: null,
         historial: [{ desde: null, hacia: 'BORRADOR', actor: admin.apodo, motivo: null, fecha: ahora() }],
       };
       db.rifas.push(rifa);
@@ -157,27 +177,66 @@ export const adminServiceMock = {
     });
   },
 
-  registrarCompra(rifaId, comprobante) {
+  // La compra se hace fuera de la web: aquí solo se registra (README §7.12).
+  registrarCompra(rifaId, datos = {}) {
     return sobreRifa(rifaId, (db, rifa, admin) => {
-      const texto = exigirTexto(comprobante, 'DATOS_INCOMPLETOS');
+      exigirEstado(rifa, 'SORTEADA');
+      const campos = {};
+      const r = {
+        fecha: fechaIso(datos.fecha), tienda: texto(datos.tienda),
+        productoComprado: texto(datos.productoComprado) || rifa.producto.nombre,
+        esEquivalente: datos.esEquivalente === true, justificacion: texto(datos.justificacion) || null,
+        montoPagado: Number(datos.montoPagado), numeroComprobante: texto(datos.numeroComprobante),
+        archivoComprobante: texto(datos.archivoComprobante),
+      };
+      if (!r.fecha) campos.fecha = 'Indica la fecha de compra.';
+      if (!r.tienda) campos.tienda = 'Indica la tienda.';
+      if (r.esEquivalente && !r.justificacion) campos.justificacion = 'Explica por qué es equivalente (igual o mayor valor).';
+      if (!Number.isFinite(r.montoPagado) || r.montoPagado <= 0) campos.montoPagado = 'Indica el monto pagado.';
+      if (!r.numeroComprobante) campos.numeroComprobante = 'Indica el número de boleta o factura.';
+      if (!r.archivoComprobante) campos.archivoComprobante = 'Adjunta la foto o PDF del comprobante.';
+      const aNombreDe = titularDelPremio(db, rifa, datos.aNombreDe, campos);
+      sinErrores(campos);
+      if (!r.esEquivalente) r.justificacion = null;
       cambiarEstado(rifa, 'COMPRANDO', { actor: admin.apodo });
-      rifa.entrega.comprobante = texto;
+      rifa.registros.compra = { ...r, aNombreDe, registradoPor: admin.apodo, registradoEl: ahora() };
     });
   },
 
-  registrarEnvio(rifaId, detalle) {
+  registrarEnvio(rifaId, datos = {}) {
     return sobreRifa(rifaId, (db, rifa, admin) => {
-      const texto = exigirTexto(detalle, 'DATOS_INCOMPLETOS');
+      exigirEstado(rifa, 'COMPRANDO');
+      const campos = {};
+      const r = {
+        modalidad: datos.modalidad, courier: texto(datos.courier) || null,
+        codigoSeguimiento: texto(datos.codigoSeguimiento) || null, fechaEstimada: fechaIso(datos.fechaEstimada),
+      };
+      if (!MODALIDADES_ENVIO.includes(r.modalidad)) campos.modalidad = 'Elige recojo en tienda o courier.';
+      if (r.modalidad === 'COURIER' && !r.courier) campos.courier = 'Indica el courier.';
+      if (r.modalidad === 'COURIER' && !r.codigoSeguimiento) campos.codigoSeguimiento = 'Indica el código de seguimiento.';
+      if (!r.fechaEstimada) campos.fechaEstimada = 'Indica la fecha estimada.';
+      sinErrores(campos);
+      if (r.modalidad === 'RECOJO') { r.courier = null; r.codigoSeguimiento = null; }
       cambiarEstado(rifa, 'EN_CAMINO', { actor: admin.apodo });
-      rifa.entrega.envio = texto;
+      rifa.registros.envio = { ...r, registradoPor: admin.apodo, registradoEl: ahora() };
     });
   },
 
-  registrarEntrega(rifaId, evidencia) {
+  registrarEntrega(rifaId, datos = {}) {
     return sobreRifa(rifaId, (db, rifa, admin) => {
-      const texto = exigirTexto(evidencia, 'DATOS_INCOMPLETOS');
+      exigirEstado(rifa, 'EN_CAMINO');
+      const campos = {};
+      const r = {
+        fecha: fechaIso(datos.fecha), recibidoPor: texto(datos.recibidoPor), dniVerificado: datos.dniVerificado === true,
+        archivoEvidencia: texto(datos.archivoEvidencia), observaciones: texto(datos.observaciones) || null,
+      };
+      if (!r.fecha) campos.fecha = 'Indica la fecha de entrega.';
+      if (!r.recibidoPor) campos.recibidoPor = 'Indica quién recibió el premio.';
+      if (!r.dniVerificado) campos.dniVerificado = 'Verifica el DNI físico del ganador antes de entregar.';   // invariante 11
+      if (!r.archivoEvidencia) campos.archivoEvidencia = 'Adjunta la foto o el acta de entrega.';
+      sinErrores(campos);
       cambiarEstado(rifa, 'ENTREGADA', { actor: admin.apodo });
-      rifa.entrega.evidencia = texto;
+      rifa.registros.entrega = { ...r, registradoPor: admin.apodo, registradoEl: ahora() };
     });
   },
 

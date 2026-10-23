@@ -266,7 +266,7 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 | 23 | Rifas | `/admin/rifas` | Listado por estado · crear · publicar · configuración por rifa (§7.9) | P1 |
 | 24 | Cola de revisión | `/admin/revision` | Rifas cerradas por revisar · aprobar y programar sorteo · cancelar con motivo | P1 |
 | 25 | Ejecutar sorteo | `/admin/rifas/[codigo]/sorteo` | Snapshot + hash · ejecutar · resultado | P2 |
-| 25b | Compra y entrega | `/admin/rifas/[codigo]/entrega` | Registrar compra (comprobante) · envío · entrega con evidencia | P2 |
+| 25b | Compra y entrega | `/admin/rifas/[codigo]/entrega` | Registrar compra (datos y comprobante) · envío · entrega con DNI verificado y evidencia (§7.12) | P2 |
 | 25c | Categorías | `/admin/categorias` | Listado · crear/editar | P2 |
 | 26 | Usuarios | `/admin/usuarios` | Listado · detalle · ajuste de saldo con motivo | P2 |
 | 27 | Moderar propuestas | `/admin/propuestas` | Propuestas que alcanzaron el umbral · aprobar (pasa a pública) · descartar con motivo · denuncias | P3 |
@@ -309,9 +309,9 @@ Reglas visuales de la tarjeta:
 | En revisión | 🟠 En revisión | — |
 | Programada | 📅 Sorteo el *fecha y hora* | Ver participantes · ver hash |
 | Sorteada | 🏆 Ganador: *apodo* | Ver sorteo |
-| Comprando | 🛒 Comprando el premio | Ver comprobante |
+| Comprando | 🛒 Comprando el premio | — (muestra la fecha de compra; el comprobante es interno) |
 | En camino | 🚚 En camino | — |
-| Entregada | ✅ Entregada | Ver evidencia |
+| Entregada | ✅ Entregada | — (muestra la fecha de entrega; la evidencia es interna) |
 | No se armó | ⚫ No se armó la Chance | — (puntos devueltos) |
 | Cancelada | 🔴 Cancelada | — (puntos devueltos) |
 
@@ -442,9 +442,9 @@ Reglas visuales de la tarjeta:
 | `EN_REVISION` | En revisión | El admin verifica: producto disponible y a precio esperado, recaudación correcta, sin indicios de fraude. | No | — |
 | `PROGRAMADA` | Sorteo el *fecha* | Revisión aprobada; fecha y hora de sorteo publicadas junto con el hash de la lista. | No | — |
 | `SORTEADA` | Ganador: *apodo* | Ganador seleccionado y notificado. | No | — |
-| `COMPRANDO` | Comprando el premio | La plataforma compra el producto; se adjunta comprobante. | No | — |
+| `COMPRANDO` | Comprando el premio | La plataforma compra el producto **fuera de la web**, a nombre del ganador, y registra la compra (§7.12). | No | — |
 | `EN_CAMINO` | En camino | Producto enviado o listo para recojo. | No | — |
-| `ENTREGADA` | Entregada | Premio entregado con evidencia (foto, acta). Estado final. | No | — |
+| `ENTREGADA` | Entregada | Premio entregado al titular del DNI, con evidencia registrada (§7.12). Estado final. | No | — |
 | `CANCELADA` | Cancelada | Problema grave detectado en revisión (o fuerza mayor). | No | Consumido → Disponible (reembolso) |
 | `DESCARTADA` *(F2)* | Descartada | Propuesta no aprobada en moderación. | No | Retenido → Disponible |
 
@@ -477,8 +477,9 @@ Cada acción tiene un **actor**, una **condición previa** y un **resultado**. E
 | Aprobar revisión y programar sorteo | Admin | Rifa CERRADA → EN_REVISION, fecha de sorteo definida | Rifa PROGRAMADA, fecha y hash públicos |
 | Cancelar rifa | Admin | Rifa en EN_REVISION (o fuerza mayor), motivo obligatorio | Reembolso de todos los tickets, rifa CANCELADA |
 | Sortear | Admin | Rifa PROGRAMADA | Ticket ganador registrado, ganador notificado, rifa SORTEADA |
-| Registrar compra | Admin | Rifa SORTEADA, comprobante adjunto | Rifa COMPRANDO → (al confirmar envío) EN_CAMINO |
-| Registrar entrega | Admin | Rifa EN_CAMINO, evidencia adjunta | Rifa ENTREGADA |
+| Registrar compra | Admin | Rifa SORTEADA; datos de la compra y comprobante adjunto (§7.12) | Rifa COMPRANDO |
+| Registrar envío | Admin | Rifa COMPRANDO; modalidad y fecha estimada (§7.12) | Rifa EN_CAMINO |
+| Registrar entrega | Admin | Rifa EN_CAMINO; DNI físico verificado y evidencia adjunta (§7.12) | Rifa ENTREGADA |
 | Ajustar saldo | Admin | Motivo obligatorio | Movimiento de ajuste registrado y auditado |
 
 ### 7.6 Eventos que el sistema comunica al participante
@@ -582,6 +583,20 @@ Además, un proceso diario de conciliación recorre todas las billeteras y alert
 **Reemplazo interno del link:** el admin puede cambiar el link de compra por uno equivalente en una tienda segura y adecuada, para **reflejar la intención** del autor y **garantizar la compra**. El link original se conserva en el historial; el público ve el producto, no necesariamente la tienda.
 
 **Garantía de entrega:** la plataforma **no está obligada a entregar el producto exacto del link original**, pero **sí está obligada a entregar el premio sorteado**: el mismo producto o uno equivalente de igual o mayor valor. Esto debe quedar escrito en los Términos y Condiciones y en el Reglamento de Rifas.
+
+### 7.12 Compra, envío y entrega del premio
+
+La compra del premio **se hace fuera de la plataforma** (en la tienda, con los medios de pago de la empresa). La plataforma **no compra nada**: solo **registra** cada paso para gestión y control interno, y cada registro cambia el estado de la rifa.
+
+| Registro | Estado | Datos obligatorios | Datos opcionales |
+|----------|--------|--------------------|------------------|
+| **Compra** | SORTEADA → COMPRANDO | Fecha de compra · tienda · monto pagado · número de boleta o factura · foto o PDF del comprobante · a nombre de quién se compró (nombres, apellidos y DNI del ganador) | Producto comprado (por defecto, el de la rifa) · si es **equivalente**, justificación obligatoria (igual o mayor valor, §7.11) |
+| **Envío** | COMPRANDO → EN_CAMINO | Modalidad (**recojo en tienda** o **courier**) · fecha estimada · si es courier: empresa y código de seguimiento | — |
+| **Entrega** | EN_CAMINO → ENTREGADA | Fecha · quién recibió · **DNI físico verificado: coincide con el titular** (invariante 11) · foto o acta de entrega | Observaciones |
+
+- El premio se compra **a nombre del ganador**: sus datos salen de la cuenta ganadora, no se escriben a mano.
+- Cada registro guarda automáticamente qué administrador lo hizo y cuándo.
+- **Visibilidad:** los registros (comprobante, monto, datos del ganador, evidencia) son **solo para administradores**. La boleta lleva datos personales del ganador y no debe publicarse. El público ve únicamente el **estado** y la **fecha** de cada paso (comprado el…, enviado el…, entregado el…).
 
 ---
 

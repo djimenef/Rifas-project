@@ -288,7 +288,7 @@ export const rifasServiceMock = {
         puntosExternos: 0, participantesExternos: 0, ticketsExternos: 0, siguienteTicket: 1,
         puntosAlCierre: null, participantesAlCierre: null,
         fechas: { creada: ahora(), ...(confiable ? { limiteCaptacion: sumarDias(ahora(), config.ventanaCaptacionDias) } : {}) },
-        apodosFijos: {}, ganador: null, sorteo: null, hashLista: null, entrega: {}, motivo: null,
+        apodosFijos: {}, ganador: null, sorteo: null, hashLista: null, registros: {}, motivo: null,
         historial: [{ desde: null, hacia: confiable ? 'CAPTANDO' : 'REVISION_LINK', actor: u.apodo, motivo: lectura.motivoRevision, fecha: ahora() }],
       };
 

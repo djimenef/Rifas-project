@@ -101,7 +101,7 @@ export const calcularMaximo = (meta, maxPct) => Math.floor(meta * maxPct / 100);
  *   fechaLimiteArmado?: string, fechaCierre?: string, fechaSorteo?: string,
  *   hashLista?: string, ganadorApodo?: string,
  *   sorteo?: { semilla: string, ticketGanador: number, fecha: string },
- *   entrega?: { comprobante?: string, envio?: string, evidencia?: string },
+ *   entrega?: { compradoEl?: string, enviadoEl?: string, entregadoEl?: string },   // solo fechas: el detalle es interno
  *   motivo?: string, autorApodo?: string,
  * }} Rifa
  */
@@ -113,9 +113,43 @@ export const calcularMaximo = (meta, maxPct) => Math.floor(meta * maxPct / 100);
  *   umbral: number, maxPorParticipante: number, config: ConfiguracionRifa,
  *   autor: { tipo: TipoAutor, usuarioId: string|null },
  *   linkOriginal: string, linkCompra: string, estadoLink: 'VALIDO'|'EN_REVISION'|'REEMPLAZADO',
+ *   registros: RegistrosPremio, ganadorUsuarioId: string|null,
  *   historial: { desde: EstadoRifa|null, hacia: EstadoRifa, actor: string, motivo: string|null, fecha: string }[],
  * }} RifaAdmin
  */
+
+// --- Compra, envío y entrega del premio (README §7.12) ---
+// La compra se hace FUERA de la web; aquí solo se registra para gestión y control interno.
+// Estos registros solo los ven los administradores. El público ve el estado y la fecha.
+
+export const MODALIDADES_ENVIO = Object.freeze(['RECOJO', 'COURIER']);
+
+/** @typedef {{ nombres: string, apellidos: string, dni: string }} TitularPremio */
+
+/**
+ * @typedef {{
+ *   fecha: string, tienda: string, productoComprado: string, esEquivalente: boolean, justificacion: string|null,
+ *   montoPagado: number, numeroComprobante: string, archivoComprobante: string,
+ *   aNombreDe: TitularPremio, registradoPor: string, registradoEl: string,
+ * }} RegistroCompra
+ */
+
+/**
+ * @typedef {{
+ *   modalidad: 'RECOJO'|'COURIER', courier: string|null, codigoSeguimiento: string|null, fechaEstimada: string,
+ *   registradoPor: string, registradoEl: string,
+ * }} RegistroEnvio
+ */
+
+/**
+ * `dniVerificado` debe ser true: el premio solo se entrega al titular del DNI de la cuenta ganadora (invariante 11).
+ * @typedef {{
+ *   fecha: string, recibidoPor: string, dniVerificado: true, archivoEvidencia: string, observaciones: string|null,
+ *   registradoPor: string, registradoEl: string,
+ * }} RegistroEntrega
+ */
+
+/** @typedef {{ compra?: RegistroCompra, envio?: RegistroEnvio, entrega?: RegistroEntrega }} RegistrosPremio */
 
 /** @typedef {'ACTIVO'|'CAPTURADO'|'LIBERADO'} EstadoCompromiso */
 /** @typedef {{ id: string, rifaId: string, usuarioId: string, cantidad: number, estado: EstadoCompromiso, fecha: string }} Compromiso */

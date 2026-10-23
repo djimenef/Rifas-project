@@ -148,17 +148,17 @@
   --estado-armando-bg: color-mix(in srgb, var(--gold) 15%, transparent);
   --estado-armando-ink: var(--gold-ink);
   --estado-abierta-bg: color-mix(in srgb, var(--ok) 15%, transparent);
-  --estado-abierta-ink: var(--ok);
+  --estado-abierta-ink: var(--text);            /* 13.6:1 */
   --estado-cerrada-bg: var(--surface-2);
-  --estado-cerrada-ink: var(--lock);
+  --estado-cerrada-ink: var(--muted);           /* 5.1:1 */
   --estado-sorteada-bg: var(--gold);
   --estado-sorteada-ink: var(--on-gold);
   --estado-entregada-bg: var(--ok);
-  --estado-entregada-ink: var(--accent-ink);
+  --estado-entregada-ink: var(--accent-ink);    /* en modo oscuro cambia a --ink-oscuro (7.8:1) */
   --estado-no-se-armo-bg: var(--muted);
   --estado-no-se-armo-ink: var(--bg);
   --estado-cancelada-bg: color-mix(in srgb, var(--error) 15%, transparent);
-  --estado-cancelada-ink: var(--error);
+  --estado-cancelada-ink: var(--text);          /* 13.3:1 */
   /* Naranja sólido con texto oscuro: contraste 5.7:1 (claro) y 7.9:1 (oscuro) */
   --estado-naranja-bg: var(--naranja);
   --estado-naranja-ink: var(--ink-oscuro);
@@ -192,5 +192,6 @@
     --lock: #6f675c;
     --error: #f0765f;
     --shadow: 0 10px 30px -12px rgba(0, 0, 0, .6);
+    --estado-entregada-ink: var(--ink-oscuro);
   }
 }

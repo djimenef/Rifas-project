@@ -29,13 +29,18 @@ function rifa(t, d) {
     ganador: d.ganador ?? null,
     sorteo: d.sorteo ?? null,
     hashLista: null,                 // se calcula al primer uso (motor.asegurarHash)
-    entrega: d.entrega ?? {},
+    registros: d.registros ?? {},       // compra, envío y entrega del premio (solo admins)
     motivo: d.motivo ?? null,
     historial: [{ desde: null, hacia: d.estado, actor: 'DATOS_DE_EJEMPLO', motivo: null, fecha: t(-1) }],
   };
 }
 
-const COMPROBANTE = 'Boleta B001-004512 de la tienda';
+// Registros internos de compra, envío y entrega (README §7.12). Personas ficticias.
+const compra = (t, dias, d) => ({
+  fecha: t(dias), esEquivalente: false, justificacion: null, archivoComprobante: `comprobante-${d.numeroComprobante}.pdf`,
+  registradoPor: 'equipo_dc', registradoEl: t(dias), ...d,
+});
+const envio = (t, dias, d) => ({ courier: null, codigoSeguimiento: null, registradoPor: 'equipo_dc', registradoEl: t(dias), ...d });
 
 export const rifasMock = t => [
   // --- Armando la Chance ---
@@ -65,19 +70,28 @@ export const rifasMock = t => [
     estado: 'COMPRANDO', ticketsExternos: 3820, participantesExternos: 470, apodosFijos: { 1777: 'mafer.pe' },
     ganador: { apodo: 'mafer.pe', ticket: 1777, usuarioId: null },
     sorteo: { semilla: '41ad7e09c3b25f18', ticketGanador: 1777, fecha: t(-4) },
-    entrega: { comprobante: COMPROBANTE },
+    registros: {
+      compra: compra(t, -2, { tienda: 'Tienda de ejemplo', productoComprado: 'Samsung Galaxy S24 256 GB', montoPagado: 2799, numeroComprobante: 'B001-004512', aNombreDe: { nombres: 'María Fernanda', apellidos: 'Peña Rivas', dni: '46339871' } }),
+    },
     fechas: { publicada: t(-18), confirmada: t(-11), cierre: t(-8), sorteo: t(-4) } }),
   rifa(t, { id: 'r-watch', codigo: 'RF-5GH8ZN2C', slug: 'apple-watch-se', categoriaId: 'cat-relojes', nombre: 'Apple Watch SE', emoji: '⌚', precio: 1099,
     estado: 'EN_CAMINO', ticketsExternos: 1500, participantesExternos: 180, apodosFijos: { 903: 'jorge_rv' },
     ganador: { apodo: 'jorge_rv', ticket: 903, usuarioId: null },
     sorteo: { semilla: 'c07e5b1d92fa3864', ticketGanador: 903, fecha: t(-7) },
-    entrega: { comprobante: COMPROBANTE, envio: 'Enviado por courier. Llega en 2 días hábiles.' },
+    registros: {
+      compra: compra(t, -5, { tienda: 'Tienda de ejemplo', productoComprado: 'Apple Watch SE 40 mm', montoPagado: 1099, numeroComprobante: 'B001-004377', aNombreDe: { nombres: 'Jorge', apellidos: 'Ramos Vílchez', dni: '44120985' } }),
+      envio: envio(t, -1, { modalidad: 'COURIER', courier: 'Courier de ejemplo', codigoSeguimiento: 'CE-55120938', fechaEstimada: t(2) }),
+    },
     fechas: { publicada: t(-22), confirmada: t(-15), cierre: t(-12), sorteo: t(-7) } }),
   rifa(t, { id: 'r-jordan', codigo: 'RF-2PB6TW9K', slug: 'zapatillas-jordan', categoriaId: 'cat-zapatillas', nombre: 'Zapatillas Jordan retro', emoji: '👟', precio: 799,
     estado: 'ENTREGADA', ticketsExternos: 1102, participantesExternos: 150, apodosFijos: { 77: 'kathy_m' },
     ganador: { apodo: 'kathy_m', ticket: 77, usuarioId: null },
     sorteo: { semilla: '5b8e2f4a6c1d9073', ticketGanador: 77, fecha: t(-15) },
-    entrega: { comprobante: COMPROBANTE, envio: 'Recogido en tienda.', evidencia: 'Foto de entrega y acta firmada por la ganadora.' },
+    registros: {
+      compra: compra(t, -12, { tienda: 'Tienda de ejemplo', productoComprado: 'Zapatillas Jordan retro talla 38', montoPagado: 799, numeroComprobante: 'B001-003958', aNombreDe: { nombres: 'Katherine', apellidos: 'Mendoza Ccori', dni: '48761203' } }),
+      envio: envio(t, -10, { modalidad: 'RECOJO', fechaEstimada: t(-8) }),
+      entrega: { fecha: t(-8), recibidoPor: 'Katherine Mendoza Ccori', dniVerificado: true, archivoEvidencia: 'entrega-jordan.jpg', observaciones: 'Recogió en la oficina con su DNI físico.', registradoPor: 'equipo_dc', registradoEl: t(-8) },
+    },
     fechas: { publicada: t(-30), confirmada: t(-24), cierre: t(-21), sorteo: t(-15) } }),
 
   // --- Finalizadas sin sorteo ---

@@ -203,7 +203,8 @@ export function vistaPublica(db, rifa) {
     v.ganadorApodo = rifa.ganador.apodo;
     v.sorteo = { ...rifa.sorteo };
   }
-  if (Object.keys(rifa.entrega).length) v.entrega = { ...rifa.entrega };
+  const { compra, envio, entrega } = rifa.registros;
+  if (compra) v.entrega = { compradoEl: compra.fecha, ...(envio ? { enviadoEl: envio.registradoEl } : {}), ...(entrega ? { entregadoEl: entrega.fecha } : {}) };
   if (rifa.motivo) v.motivo = rifa.motivo;
   return v;
 }
@@ -218,6 +219,7 @@ export function vistaAdmin(db, rifa) {
     autor: { ...rifa.autor }, codigoAutor: rifa.codigoAutor,
     linkOriginal: rifa.producto.linkOriginal, linkCompra: rifa.producto.linkCompra, estadoLink: rifa.producto.estadoLink,
     fechas: { ...rifa.fechas }, historial: rifa.historial.map(h => ({ ...h })),
+    registros: structuredClone(rifa.registros), ganadorUsuarioId: rifa.ganador?.usuarioId ?? null,
   };
 }
 
