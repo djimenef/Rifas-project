@@ -43,7 +43,7 @@ const compra = (t, dias, d) => ({
 const envio = (t, dias, d) => ({ courier: null, codigoSeguimiento: null, registradoPor: 'equipo_dc', registradoEl: t(dias), ...d });
 
 export const rifasMock = t => [
-  // --- Armando la Chance ---
+  // --- Armando Rifa ---
   rifa(t, { id: 'r-ps5', codigo: 'RF-7K3Q9XM2', slug: 'ps5-slim', categoriaId: 'cat-consolas', nombre: 'PlayStation 5 Slim', emoji: '🎮', precio: 2200,
     estado: 'ARMANDO', puntosExternos: 1921, participantesExternos: 147, fechas: { publicada: t(-1, -4), limiteArmado: t(6, 4) } }),
   rifa(t, { id: 'r-zapas-urbanas', codigo: 'RF-5WQ8H3TK', slug: 'zapatillas-urbanas-blancas', categoriaId: 'cat-zapatillas', nombre: 'Zapatillas urbanas blancas', emoji: '👟', precio: 450,

@@ -4,7 +4,7 @@
 
 ## Proyecto
 
-Plataforma web de rifas a demanda (Perú, soles). Los participantes se registran con DNI, recargan puntos (1 punto = S/ 1 = 1 opción) y ponen puntos en rifas que se confirman solo si se arma el pozo ("Armando la Chance").
+Plataforma web de rifas a demanda (Perú, soles). Los participantes se registran con DNI, recargan **Chances** (1 Chance = S/ 1 = 1 opción de ganar) y ponen Chances en rifas que se confirman solo si se arma el pozo ("Armando Rifa").
 
 **Etapa actual: Fase 0 — mockups navegables.** Solo interfaz con datos falsos. Nada de backend.
 
@@ -25,6 +25,8 @@ Si algo no está definido en estas fuentes, **pregunta** antes de inventar. Si e
 - **La lógica de negocio va en los servicios mock**, no en los componentes. Los mocks deben aplicar las reglas de `README.md` §7 (saldo insuficiente, estados que no aceptan puntos, etc.).
 - **El público nunca ve montos del pozo, meta ni margen**: solo cantidad de personas y barra de % (rojo → verde).
 - Textos de interfaz en **español de Perú** usando el glosario de `README.md` §7.1.
+- **Vocabulario visible:** la moneda se llama **Chance/Chances** y va en femenino ("35 Chances", "Tus Chances quedan retenidas", "¿Cuántas Chances quieres?"). "Chance" se usa **solo** para la moneda. Estados: **Armando Rifa**, **Calentando Rifa**, **No se armó la Rifa**; frases como "si la rifa se arma". Precio: **"Precio referencial: S/ X"**. En el código y nombres internos se mantiene "puntos" y `precioTienda`.
+- **Recargas:** atajos de 5, 10, 15 y 20 + monto libre de 5 a 500 (aviso junto al campo fuera de rango).
 - Mobile-first: probar a 360 px, 768 px y 1280 px.
 - Accesibilidad: `label` en inputs, foco visible, contraste suficiente, navegable con teclado.
 - Nunca borres archivos existentes sin preguntar.

@@ -81,6 +81,13 @@ await prueba('Visitante: la vista pública nunca expone meta, margen, puntos reu
   for (const r of todas) esperar(!prohibidas.some(k => k in r), `${r.codigo} expone ${prohibidas.filter(k => k in r)}`);
   esperar(todas.every(r => Number.isInteger(r.progreso) && r.progreso >= 0 && r.progreso <= 100), 'progreso fuera de 0–100');
 });
+await prueba('Textos visibles: badges con los nombres nuevos y errores en "Chances"', async () => {
+  const { badgeEstado } = await import('../components/badge.js');
+  esperar(badgeEstado('ARMANDO').includes('Armando Rifa') && badgeEstado('CAPTANDO').includes('Calentando Rifa') && badgeEstado('NO_SE_ARMO').includes('No se armó la Rifa'), 'badges');
+  const { MENSAJES_ERROR } = await import('../domain/errores.js');
+  const conPuntos = Object.values(MENSAJES_ERROR).filter(m => /\bpuntos?\b/i.test(m));
+  esperar(!conPuntos.length, conPuntos.join(' | '));
+});
 await prueba('Visitante: PS5 muestra 148 personas y 65 %', async () => {
   const r = await rifasService.obtenerPorSlug('ps5-slim');
   esperar(r.participantes === 148 && r.progreso === 65, `${r.participantes} personas, ${r.progreso} %`);
@@ -108,6 +115,12 @@ await prueba('Historial: incluye los 8 tipos de movimiento y filtra por rifa y t
   esperar(h[0].fecha >= h[h.length - 1].fecha, 'orden');
   esperar((await billeteraService.historial({ rifaId: TV })).every(m => m.rifaId === TV), 'filtro por rifa');
   esperar((await billeteraService.historial({ tipo: 'RECARGA' })).every(m => m.tipo === 'RECARGA'), 'filtro por tipo');
+});
+await prueba('Opciones de recarga (sin sesión): atajos 5/10/15/20 y límites 5–500', async () => {
+  await authService.cerrarSesion();
+  const o = await billeteraService.opcionesRecarga();
+  esperar(igual(o.paquetes.map(p => p.puntos), [5, 10, 15, 20]) && o.minimo === 5 && o.maximo === 500, JSON.stringify(o));
+  await entrar('lucia@dalechance.pe');
 });
 await prueba('Paquetes de recarga: 5, 10, 15 y 20', async () => {
   esperar(igual((await billeteraService.listarPaquetes()).map(p => p.puntos), [5, 10, 15, 20]), 'paquetes');
@@ -175,7 +188,7 @@ await prueba('Máximo por persona: 20 % de la meta (PS5: 594 puntos)', async () 
   esperar(p.maxPuedoPoner === 594, 'maxPuedoPoner ' + p.maxPuedoPoner);
 });
 
-// --- La Chance se arma ---
+// --- La rifa se arma ---
 await prueba('Cubrir la meta: la rifa pasa a ABIERTA y los puntos retenidos se vuelven tickets', async () => {
   const c = await rifasService.comprometer('r-zapas-urbanas', 18, clave());
   esperar(c.rifaConfirmada === true, 'no se confirmó');
@@ -186,7 +199,7 @@ await prueba('Cubrir la meta: la rifa pasa a ABIERTA y los puntos retenidos se v
   const h = await billeteraService.historial({ rifaId: 'r-zapas-urbanas' });
   esperar(igual(h.map(m => m.tipo).sort(), ['CAPTURA', 'RETENCION']), 'movimientos ' + h.map(m => m.tipo));
 });
-await prueba('Calentando la Chance: al llegar al umbral (20 % de la meta y 10 personas) pasa a moderación', async () => {
+await prueba('Calentando Rifa: al llegar al umbral (20 % de la meta y 10 personas) pasa a moderación', async () => {
   const c = await rifasService.comprometer('r-zapas-creador', 97, clave());
   esperar(c.pasoAModeracion === true, JSON.stringify(c));
   const r = await rifasService.obtenerPorSlug('zapas-edicion-creador');
@@ -199,6 +212,17 @@ await prueba('Mis rifas: agrupa en Armando, Abiertas y Finalizadas', async () =>
   esperar(igual(grupos.ARMANDO, ['zapas-edicion-creador']), 'armando ' + grupos.ARMANDO);
   esperar(igual(grupos.ABIERTAS, ['tv-55', 'zapatillas-urbanas-blancas']), 'abiertas ' + grupos.ABIERTAS);
   esperar(igual(grupos.FINALIZADAS, ['reloj-smart', 'xbox-series-x']), 'finalizadas ' + grupos.FINALIZADAS);
+});
+await prueba('Recarga con monto libre: 37 se acepta; 4, 501 y 2.5 se rechazan', async () => {
+  const antes = (await billeteraService.obtener()).disponible;
+  const c = await billeteraService.recargar(37, { medioPago: 'TARJETA', claveIdempotencia: clave() });
+  esperar(c.cantidad === 37 && c.disponibleDespues === antes + 37, JSON.stringify(c));
+  const e1 = await esperarError(billeteraService.recargar(4, { medioPago: 'TARJETA', claveIdempotencia: clave() }), 'RECARGA_FUERA_DE_RANGO');
+  esperar(e1.message === 'Mínimo 5 Chances', e1.message);
+  const e2 = await esperarError(billeteraService.recargar(501, { medioPago: 'TARJETA', claveIdempotencia: clave() }), 'RECARGA_FUERA_DE_RANGO');
+  esperar(e2.message === 'Máximo 500 Chances por recarga', e2.message);
+  await esperarError(billeteraService.recargar(2.5, { medioPago: 'TARJETA', claveIdempotencia: clave() }), 'CANTIDAD_INVALIDA');
+  esperar((await billeteraService.obtener()).disponible === antes + 37, 'los rechazos cambiaron el saldo');
 });
 await prueba('Recarga aprobada suma puntos; rechazada no cambia nada', async () => {
   const antes = (await billeteraService.obtener()).disponible;

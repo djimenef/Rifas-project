@@ -10,7 +10,7 @@
 
 Construir **todas las interfaces** del inventario de `README.md` §6 como **mockups navegables**, conectadas entre sí, con datos falsos y con el mismo estilo visual de las 3 pantallas que ya existen (inicio, login, registro). Al final debe poder recorrerse el flujo completo con clics:
 
-> visitante entra por un enlace de rifa → se registra → verifica su cuenta → recarga puntos → pone puntos en una rifa "Armando la Chance" → ve sus puntos retenidos → la rifa "va" → ve sus tickets → ve el sorteo y al ganador.
+> visitante entra por un enlace de rifa → se registra → verifica su cuenta → recarga Chances → pone Chances en una rifa "Armando Rifa" → ve sus Chances retenidas → la rifa "va" → ve sus tickets → ve el sorteo y al ganador.
 
 Sin backend, sin base de datos, sin pagos reales, sin llamadas a APIs externas.
 
@@ -105,13 +105,13 @@ En cualquier caso, respeta la **separación por capas** de `README.md` §3: pant
 Construye cada pantalla con **todos sus estados** (columna "Estados" de `README.md` §6) y con las conexiones de la tabla "Flujos" de abajo. Un commit por pantalla o por grupo pequeño.
 
 1. Listado de rifas `/rifas` (filtros por estado y categoría, búsqueda; **no** muestra rifas `SOLO_ENLACE`).
-2. Detalle público `/r/[slug]` con **una variante por estado** y la tarjeta definida en `README.md` §6 (título del producto, precio en tienda, personas, barra %, ID en letra pequeña, compartir).
-3. Modal **Poner puntos / Comprar opciones** con pantalla de confirmación (saldo antes y después), saldo insuficiente → botón "Recargar" que vuelve al modal.
+2. Detalle público `/r/[slug]` con **una variante por estado** y la tarjeta definida en `README.md` §6 (título del producto, "Precio referencial: S/ X", personas, barra %, ID en letra pequeña, compartir).
+3. Modal **Poner Chances / Comprar opciones** con pantalla de confirmación (saldo antes y después), saldo insuficiente → botón "Recargar" que vuelve al modal.
 4. Cómo funciona `/como-funciona`.
 5. Verificar cuenta `/verificar`.
 6. Mi billetera `/billetera` (disponible, retenido y en qué rifas).
 7. Mi historial de puntos `/billetera/historial`.
-8. Recargar `/billetera/recargar` (paquetes 5/10/15/20, medio de pago simulado, procesando, éxito, rechazado).
+8. Recargar `/billetera/recargar` (atajos 5/10/15/20 y monto libre de 5 a 500 con aviso junto al campo fuera de rango, medio de pago simulado, procesando, éxito, rechazado).
 9. Mis rifas `/mis-rifas` (pestañas Armando · Abiertas · Finalizadas).
 10. Admin: Rifas `/admin/rifas` y Cola de revisión `/admin/revision`, dentro del layout del panel de administración (Paso 3, punto 7).
 
@@ -194,10 +194,10 @@ Commit: `docs(semantica): separar semántica funcional por dominio`.
 |-------|--------|-------|
 | Inicio | "Ver rifas" / tarjeta destacada | `/rifas` / `/r/[slug]` |
 | Listado | Clic en tarjeta | `/r/[slug]` |
-| Detalle (visitante) | "Poner puntos" o "Comprar opciones" | `/login?volver=/r/[slug]` (con enlace a `/registro?volver=…`) |
+| Detalle (visitante) | "Poner Chances" o "Comprar opciones" | `/login?volver=/r/[slug]` (con enlace a `/registro?volver=…`) |
 | Login / Registro | Éxito | `volver` → detalle con el modal ya abierto |
 | Registro | Éxito | `/verificar` → luego `volver` o `/rifas` |
-| Detalle (participante) | "Poner puntos" | Modal → confirmación → éxito (toast + saldo del header actualizado) |
+| Detalle (participante) | "Poner Chances" | Modal → confirmación → éxito (toast + saldo del header actualizado) |
 | Modal | Saldo insuficiente → "Recargar" | `/billetera/recargar?volver=/r/[slug]` → tras éxito regresa al detalle |
 | Detalle | "Compartir" | Copia el enlace y muestra toast |
 | Header | Saldo | `/billetera` |
@@ -214,9 +214,9 @@ Commit: `docs(semantica): separar semántica funcional por dominio`.
 | Estado | Badge | Color | Visible en listado |
 |--------|-------|-------|--------------------|
 | `REVISION_LINK` | 🔎 Link en revisión | Gris | No |
-| `CAPTANDO` | 🔥 Calentando la Chance · 🔒 | Naranja | No (solo por enlace) |
+| `CAPTANDO` | 🔥 Calentando Rifa · 🔒 | Naranja | No (solo por enlace) |
 | `PROPUESTA` | 📝 En moderación | Gris | No |
-| `ARMANDO` | 🍀 Armando la Chance | Amarillo | Sí |
+| `ARMANDO` | 🍀 Armando Rifa | Amarillo | Sí |
 | `ABIERTA` | 🟢 ¡Va! Rifa confirmada | Verde | Sí |
 | `CERRADA` | ⚪ Cerrada | Gris claro | Sí |
 | `EN_REVISION` | 🟠 En revisión | Naranja | Sí |
@@ -225,7 +225,7 @@ Commit: `docs(semantica): separar semántica funcional por dominio`.
 | `COMPRANDO` | 🛒 Comprando el premio | Azul | Sí |
 | `EN_CAMINO` | 🚚 En camino | Azul | Sí |
 | `ENTREGADA` | ✅ Entregada | Verde oscuro | Sí |
-| `NO_SE_ARMO` | ⚫ No se armó la Chance | Gris oscuro | Sí (en "Finalizadas") |
+| `NO_SE_ARMO` | ⚫ No se armó la Rifa | Gris oscuro | Sí (en "Finalizadas") |
 | `CANCELADA` | 🔴 Cancelada | Rojo | Sí (en "Finalizadas") |
 | `BORRADOR` · `DESCARTADA` | — | — | No |
 

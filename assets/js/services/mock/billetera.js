@@ -5,6 +5,7 @@ import { ErrorDominio } from '../../domain/errores.js';
 import { MEDIOS_PAGO, TIPOS_MOVIMIENTO, ETIQUETA_MOVIMIENTO } from '../../domain/billetera.js';
 import { nuevoId } from '../../lib/ids.js';
 
+const PRECIO_PUNTO = 1;   // 1 punto ("Chance") = S/ 1
 const masReciente = (a, b) => b.fecha.localeCompare(a.fecha) || b.numeroOperacion.localeCompare(a.numeroOperacion);
 
 /** @type {import('../interfaces/billetera.js').BilleteraService} */
@@ -39,30 +40,54 @@ export const billeteraServiceMock = {
     });
   },
 
+  // Pública (sin sesión): la calculadora de Inicio la usa para conocer los atajos y los límites.
+  opcionesRecarga() {
+    return operacion(db => ({
+      paquetes: db.paquetes.filter(p => p.activo).sort((a, b) => a.puntos - b.puntos),
+      ...db.configuracion.recarga,
+    }));
+  },
+
   listarPaquetes() {
     return operacion(db => db.paquetes.filter(p => p.activo).sort((a, b) => a.puntos - b.puntos));
   },
 
-  recargar(paqueteId, { medioPago, claveIdempotencia, simularRechazo = false } = {}) {
+  /** @param {string|number} paqueteOCantidad id de un paquete (atajo) o cantidad libre de puntos */
+  recargar(paqueteOCantidad, { medioPago, claveIdempotencia, simularRechazo = false } = {}) {
     return operacion(db => {
       const u = exigirParticipante(db);
       return conIdempotencia(db, u.id, 'RECARGA', claveIdempotencia, () => {
-        const paquete = db.paquetes.find(p => p.id === paqueteId);
-        if (!paquete?.activo) throw new ErrorDominio('PAQUETE_INACTIVO');
+        let cantidad, paqueteId = null;
+        if (typeof paqueteOCantidad === 'string') {
+          const paquete = db.paquetes.find(p => p.id === paqueteOCantidad);
+          if (!paquete?.activo) throw new ErrorDominio('PAQUETE_INACTIVO');
+          cantidad = paquete.puntos;
+          paqueteId = paquete.id;
+        } else {
+          cantidad = paqueteOCantidad;
+          const { minimo, maximo } = db.configuracion.recarga;
+          if (!Number.isInteger(cantidad)) throw new ErrorDominio('CANTIDAD_INVALIDA');
+          if (cantidad < minimo || cantidad > maximo) {
+            throw new ErrorDominio('RECARGA_FUERA_DE_RANGO', {
+              mensaje: cantidad < minimo ? `Mínimo ${minimo} Chances` : `Máximo ${maximo} Chances por recarga`,
+              datos: { minimo, maximo },
+            });
+          }
+        }
         if (!MEDIOS_PAGO.includes(medioPago)) throw new ErrorDominio('VALIDACION', { campos: { medioPago: 'Elige un medio de pago.' } });
         if (simularRechazo) throw new ErrorDominio('PAGO_RECHAZADO');
 
         const antes = saldo(db, u.id);
         const recarga = {
-          id: nuevoId('rc'), usuarioId: u.id, paqueteId, monto: paquete.precio, puntos: paquete.puntos,
+          id: nuevoId('rc'), usuarioId: u.id, paqueteId, monto: cantidad * PRECIO_PUNTO, puntos: cantidad,
           medioPago, estado: 'APROBADA', referencia: 'PSP-' + Date.now().toString().slice(-8), fecha: ahora(),
         };
         db.recargas.push(recarga);
-        const m = registrarMovimiento(db, { usuarioId: u.id, tipo: 'RECARGA', deltaDisponible: paquete.puntos, referencia: recarga.id });
+        const m = registrarMovimiento(db, { usuarioId: u.id, tipo: 'RECARGA', deltaDisponible: cantidad, referencia: recarga.id });
         verificarCuadre(db, u.id);
         const despues = saldo(db, u.id);
         return {
-          numeroOperacion: m.numeroOperacion, tipo: 'RECARGA', cantidad: paquete.puntos,
+          numeroOperacion: m.numeroOperacion, tipo: 'RECARGA', cantidad,
           disponibleAntes: antes.disponible, disponibleDespues: despues.disponible,
           retenidoAntes: antes.retenido, retenidoDespues: despues.retenido,
           fecha: m.fecha, claveIdempotencia,

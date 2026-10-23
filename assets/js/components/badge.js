@@ -4,9 +4,9 @@ import { esc } from '../lib/html.js';
 // BORRADOR y DESCARTADA no tienen badge público.
 const ESTADOS = {
   REVISION_LINK: () => '🔎 Link en revisión',
-  CAPTANDO: () => '🔥 Calentando la Chance · 🔒',
+  CAPTANDO: () => '🔥 Calentando Rifa · 🔒',
   PROPUESTA: () => '📝 En moderación',
-  ARMANDO: () => '🍀 Armando la Chance',
+  ARMANDO: () => '🍀 Armando Rifa',
   ABIERTA: () => '🟢 ¡Va! Rifa confirmada',
   CERRADA: () => '⚪ Cerrada',
   EN_REVISION: () => '🟠 En revisión',
@@ -15,7 +15,7 @@ const ESTADOS = {
   COMPRANDO: () => '🛒 Comprando el premio',
   EN_CAMINO: () => '🚚 En camino',
   ENTREGADA: () => '✅ Entregada',
-  NO_SE_ARMO: () => '⚫ No se armó la Chance',
+  NO_SE_ARMO: () => '⚫ No se armó la Rifa',
   CANCELADA: () => '🔴 Cancelada',
 };
 

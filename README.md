@@ -28,11 +28,11 @@
 
 Plataforma web donde los usuarios se registran con su **DNI**, **recargan saldo en puntos** y usan esos puntos para **comprar opciones (tickets) en rifas de productos**.
 
-- **1 punto = S/ 1.00 = 1 opción** en una rifa.
-- Recargas disponibles: **5, 10, 15 y 20 puntos**.
+- **1 punto = S/ 1.00 = 1 opción** en una rifa. En pantalla, el punto se llama **Chance** ("1 Chance = S/ 1 = 1 opción de ganar").
+- Recargas: atajos rápidos de **5, 10, 15 y 20 Chances** o un **monto libre de 5 a 500 Chances** por recarga (límites configurables por un admin, §7.9).
 - Cada rifa nace como una **intención**: muestra la foto del producto, su precio (según el link de la tienda) y cuánta gente ya puso puntos.
 - Cada rifa tiene una **meta** = precio del producto + **margen interno** de la plataforma. El margen nunca se muestra al público.
-- Mientras la meta no se cubre, la rifa está **"Armando la Chance"** y los puntos que ponen los participantes quedan **retenidos**: bloqueados, pero no descontados.
+- Mientras la meta no se cubre, la rifa está **"Armando Rifa"** y los puntos que ponen los participantes quedan **retenidos**: bloqueados, pero no descontados.
 - Si en la ventana de armado (por defecto **7 días**) se cubre la meta, la rifa **va**: los puntos retenidos se consumen, se convierten en tickets y la rifa queda **abierta** un tiempo más para que otros participantes compren opciones.
 - Si no se cubre la meta, la rifa **no se armó** y todos los puntos retenidos vuelven al saldo disponible.
 - Al cerrarse, los administradores **revisan** que todo esté en orden, se **programa y realiza el sorteo**, se **compra** el premio y se **entrega** al ganador.
@@ -45,7 +45,7 @@ Plataforma web donde los usuarios se registran con su **DNI**, **recargan saldo 
 | **Fase 1** | Solo los administradores. |
 | **Fase 2** | Cualquier participante o **creador de contenido** puede proponer una rifa (link del producto, foto, precio). La propuesta nace **privada, solo accesible por su enlace**, y su autor debe juntar un apoyo mínimo real (puntos puestos) antes de que la rifa aparezca en el listado público. |
 
-El motor de rifas es **el mismo** en ambas fases; la Fase 2 solo agrega la etapa privada de captación (**Calentando la Chance**) y la moderación.
+El motor de rifas es **el mismo** en ambas fases; la Fase 2 solo agrega la etapa privada de captación (**Calentando Rifa**) y la moderación.
 
 > **Por qué la etapa privada:** si cualquiera pudiera publicar rifas directamente en el listado, se llenaría de miles de rifas que nunca se arman. Exigir que el autor junte primero un apoyo mínimo con su propia comunidad filtra las propuestas sin tracción y premia a quien tiene audiencia (por eso los creadores de contenido tienen ventaja).
 
@@ -251,7 +251,7 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 |---|----------|---------------|---------|-----------|
 | 13 | Mi billetera | `/billetera` | Saldo disponible + retenido (con detalle de en qué rifas está retenido) · sin movimientos | P1 |
 | 13b | Mi historial de puntos | `/billetera/historial` | Lista de movimientos (recargas, puntos puestos, liberados, usados, reembolsos) · filtro por rifa y tipo · vacío | P1 |
-| 14 | Recargar puntos | `/billetera/recargar` | Selección de paquete 5/10/15/20 · medio de pago · procesando · éxito · rechazado | P1 |
+| 14 | Recargar Chances | `/billetera/recargar` | Atajos 5/10/15/20 o monto libre de 5 a 500 (aviso junto al campo si sale del rango) · medio de pago · procesando · éxito · rechazado | P1 |
 | 15 | Comprometer / comprar opciones | Modal desde detalle | Selector de cantidad · saldo insuficiente · confirmación · éxito | P1 |
 | 16 | Mis rifas | `/mis-rifas` | Pestañas: Armando · Abiertas · Finalizadas · vacío | P1 |
 | 17 | Mis tickets en una rifa | `/mis-rifas/[codigo]` | Números de ticket · compromiso retenido | P2 |
@@ -281,14 +281,14 @@ Debe existir en `components/` con una variante visual por estado:
 ┌─────────────────────────────────────┐
 │  [Foto del producto]                │
 │  Consolas · PlayStation 5 Slim      │
-│  Precio en tienda: S/ 2,200         │
-│  🍀 Armando la Chance · quedan 4 d  │
+│  Precio referencial: S/ 2,200       │
+│  🍀 Armando Rifa · quedan 4 d       │
 │  👥 148 personas                    │
 │  🟥🟧🟨🟩░░░░░░  65 %                 │
-│  Tus puntos aquí: 10 (retenidos)    │
-│  [ − ]  5  [ + ]   Poner puntos     │
-│  Tus puntos quedan retenidos y solo │
-│  se usan si la Chance se arma.      │
+│  Tus Chances aquí: 10 (retenidas)   │
+│  [ − ]  5  [ + ]   Poner Chances    │
+│  Tus Chances quedan retenidas y     │
+│  solo se usan si la rifa se arma.   │
 │                       [Compartir ↗] │
 │  ID: RF-7K3Q9XM2  (letra pequeña)   │
 └─────────────────────────────────────┘
@@ -304,8 +304,8 @@ Reglas visuales de la tarjeta:
 |--------|-------|------------------|
 | Propuesta | 📝 Propuesta | — (solo la ve su autor y los admins) |
 | Link en revisión | 🔎 Link en revisión | — (solo la ve su autor y los admins) |
-| Captando | 🔥 Calentando la Chance · 🔒 solo por enlace | Poner puntos · compartir (no aparece en listados ni buscador) |
-| Armando | 🍀 Armando la Chance | Poner puntos · retirar (si la rifa lo permite) |
+| Captando | 🔥 Calentando Rifa · 🔒 solo por enlace | Poner Chances · compartir (no aparece en listados ni buscador) |
+| Armando | 🍀 Armando Rifa | Poner Chances · retirar (si la rifa lo permite) |
 | Abierta | 🟢 ¡Va! Rifa confirmada | Comprar opciones |
 | Cerrada | ⚪ Cerrada | Ver participantes |
 | En revisión | 🟠 En revisión | — |
@@ -314,8 +314,8 @@ Reglas visuales de la tarjeta:
 | Comprando | 🛒 Comprando el premio | — (muestra la fecha de compra; el comprobante es interno) |
 | En camino | 🚚 En camino | — |
 | Entregada | ✅ Entregada | — (muestra la fecha de entrega; la evidencia es interna) |
-| No se armó | ⚫ No se armó la Chance | — (puntos devueltos) |
-| Cancelada | 🔴 Cancelada | — (puntos devueltos) |
+| No se armó | ⚫ No se armó la Rifa | — (Chances devueltas) |
+| Cancelada | 🔴 Cancelada | — (Chances devueltas) |
 
 ---
 
@@ -332,12 +332,14 @@ Reglas visuales de la tarjeta:
 | **Creador** *(Fase 2)* | Participante habilitado para proponer rifas y compartirlas con su comunidad. |
 | **Administrador** | Persona del equipo que gestiona categorías, rifas, revisiones, sorteos y entregas. |
 | **Intención de rifa** | Rifa que aún no se confirma: está reuniendo puntos hacia su meta. |
-| **La Chance** | Nombre visible de la rifa mientras junta su pozo ("Armando la Chance"). |
+| **Chance** | **Moneda visible** de la plataforma: 1 Chance = S/ 1 = 1 opción de ganar. Siempre en femenino: "la Chance", "35 Chances", "Tus Chances quedan retenidas". "Chance" se usa **solo** para la moneda. |
+| **Armando Rifa** | Nombre visible de la etapa en que una rifa pública junta Chances hacia su meta. |
+| **Precio referencial** | Precio del producto según el link de la tienda. En pantalla: "Precio referencial: S/ X". |
 | **Margen** | Monto interno que la plataforma suma al precio del producto para formar la meta. No es público. |
 | **Enlace de rifa** | URL pública y compartible de una rifa (`/r/slug`). |
 | **Categoría** | Agrupación de rifas: zapatillas, ropa, relojes, consolas, TVs, etc. |
-| **Punto** | Unidad de saldo. 1 punto = S/ 1. |
-| **Opción / ticket** | Una participación en una rifa. Cuesta 1 punto. |
+| **Punto** | Nombre **interno** (código y especificación) de la Chance. 1 punto = S/ 1. En pantalla siempre se muestra como "Chance". |
+| **Opción / ticket** | Una participación en una rifa. Cuesta 1 Chance. |
 | **Saldo disponible** | Puntos libres para usar. |
 | **Saldo retenido** | Puntos comprometidos en rifas aún no confirmadas. Bloqueados pero no gastados. |
 | **Compromiso** | Puntos que un participante pone en una rifa que aún se está armando. Quedan retenidos. |
@@ -347,7 +349,7 @@ Reglas visuales de la tarjeta:
 | **Liberación** | Devolución de puntos retenidos al saldo disponible. |
 | **Snapshot** | Lista congelada de todos los tickets de una rifa al cerrarse. |
 | **Propuesta** *(Fase 2)* | Rifa creada por un participante o creador. |
-| **Calentando la Chance** *(Fase 2)* | Etapa privada de una propuesta: solo accesible por su enlace, no aparece en listados ni buscador. El autor capta apoyo con su comunidad. |
+| **Calentando Rifa** *(Fase 2)* | Etapa privada de una propuesta: solo accesible por su enlace, no aparece en listados ni buscador. El autor capta apoyo con su comunidad. |
 | **Umbral de visibilidad** *(Fase 2)* | Apoyo mínimo (puntos puestos y/o participantes) que una propuesta debe juntar en privado para pasar a la etapa pública de armado. |
 | **Rifa no listada** | Rifa que existe y se puede abrir por enlace, pero no aparece en el listado general ni en el buscador. |
 | **Clave de idempotencia** | Identificador único de cada intento de poner puntos o comprar; evita que un doble clic o un reintento descuente dos veces. |
@@ -359,7 +361,7 @@ Reglas visuales de la tarjeta:
 | **Participante** | documento, nombres, fecha de nacimiento, correo, celular, apodo público, estado | Documento (único) |
 | **Billetera** | saldo disponible, saldo retenido | Pertenece a un participante (1 a 1) |
 | **Movimiento** | tipo, variación en disponible, variación en retenido, referencia (rifa/pago/compromiso), fecha | Inmutable, nunca se edita ni se borra |
-| **Paquete de recarga** | precio, puntos que otorga, activo | — |
+| **Paquete de recarga** | precio, puntos que otorga, activo (atajos rápidos: 5, 10, 15 y 20) | — |
 | **Recarga** | paquete, monto, medio de pago, estado | Referencia de la pasarela (única) |
 | **Categoría** | nombre, ícono, orden, activa | Nombre único |
 | **Producto** | nombre (título extraído del link), imágenes, **link original**, **link de compra** (el que usa la plataforma, puede ser reemplazado por un admin), estado del link, precio según la tienda, categoría | — |
@@ -404,7 +406,7 @@ Reglas visuales de la tarjeta:
          │  └── link no confiable ──► REVISION_LINK ──(admin valida o reemplaza)──┐
          ▼◄──────────────────────────────────────────────────────────────────┘
          ▼
-      CAPTANDO  "Calentando la Chance" 🔒 privada, solo por enlace
+      CAPTANDO  "Calentando Rifa" 🔒 privada, solo por enlace
          │  ├── ventana de captación vencida sin umbral ──► NO_SE_ARMO (puntos liberados)
          │  umbral de visibilidad alcanzado
          ▼
@@ -414,7 +416,7 @@ Reglas visuales de la tarjeta:
  Fase 1: admin crea ──► BORRADOR ──publicar──┐
          └───────────────────────────────────┤
                                              ▼
-                                         ARMANDO  "Armando la Chance" (pública y listada)
+                                         ARMANDO  "Armando Rifa" (pública y listada)
                                    ┌─────────┴──────────┐
                      ventana vencida sin meta     meta cubierta
                                    ▼                    ▼
@@ -435,10 +437,10 @@ Reglas visuales de la tarjeta:
 |--------|------------------|-------------|-----------------|-----------------|
 | `BORRADOR` | — | El admin la está configurando; no es pública. | No | — |
 | `REVISION_LINK` *(F2)* | Link en revisión | El link no es de tienda confiable o no se pudo leer; un admin lo valida o lo reemplaza (§7.11). | No | — |
-| `CAPTANDO` *(F2)* | **Calentando la Chance** 🔒 | Propuesta privada, no listada. Su autor comparte el enlace y la gente que entra pone puntos. Si alcanza el umbral de visibilidad pasa a moderación. | Sí, como compromiso | Disponible → Retenido |
+| `CAPTANDO` *(F2)* | **Calentando Rifa** 🔒 | Propuesta privada, no listada. Su autor comparte el enlace y la gente que entra pone puntos. Si alcanza el umbral de visibilidad pasa a moderación. | Sí, como compromiso | Disponible → Retenido |
 | `PROPUESTA` *(F2)* | En moderación | Alcanzó el umbral; el admin valida producto lícito, precio coherente con el link y entregable, y fija el margen. Sigue accesible por enlace pero ya no acepta puntos nuevos. | No | Se mantiene retenido |
-| `ARMANDO` | **Armando la Chance** | Pública y listada. Muestra foto, precio, cantidad de participantes y barra de avance en % (nunca montos ni puntos reunidos). Reúne compromisos durante la ventana de armado. Los compromisos de la etapa privada se conservan. | Sí, como compromiso | Disponible → Retenido |
-| `NO_SE_ARMO` | **No se armó la Chance** | La ventana venció sin cubrir la meta. | No | Retenido → Disponible |
+| `ARMANDO` | **Armando Rifa** | Pública y listada. Muestra foto, precio, cantidad de participantes y barra de avance en % (nunca montos ni puntos reunidos). Reúne compromisos durante la ventana de armado. Los compromisos de la etapa privada se conservan. | Sí, como compromiso | Disponible → Retenido |
+| `NO_SE_ARMO` | **No se armó la Rifa** | La ventana venció sin cubrir la meta. | No | Retenido → Disponible |
 | `ABIERTA` | **¡Va! Rifa confirmada** | Meta cubierta. Todos los compromisos se convierten en tickets. Sigue abierta para nuevos participantes durante el tiempo configurado. | Sí, como compra directa | Retenido → Consumido · Disponible → Consumido |
 | `CERRADA` | Cerrada | Venció el tiempo abierta o se llegó al tope de tickets. Lista congelada. | No | — |
 | `EN_REVISION` | En revisión | El admin verifica: producto disponible y a precio esperado, recaudación correcta, sin indicios de fraude. | No | — |
@@ -491,8 +493,8 @@ Cada acción tiene un **actor**, una **condición previa** y un **resultado**. E
 | Cuenta creada / contacto verificado | Correo |
 | Recarga aprobada o rechazada | Correo + en pantalla |
 | Puntos puestos en una rifa (retenidos) | En pantalla |
-| ¡Se armó la Chance! Tus puntos ahora son tickets | Correo |
-| No se armó la Chance: tus puntos volvieron a tu billetera | Correo |
+| ¡La rifa va! Tus Chances ahora son opciones de ganar | Correo |
+| No se armó la Rifa: tus Chances volvieron a tu billetera | Correo |
 | Rifa por vencer sin completar meta (recordatorio para compartir) | Correo |
 | Sorteo programado (fecha y hora) | Correo |
 | Ganaste | Correo + WhatsApp |
@@ -534,13 +536,21 @@ Cada rifa tiene parámetros propios con valores por defecto globales. Los partic
 | Tope de tickets | Sin tope | Al alcanzarse, la rifa se cierra antes de tiempo |
 | Mínimo de puntos por participante | 1 | — |
 | Máximo de puntos por participante | 20 % de la meta | Evita que una sola persona acapare |
-| Permitir retirar puntos en armado | Sí | Si se permite que el participante se arrepienta mientras la Chance se arma |
+| Permitir retirar puntos en armado | Sí | Si se permite que el participante se arrepienta mientras la rifa se arma |
 | Mostrar avance | Personas + barra de % | Se muestra la cantidad de personas y una barra de 0–100 % (rojo → verde). Los montos, la meta y los puntos reunidos **no** se muestran |
 | Categoría | — | Obligatoria |
 | Umbral de visibilidad *(F2)* | **20 % de la meta total** (precio + margen), en puntos | Apoyo mínimo para salir de la etapa privada. Además exige un mínimo de **10 participantes** (decisión #22) |
 | Ventana de captación *(F2)* | 7 días | Plazo de la etapa privada; la ventana de armado público empieza a contar al aprobarse |
 | Puntos mínimos del autor *(F2)* | 1 % de la meta | El autor debe poner puntos propios en su propuesta |
 | Propuestas activas por autor *(F2)* | 2 (creadores verificados: 5) | Evita spam de propuestas |
+
+**Parámetros globales de recarga** (los define un admin; no son por rifa):
+
+| Parámetro | Por defecto | Descripción |
+|-----------|-------------|-------------|
+| Atajos de recarga | 5, 10, 15 y 20 Chances | Recuadros rápidos en la pantalla de recarga |
+| Recarga mínima | 5 Chances | Monto libre mínimo por recarga |
+| Recarga máxima | 500 Chances | Monto libre máximo por recarga |
 
 ### Ejemplo de cálculo de meta y umbral
 
@@ -551,8 +561,8 @@ Cada rifa tiene parámetros propios con valores por defecto globales. Los partic
 | **Meta total** | precio + margen | **2,970 puntos** |
 | Umbral de visibilidad *(F2)* | 20 % × meta total | **594 puntos** |
 
-- En **Calentando la Chance** (privada), la propuesta necesita juntar 594 puntos para pasar a moderación y luego a **Armando la Chance** (pública).
-- En **Armando la Chance**, necesita llegar a 2,970 puntos para que la rifa **vaya**.
+- En **Calentando Rifa** (privada), la propuesta necesita juntar 594 puntos para pasar a moderación y luego a **Armando Rifa** (pública).
+- En **Armando Rifa**, necesita llegar a 2,970 puntos para que la rifa **vaya**.
 - El público solo ve el precio del producto y la cantidad de participantes; la meta, el margen y el umbral son internos.
 - El margen de 35 % sobre el precio equivale a ~26 % de la meta total. Si la rifa supera la meta mientras está abierta, el excedente se trata según la decisión #8.
 
@@ -821,7 +831,7 @@ Puntos técnicos obligatorios:
 - [ ] Reemplazar servicios mock por servicios HTTP
 
 ### Fase 2 — Comunidad
-- [ ] Propuestas de rifas con etapa privada (Calentando la Chance), umbral de visibilidad y moderación
+- [ ] Propuestas de rifas con etapa privada (Calentando Rifa), umbral de visibilidad y moderación
 - [ ] Enlaces de autor con atribución para creadores de contenido
 - [ ] Notificaciones de progreso
 - [ ] Segundo medio de pago (Yape)
@@ -886,3 +896,4 @@ docs(semantica): estados y transiciones de rifa
 | 20 | ¿Cómo se distingue a un "creador verificado" de un participante normal? | Verificación manual por admin (redes sociales, audiencia); le da más propuestas activas y una insignia |
 | 21 | Si el autor de una propuesta retira sus propios puntos, ¿la propuesta se cae? | Sí, si queda por debajo de sus puntos mínimos de autor |
 | 22 | ~~¿El umbral exige además un mínimo de participantes?~~ | **Resuelto:** sí, 10 participantes, para que una sola persona con mucho saldo no lo cubra |
+| 23 | ¿Límite diario de recarga por usuario? | S/ 500 al día por usuario, por prevención de lavado de activos (§10) |

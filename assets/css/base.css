@@ -46,7 +46,7 @@ header {
 .nav-links > a.btn-primary { color: var(--accent-ink); }
 .nav-links > a.btn-ghost { color: var(--text); }
 .saldo { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.usuario-icono, .saldo-corto { display: none; }
+.usuario-icono { display: none; }
 .usuario-apodo { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nav-links .join-menu.menu-usuario { gap: var(--sp-4); }
 .nav-links .join-menu.menu-usuario a,
@@ -94,7 +94,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: var(--sp-16);
   .wrap { padding: 0 var(--gutter-mobile); }
   .nav-links { gap: var(--sp-10); }
   .solo-escritorio { display: none; }
-  .saldo-unidad, .usuario-apodo { display: none; }
-  .usuario-icono, .saldo-corto { display: inline; }
+  .usuario-apodo { display: none; }
+  .usuario-icono { display: inline; }
   .pagina { padding: var(--sp-40) 0; }
 }

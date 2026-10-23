@@ -1,4 +1,4 @@
-// Mensajes breves en la parte inferior ("¡Listo! Pusiste 5 puntos", "Enlace copiado").
+// Mensajes breves en la parte inferior ("¡Listo! Pusiste 5 Chances", "Enlace copiado").
 
 let contenedor;
 

@@ -171,15 +171,15 @@ export const rifasServiceMock = {
       if (!c) throw new ErrorDominio('SIN_COMPROMISO');
 
       const antes = saldo(db, u.id);
-      const mov = registrarMovimiento(db, { usuarioId: u.id, tipo: 'LIBERACION', deltaDisponible: c.cantidad, deltaRetenido: -c.cantidad, rifaId: rifa.id, motivo: 'Retiraste tus puntos.' });
+      const mov = registrarMovimiento(db, { usuarioId: u.id, tipo: 'LIBERACION', deltaDisponible: c.cantidad, deltaRetenido: -c.cantidad, rifaId: rifa.id, motivo: 'Retiraste tus Chances.' });
       c.estado = 'LIBERADO';
 
       // Decisión #21: si el autor retira sus puntos mínimos, la propuesta se cae.
       if (rifa.estado === 'CAPTANDO' && rifa.autor.usuarioId === u.id) {
         congelarAvance(db, rifa);
         liberarCompromisos(db, rifa, 'El autor retiró su propuesta.');
-        cambiarEstado(rifa, 'DESCARTADA', { actor: u.apodo, motivo: 'El autor retiró sus puntos mínimos' });
-        rifa.motivo = 'El autor retiró su propuesta. Se devolvieron todos los puntos.';
+        cambiarEstado(rifa, 'DESCARTADA', { actor: u.apodo, motivo: 'El autor retiró sus Chances mínimas' });
+        rifa.motivo = 'El autor retiró su propuesta. Se devolvieron todas las Chances.';
       }
       verificarCuadreTodos(db);
       return comprobante(db, { mov, tipo: 'RETIRO', cantidad: c.cantidad, antes, usuarioId: u.id, rifa });
@@ -296,7 +296,7 @@ export const rifasServiceMock = {
         // El autor pone puntos propios (mínimo 1 % de la meta).
         const minimo = puntosMinAutor(rifa);
         const n = Number(datos.puntosAutor);
-        if (!Number.isInteger(n) || n < minimo) throw new ErrorDominio('BAJO_MINIMO', { mensaje: `Debes poner al menos ${minimo} puntos propios.`, datos: { minimo } });
+        if (!Number.isInteger(n) || n < minimo) throw new ErrorDominio('BAJO_MINIMO', { mensaje: `Debes poner al menos ${minimo} Chances propias.`, datos: { minimo } });
         if (n > saldo(db, u.id).disponible) throw new ErrorDominio('SALDO_INSUFICIENTE', { datos: { disponible: saldo(db, u.id).disponible } });
         db.rifas.push(rifa);
         const mov = registrarMovimiento(db, { usuarioId: u.id, tipo: 'RETENCION', deltaDisponible: -n, deltaRetenido: n, rifaId: rifa.id });

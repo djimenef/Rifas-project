@@ -21,8 +21,8 @@
   <div class="wrap hero">
     <div>
       <span class="pill"><span class="dot"></span> Rifas armándose esta semana</span>
-      <h1>Cada punto a <em>S/ 1</em>.<br>Tú eliges qué rifa va.</h1>
-      <p class="lead">Recarga puntos y ponlos en la rifa que quieras. Si se arma la Chance, tus puntos se vuelven opciones para el sorteo. Si no se arma, vuelven completos a tu billetera.</p>
+      <h1>Cada Chance a <em>S/ 1</em>.<br>Tú eliges qué rifa va.</h1>
+      <p class="lead">Recarga Chances y ponlas en la rifa que quieras. Si la rifa se arma, tus Chances se vuelven opciones para el sorteo. Si no se arma, vuelven completas a tu billetera.</p>
       <div class="hero-cta">
         <a href="rifas/" class="btn btn-primary">Ver rifas</a>
         <a href="#como-funciona" class="btn btn-ghost">Cómo funciona</a>
@@ -30,16 +30,16 @@
       <div class="stats">
         <div><strong id="stat-personas">—</strong><span>personas participando</span></div>
         <div><strong id="stat-rifas">—</strong><span>rifas armándose</span></div>
-        <div><strong>S/ 1</strong><span>por punto</span></div>
+        <div><strong>S/ 1</strong><span>por Chance</span></div>
       </div>
     </div>
 
     <div class="ticket" aria-label="Rifa destacada">
-      <small id="destacada-etiqueta">Armando la Chance</small>
+      <small id="destacada-etiqueta">Armando Rifa</small>
       <h3><a id="destacada-enlace" href="rifas/">Cargando rifa destacada…</a></h3>
       <div id="destacada-detalle">&nbsp;</div>
       <div class="divider"></div>
-      <small>La Chance se cierra en</small>
+      <small>La rifa se cierra en</small>
       <div class="countdown" id="countdown">
         <div><b id="cd-d">00</b><span>días</span></div>
         <div><b id="cd-h">00</b><span>horas</span></div>
@@ -64,13 +64,13 @@
         </div>
         <div class="step">
           <div class="num">2</div>
-          <h3>Recarga puntos</h3>
-          <p>Paquetes de 5, 10, 15 o 20 puntos. 1 punto = S/ 1. Paga con Yape o tarjeta.</p>
+          <h3>Recarga Chances</h3>
+          <p>Elige 5, 10, 15 o 20 Chances, o la cantidad que quieras. 1 Chance = S/ 1. Paga con Yape o tarjeta.</p>
         </div>
         <div class="step">
           <div class="num">3</div>
-          <h3>Pon puntos y gana</h3>
-          <p>Pon tus puntos en la rifa que quieras. Si se arma la Chance, cada punto es una opción para el sorteo.</p>
+          <h3>Pon Chances y gana</h3>
+          <p>Pon tus Chances en la rifa que quieras. Si la rifa se arma, cada Chance es una opción de ganar.</p>
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
     <div class="wrap">
       <div class="section-head">
         <h2>Rifas armándose</h2>
-        <p>Cada rifa necesita juntar puntos para confirmarse. Mientras se arma, tus puntos quedan retenidos y no se gastan.</p>
+        <p>Cada rifa necesita juntar Chances para confirmarse. Mientras se arma, tus Chances quedan retenidas y no se gastan.</p>
       </div>
       <div id="rifas-destacadas"></div>
     </div>
@@ -93,8 +93,8 @@
       <div class="buy">
         <div class="buy-grid">
           <div>
-            <h2 class="buy-title">¿Cuántos puntos quieres?</h2>
-            <p class="buy-sub">Elige un paquete. 1 punto = S/ 1 = 1 opción.</p>
+            <h2 class="buy-title">¿Cuántas Chances quieres?</h2>
+            <p class="buy-sub">Elige un atajo o escribe la cantidad, de 5 a 500. 1 Chance = S/ 1 = 1 opción de ganar.</p>
             <div class="packs" id="packs">
               <button class="pack" data-qty="5"><b>5</b><span>S/ 5</span></button>
               <button class="pack active" data-qty="10"><b>10</b><span>S/ 10</span></button>
@@ -102,19 +102,20 @@
               <button class="pack" data-qty="20"><b>20</b><span>S/ 20</span></button>
             </div>
             <div class="qty">
-              <button type="button" id="minus" aria-label="Paquete anterior">−</button>
-              <input type="number" id="qty" value="10" min="5" max="20" step="5" aria-label="Puntos a recargar">
-              <button type="button" id="plus" aria-label="Paquete siguiente">+</button>
-              <span class="qty-unidad">puntos</span>
+              <button type="button" id="minus" aria-label="Una Chance menos">−</button>
+              <input type="number" id="qty" value="10" min="5" max="500" step="1" aria-label="Chances a recargar" aria-describedby="qty-aviso">
+              <button type="button" id="plus" aria-label="Una Chance más">+</button>
+              <span class="qty-unidad">Chances</span>
             </div>
+            <p class="field-error qty-aviso" id="qty-aviso" role="status" hidden></p>
           </div>
 
           <div class="summary">
-            <div class="row"><span>Puntos</span><span id="sum-qty">10</span></div>
-            <div class="row"><span>Precio por punto</span><span>S/ 1.00</span></div>
+            <div class="row"><span>Chances</span><span id="sum-qty">10</span></div>
+            <div class="row"><span>Precio por Chance</span><span>S/ 1.00</span></div>
             <div class="row total"><span>Total</span><b id="sum-total">S/ 10.00</b></div>
             <ul class="unlock-list" id="unlock-list"></ul>
-            <a href="billetera/recargar/" class="btn btn-primary btn-block" id="recargar-cta">Recargar puntos</a>
+            <a href="billetera/recargar/" class="btn btn-primary btn-block" id="recargar-cta">Recargar 10 Chances</a>
           </div>
         </div>
       </div>
@@ -126,9 +127,9 @@
     <div class="wrap register">
       <div>
         <h2>Inscríbete y empieza a participar</h2>
-        <p>Tu cuenta es gratis. Solo pagas los puntos que recargues.</p>
+        <p>Tu cuenta es gratis. Solo pagas las Chances que recargues.</p>
         <ul class="perks">
-          <li>Revisa tus puntos y opciones en cualquier momento</li>
+          <li>Revisa tus Chances y opciones en cualquier momento</li>
           <li>Recibe aviso por WhatsApp si ganas</li>
           <li>Sorteos transmitidos en vivo</li>
         </ul>
@@ -145,16 +146,16 @@
       <div class="section-head"><h2>Preguntas frecuentes</h2></div>
       <div class="faq">
         <details open>
-          <summary>¿Cuánto cuesta un punto?</summary>
-          <p>1 punto = S/ 1 = 1 opción. Recargas paquetes de 5, 10, 15 o 20 puntos con Yape o tarjeta.</p>
+          <summary>¿Cuánto cuesta una Chance?</summary>
+          <p>1 Chance = S/ 1 = 1 opción de ganar. Recarga con los atajos de 5, 10, 15 o 20 Chances, o cualquier cantidad de 5 a 500, con Yape o tarjeta.</p>
         </details>
         <details>
-          <summary>¿Qué significa "Armando la Chance"?</summary>
-          <p>Cada rifa necesita juntar suficientes puntos para confirmarse. Mientras tanto, tus puntos quedan retenidos: no se gastan hasta que la rifa va.</p>
+          <summary>¿Qué significa "Armando Rifa"?</summary>
+          <p>Cada rifa necesita juntar suficientes Chances para confirmarse. Mientras tanto, tus Chances quedan retenidas: no se gastan hasta que la rifa va.</p>
         </details>
         <details>
-          <summary>¿Y si la Chance no se arma?</summary>
-          <p>Tus puntos vuelven completos a tu billetera para que los uses en otra rifa.</p>
+          <summary>¿Y si la rifa no se arma?</summary>
+          <p>Tus Chances vuelven completas a tu billetera para que las uses en otra rifa.</p>
         </details>
         <details>
           <summary>¿Cómo sé si gané?</summary>

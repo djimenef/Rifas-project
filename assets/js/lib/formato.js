@@ -7,8 +7,11 @@ const decimales = new Intl.NumberFormat('es-PE', { minimumFractionDigits: 2, max
 /** soles(2200) → 'S/ 2,200' · soles(5, true) → 'S/ 5.00' */
 export const soles = (monto, conDecimales = false) => 'S/ ' + (conDecimales ? decimales : numero).format(monto);
 
-/** puntos(1) → '1 punto' · puntos(10) → '10 puntos' */
-export const puntos = n => `${numero.format(n)} ${Math.abs(n) === 1 ? 'punto' : 'puntos'}`;
+/**
+ * Texto visible de una cantidad de puntos. En pantalla la moneda se llama "Chance" (femenino):
+ * puntos(1) → '1 Chance' · puntos(35) → '35 Chances'. En el código se sigue diciendo "puntos".
+ */
+export const puntos = n => `${numero.format(n)} ${Math.abs(n) === 1 ? 'Chance' : 'Chances'}`;
 
 /** opciones(1) → '1 opción' · opciones(5) → '5 opciones' */
 export const opciones = n => `${numero.format(n)} ${Math.abs(n) === 1 ? 'opción' : 'opciones'}`;

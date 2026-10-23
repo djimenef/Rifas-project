@@ -41,23 +41,28 @@ function menuUsuario(usuario, enPanel = false) {
 }
 
 function headerPublico(usuario, idRuta) {
+  // PENDIENTE (docs/PROGRESO.md): en Inicio, "Cómo funciona" y "Preguntas" bajan a su sección mientras
+  // sus páginas estén en construcción. Al construirlas en el Paso 4, usar url('comoFunciona') y url('preguntas') también aquí.
+  const enInicio = idRuta === 'inicio';
+  const comoFunciona = enInicio ? '#como-funciona' : url('comoFunciona');
+  const preguntas = enInicio ? '#faq' : url('preguntas');
   let enlaces;
   if (!usuario) {
     enlaces = `
       <a href="${url('rifas')}">Rifas</a>
-      <a href="${url('comoFunciona')}">Cómo funciona</a>
+      <a href="${comoFunciona}">Cómo funciona</a>
       <a href="${url('ganadores')}">Ganadores</a>
-      <a href="${url('preguntas')}">Preguntas</a>${menuParticipar(idRuta)}`;
+      <a href="${preguntas}">Preguntas</a>${menuParticipar(idRuta)}`;
   } else if (usuario.rol === 'ADMIN') {
     enlaces = `
       <a href="${url('rifas')}">Rifas</a>
-      <a href="${url('comoFunciona')}">Cómo funciona</a>
+      <a href="${comoFunciona}">Cómo funciona</a>
       <a href="${url('admin')}" class="btn btn-ghost btn-sm solo-escritorio">Panel de administración</a>${menuUsuario(usuario)}`;
   } else {
     enlaces = `
       <a href="${url('rifas')}">Rifas</a>
       <a href="${url('misRifas')}">Mis rifas</a>
-      <a href="${url('billetera')}" class="btn btn-ghost btn-sm saldo" aria-label="Saldo disponible"><span><span data-saldo>…</span> <span class="saldo-unidad">puntos</span><span class="saldo-corto">pts</span></span></a>
+      <a href="${url('billetera')}" class="btn btn-ghost btn-sm saldo" aria-label="Saldo disponible"><span><span data-saldo>…</span> <span class="saldo-unidad">Chances</span></span></a>
       <a href="${url('recargar')}" class="btn btn-primary btn-sm solo-escritorio">Recargar</a>${menuUsuario(usuario)}`;
   }
   return `
@@ -113,7 +118,7 @@ export async function actualizarSaldo() {
   try {
     const { disponible } = await billeteraService.obtener();
     chip.querySelector('[data-saldo]').textContent = disponible.toLocaleString('es-PE');
-    chip.querySelector('.saldo-unidad').textContent = disponible === 1 ? 'punto' : 'puntos';
+    chip.querySelector('.saldo-unidad').textContent = disponible === 1 ? 'Chance' : 'Chances';
     chip.setAttribute('aria-label', `Saldo disponible: ${puntos(disponible)}. Ver mi billetera`);
   } catch {
     chip.querySelector('[data-saldo]').textContent = '—';

@@ -6,7 +6,7 @@ import { esc } from '../lib/html.js';
  * @param {{ valor?: number, min?: number, max?: number, unidad?: string, etiqueta?: string }} [opciones]
  * @returns {string} HTML del selector
  */
-export function selectorCantidad({ valor = 1, min = 1, max = 999, unidad = 'puntos', etiqueta = 'Cantidad' } = {}) {
+export function selectorCantidad({ valor = 1, min = 1, max = 999, unidad = 'Chances', etiqueta = 'Cantidad' } = {}) {
   return `
     <div class="qty" data-min="${min}" data-max="${max}">
       <button type="button" data-paso="-1" aria-label="Quitar uno">−</button>

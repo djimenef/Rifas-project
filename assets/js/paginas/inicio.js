@@ -1,6 +1,6 @@
 // Página de inicio. Los datos (rifas, personas, avance) salen de RifasService.
 import { listo } from '../layout.js';
-import { rifasService } from '../services/index.js';
+import { rifasService, billeteraService } from '../services/index.js';
 import { url } from '../lib/rutas.js';
 import { esc } from '../lib/html.js';
 import { soles, puntos } from '../lib/formato.js';
@@ -8,39 +8,48 @@ import { barraAvance } from '../components/barra-avance.js';
 import { badgeEstado } from '../components/badge.js';
 import { cargarSeccion } from '../components/estados.js';
 
-const PRECIO_PUNTO = 1;
-const PAQUETES = [5, 10, 15, 20];
+const PRECIO_PUNTO = 1;                      // 1 Chance = S/ 1
+let limites = { minimo: 5, maximo: 500 };    // se reemplazan por los de BilleteraService.opcionesRecarga()
 const qtyInput = document.getElementById('qty');
+const aviso = document.getElementById('qty-aviso');
 const packs = [...document.querySelectorAll('.pack')];
 const list = document.getElementById('unlock-list');
 const recargarCta = document.getElementById('recargar-cta');
 
-// --- Calculadora de recarga: solo paquetes de 5, 10, 15 y 20 puntos ---
-function update() {
-  const pedido = parseInt(qtyInput.value) || PAQUETES[1];
-  const q = PAQUETES.reduce((a, b) => (Math.abs(b - pedido) < Math.abs(a - pedido) ? b : a));
-  qtyInput.value = q;
+// --- Calculadora de recarga: atajos de 5, 10, 15 y 20, o cualquier cantidad entera dentro de los límites ---
+function mostrarAviso(texto) {
+  aviso.textContent = texto;
+  aviso.hidden = !texto;
+}
+
+function update({ ajustar = true } = {}) {
+  let q = Math.round(Number(qtyInput.value));
+  if (!Number.isFinite(q) || qtyInput.value === '') q = limites.minimo;
+  if (ajustar) {
+    if (q < limites.minimo) { q = limites.minimo; mostrarAviso(`Mínimo ${limites.minimo} Chances`); }
+    else if (q > limites.maximo) { q = limites.maximo; mostrarAviso(`Máximo ${limites.maximo} Chances por recarga`); }
+    else mostrarAviso('');
+    qtyInput.value = q;
+  } else if (q < limites.minimo || q > limites.maximo) {
+    return;   // mientras escribe, no corrige: espera a que termine
+  }
   document.getElementById('sum-qty').textContent = q;
   document.getElementById('sum-total').textContent = soles(q * PRECIO_PUNTO, true);
-  packs.forEach(p => p.classList.toggle('active', +p.dataset.qty === q));
+  packs.forEach(p => p.classList.toggle('active', +p.dataset.qty === q));   // solo se marca si coincide
   recargarCta.textContent = `Recargar ${puntos(q)}`;
-  recargarCta.href = url('recargar', { paquete: `p${q}` });
+  recargarCta.href = url('recargar', { cantidad: q });
   list.innerHTML = [
-    `${q} opciones para poner en las rifas que se están armando`,
-    'Puedes repartirlos entre varias rifas',
-    'Si la Chance no se arma, vuelven a tu billetera',
+    `${q} ${q === 1 ? 'opción' : 'opciones'} de ganar para poner en las rifas que se están armando`,
+    'Puedes repartirlas entre varias rifas',
+    'Si la rifa no se arma, vuelven a tu billetera',
   ].map(texto => `<li class="on"><span class="ic">✓</span>${texto}</li>`).join('');
 }
 
-const paso = direccion => {
-  const i = PAQUETES.indexOf(+qtyInput.value);
-  qtyInput.value = PAQUETES[Math.max(0, Math.min(PAQUETES.length - 1, i + direccion))];
-  update();
-};
 packs.forEach(p => p.addEventListener('click', () => { qtyInput.value = p.dataset.qty; update(); }));
-document.getElementById('minus').onclick = () => paso(-1);
-document.getElementById('plus').onclick = () => paso(1);
-qtyInput.addEventListener('change', update);
+document.getElementById('minus').onclick = () => { qtyInput.value = +qtyInput.value - 1; update(); };
+document.getElementById('plus').onclick = () => { qtyInput.value = +qtyInput.value + 1; update(); };
+qtyInput.addEventListener('input', () => update({ ajustar: false }));
+qtyInput.addEventListener('change', () => update());
 update();
 
 // --- Cuenta regresiva hasta el cierre de la rifa destacada ---
@@ -62,13 +71,16 @@ const tarjetaRifa = r => `
     <div class="draw-img" aria-hidden="true">${r.producto.emoji}</div>
     <div class="draw-body">
       <h3><a href="${url('rifa', { slug: r.slug })}">${esc(r.producto.nombre)}</a></h3>
-      <p>${esc(r.categoria)} · Precio en tienda: ${soles(r.producto.precioTienda)}</p>
+      <p>${esc(r.categoria)} · Precio referencial: ${soles(r.producto.precioTienda)}</p>
       ${barraAvance(r.progreso)}
       <div class="req"><span>👥 ${r.participantes} personas</span>${badgeEstado(r.estado)}</div>
     </div>
   </article>`;
 
 const { usuario } = await listo;
+
+// Límites de recarga configurados (los define el admin).
+billeteraService.opcionesRecarga().then(o => { limites = o; qtyInput.min = o.minimo; qtyInput.max = o.maximo; update(); }).catch(() => {});
 
 if (usuario?.rol === 'PARTICIPANTE') {
   const cta = document.getElementById('registro-cta');
@@ -91,12 +103,12 @@ cargarSeccion(document.getElementById('rifas-destacadas'), {
     // Rifa destacada: la de mayor precio que se está armando.
     const destacada = [...armando].sort((a, b) => b.producto.precioTienda - a.producto.precioTienda)[0];
     if (destacada) {
-      document.getElementById('destacada-etiqueta').textContent = `Armando la Chance · ${destacada.categoria}`;
+      document.getElementById('destacada-etiqueta').textContent = `Armando Rifa · ${destacada.categoria}`;
       const enlace = document.getElementById('destacada-enlace');
       enlace.textContent = destacada.producto.nombre;
       enlace.href = url('rifa', { slug: destacada.slug });
       document.getElementById('destacada-detalle').textContent =
-        `Precio en tienda: ${soles(destacada.producto.precioTienda)} · ${destacada.participantes} personas · ${destacada.progreso} %`;
+        `Precio referencial: ${soles(destacada.producto.precioTienda)} · ${destacada.participantes} personas · ${destacada.progreso} %`;
       iniciarCuentaRegresiva(destacada.fechaLimiteArmado);
     }
   },

@@ -289,7 +289,7 @@ export function congelarAvance(db, rifa) {
 export function declararNoArmada(db, rifa, actor = 'SISTEMA') {
   if (!ESTADOS_COMPROMISO.includes(rifa.estado)) throw new ErrorDominio('TRANSICION_INVALIDA');
   congelarAvance(db, rifa);
-  liberarCompromisos(db, rifa, 'No se armó la Chance.');
+  liberarCompromisos(db, rifa, 'No se armó la Rifa.');
   cambiarEstado(rifa, 'NO_SE_ARMO', { actor, motivo: 'Venció la ventana sin cubrir la meta' });
 }
 

@@ -6,16 +6,16 @@ export const TIPOS_MOVIMIENTO = Object.freeze([
   'RECARGA', 'RETENCION', 'LIBERACION', 'CAPTURA', 'COMPRA_DIRECTA', 'REEMBOLSO', 'AJUSTE', 'VENCIMIENTO',
 ]);
 
-/** Texto visible de cada tipo de movimiento (glosario §7.1). */
+/** Texto visible de cada tipo de movimiento (glosario §7.1: en pantalla, los puntos se llaman "Chances"). */
 export const ETIQUETA_MOVIMIENTO = Object.freeze({
   RECARGA: 'Recarga',
-  RETENCION: 'Puntos puestos (retenidos)',
-  LIBERACION: 'Puntos liberados',
-  CAPTURA: 'Puntos usados (se armó la Chance)',
+  RETENCION: 'Chances puestas (retenidas)',
+  LIBERACION: 'Chances liberadas',
+  CAPTURA: 'Chances usadas (la rifa se armó)',
   COMPRA_DIRECTA: 'Compra de opciones',
   REEMBOLSO: 'Reembolso',
   AJUSTE: 'Ajuste',
-  VENCIMIENTO: 'Puntos vencidos',
+  VENCIMIENTO: 'Chances vencidas',
 });
 
 /** @typedef {{ disponible: number, retenido: number }} Billetera */
@@ -37,10 +37,17 @@ export const ETIQUETA_MOVIMIENTO = Object.freeze({
 /** @typedef {'TARJETA'|'YAPE'} MedioPago */
 export const MEDIOS_PAGO = Object.freeze(['TARJETA', 'YAPE']);
 
+/** Atajos de recarga: 5, 10, 15 y 20. Además se puede recargar cualquier cantidad entera dentro de los límites. */
 /** @typedef {{ id: string, precio: number, puntos: number, activo: boolean }} PaqueteRecarga */
 
+/** Límites por recarga, en puntos ("Chances"). Valores por defecto: los puede cambiar un admin (README §7.9). */
+export const LIMITES_RECARGA_POR_DEFECTO = Object.freeze({ minimo: 5, maximo: 500 });
+
+/** @typedef {{ paquetes: PaqueteRecarga[], minimo: number, maximo: number }} OpcionesRecarga */
+
 /**
- * @typedef {{ id: string, usuarioId: string, paqueteId: string, monto: number, puntos: number,
+ * paqueteId es null cuando se recarga un monto libre.
+ * @typedef {{ id: string, usuarioId: string, paqueteId: string|null, monto: number, puntos: number,
  *   medioPago: MedioPago, estado: 'PENDIENTE'|'APROBADA'|'RECHAZADA', referencia: string, fecha: string }} Recarga
  */
 
