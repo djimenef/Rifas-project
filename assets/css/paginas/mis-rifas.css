@@ -1,0 +1,11 @@
+/* Mis rifas: estilos propios. Todo sale de los tokens. */
+.tab-cuenta {
+  display: inline-grid; place-items: center; min-width: var(--size-icon-sm); height: var(--size-icon-sm); margin-left: var(--sp-6);
+  padding: 0 var(--sp-6); border-radius: var(--radius-pill); background: var(--surface-2); font-size: var(--fs-xs);
+}
+.tab[aria-selected="true"] .tab-cuenta { background: color-mix(in srgb, var(--accent) 15%, var(--surface)); }
+.mis-pestana-texto { margin: 0 0 var(--sp-20); color: var(--muted); }
+
+@media (min-width: 521px) and (max-width: 900px) {
+  .mis-rifas .draws { grid-template-columns: repeat(2, 1fr); }
+}
