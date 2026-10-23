@@ -1,0 +1,12 @@
+/* Verificar cuenta: estilos propios. Todo sale de los tokens. */
+.verificar { max-width: 440px; }
+.verificar .card { display: grid; gap: var(--sp-18); }
+.verificar form { display: grid; gap: var(--sp-14); }
+.verificar #codigo { width: 100%; text-align: center; font-size: var(--fs-2xl); font-weight: var(--fw-bold); letter-spacing: var(--ls-caps); }
+.verificar-reenviar { margin: 0; text-align: center; color: var(--muted); font-size: var(--fs-small); }
+.verificar-listo { display: grid; gap: var(--sp-14); justify-items: center; text-align: center; }
+.verificar-listo p { margin: 0; color: var(--muted); }
+
+@media (max-width: 520px) {
+  .verificar .card { padding: var(--sp-22); }
+}

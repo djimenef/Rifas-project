@@ -24,7 +24,7 @@
 .detalle-accion .btn { width: 100%; }
 .detalle-mio { display: grid; gap: var(--sp-8); padding: var(--sp-14) var(--sp-16); border-radius: var(--radius-14); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
 .detalle-mio p { margin: 0; color: var(--text); }
-.detalle-retirar { justify-self: start; border: 0; background: none; padding: 0; font: inherit; cursor: pointer; }
+.detalle-retirar { justify-self: start; }
 
 .detalle-secciones { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-20); margin-top: var(--sp-40); }
 .detalle-seccion { display: grid; gap: var(--sp-14); align-content: start; }

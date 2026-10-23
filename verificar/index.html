@@ -10,15 +10,32 @@
   <link rel="stylesheet" href="../assets/css/tokens.css">
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/paginas/verificar.css">
 </head>
 <body data-ruta="verificar">
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <div class="wrap pagina verificar">
+    <h1 class="pagina-titulo">Verifica tu cuenta</h1>
+    <p class="pagina-sub" id="sub">Te enviamos un código de 6 dígitos a tu correo y a tu celular.</p>
+
+    <div class="card" id="tarjeta">
+      <form id="form" novalidate>
+        <label>Código de verificación
+          <input type="text" id="codigo" name="codigo" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="000000" aria-describedby="codigo-ayuda">
+          <span class="field-hint" id="codigo-ayuda">Fase 0 (demo): el código es 123456.</span>
+        </label>
+        <button class="btn btn-primary" type="submit" id="enviar">Verificar</button>
+      </form>
+      <p class="verificar-reenviar">¿No te llegó? <button type="button" class="enlace" id="reenviar">Reenviar código</button></p>
+    </div>
+  </div>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../assets/js/paginas/verificar.js"></script>
 </body>
 </html>
