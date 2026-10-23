@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DaleChance · Componentes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <style>
+    /* Página interna de desarrollo: catálogo de componentes (no forma parte del sitio público) */
+    main { padding: var(--sp-56) 0; }
+    h1 { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-8); }
+    .intro { color: var(--muted); margin: 0 0 var(--sp-40); }
+    .bloque { margin-bottom: var(--sp-48); }
+    .bloque > h2 { font-size: var(--fs-2xl); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-6); }
+    .bloque > p { color: var(--muted); margin: 0 0 var(--sp-18); font-size: var(--fs-body-sm); }
+    .fila { display: flex; flex-wrap: wrap; gap: var(--sp-12); align-items: center; }
+    .rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-20); }
+    .barras { display: grid; gap: var(--sp-14); max-width: 520px; }
+    .muestra-form { display: grid; gap: var(--sp-14); max-width: 560px; }
+    code { font-size: var(--fs-label); color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<header data-layout="header" data-variante="volver"></header>
+
+<main>
+  <div class="wrap">
+    <h1>Componentes</h1>
+    <p class="intro">Catálogo interno de la Fase 0. Todo sale de <code>assets/css/tokens.css</code>. Cambia el tema del sistema (claro/oscuro) para revisar ambos.</p>
+
+    <section class="bloque">
+      <h2>Botones</h2>
+      <p>Extraídos de la página de inicio.</p>
+      <div class="fila">
+        <button class="btn btn-primary" type="button">Primario</button>
+        <button class="btn btn-ghost" type="button">Secundario</button>
+        <button class="btn btn-primary btn-sm" type="button">Pequeño</button>
+        <button class="btn btn-primary" type="button" disabled>Deshabilitado</button>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <h2>Campos</h2>
+      <p>Extraídos de crear cuenta e iniciar sesión.</p>
+      <div class="card muestra-form">
+        <div class="two">
+          <label>Nombres<input type="text" placeholder="Juan"></label>
+          <label>Fecha de nacimiento<input type="date"></label>
+        </div>
+        <label>DNI<input type="text" value="1234" aria-invalid="true" aria-describedby="err-dni"></label>
+        <span class="field-error" id="err-dni">El DNI debe tener 8 dígitos.</span>
+        <p class="alt">¿Ya tienes cuenta? <a href="#">Iniciar sesión</a></p>
+      </div>
+    </section>
+
+    <section class="bloque">
+      <h2>Badge de estado de rifa</h2>
+      <p>Los marcados con * usan un neutro provisional: su color está pendiente de aprobación.</p>
+      <div class="fila" id="badges"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Barra de avance</h2>
+      <p>Solo porcentaje; rojo al inicio, verde al llegar a 100 %.</p>
+      <div class="barras" id="barras"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Selector de cantidad</h2>
+      <p>Mismo aspecto que el de la página de inicio. Valor actual: <b id="valor-qty">5</b></p>
+      <div id="selector"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Pestañas</h2>
+      <p>Se navegan con clic o con las flechas del teclado.</p>
+      <div id="tabs"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Estados de pantalla</h2>
+      <p>Vacío, error y cargando.</p>
+      <div class="rejilla" id="estados"></div>
+    </section>
+
+    <section class="bloque">
+      <h2>Modal y toast</h2>
+      <p>El modal se cierra con Esc, con la × o al hacer clic fuera.</p>
+      <div class="fila">
+        <button class="btn btn-primary" type="button" id="abrir-modal">Abrir modal</button>
+        <button class="btn btn-ghost" type="button" id="toast-ok">Toast de éxito</button>
+        <button class="btn btn-ghost" type="button" id="toast-error">Toast de error</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer data-layout="footer"></footer>
+
+<script type="module" src="../../assets/js/layout.js"></script>
+<script type="module">
+  import { badgeEstado, ESTADOS_CON_BADGE } from '../../assets/js/components/badge.js';
+  import { barraAvance } from '../../assets/js/components/barra-avance.js';
+  import { selectorCantidad, montarSelectorCantidad } from '../../assets/js/components/selector-cantidad.js';
+  import { tabs, montarTabs } from '../../assets/js/components/tabs.js';
+  import { estadoVacio, estadoError, cargando } from '../../assets/js/components/estados.js';
+  import { abrirModal } from '../../assets/js/components/modal.js';
+  import { mostrarToast } from '../../assets/js/components/toast.js';
+
+  const PENDIENTES = ['CAPTANDO', 'EN_REVISION', 'PROGRAMADA', 'COMPRANDO', 'EN_CAMINO'];
+  document.getElementById('badges').innerHTML = ESTADOS_CON_BADGE
+    .map(e => badgeEstado(e, { fecha: '5 nov, 8:30 p. m.', apodo: 'lucho_23' }) + (PENDIENTES.includes(e) ? '*' : ''))
+    .join('');
+
+  document.getElementById('barras').innerHTML = [0, 12, 41, 65, 90, 100].map(barraAvance).join('');
+
+  const sel = document.getElementById('selector');
+  sel.innerHTML = selectorCantidad({ valor: 5, min: 1, max: 20, unidad: 'puntos', etiqueta: 'Puntos a poner' });
+  montarSelectorCantidad(sel.querySelector('.qty'), v => { document.getElementById('valor-qty').textContent = v; });
+
+  const t = document.getElementById('tabs');
+  t.innerHTML = tabs('mis-rifas', [
+    { id: 'armando', texto: 'Armando', contenido: '<p>Rifas donde tus puntos están retenidos.</p>' },
+    { id: 'abiertas', texto: 'Abiertas', contenido: '<p>Rifas confirmadas donde ya tienes tickets.</p>' },
+    { id: 'finalizadas', texto: 'Finalizadas', contenido: '<p>Rifas sorteadas, entregadas, canceladas o que no se armaron.</p>' },
+  ]);
+  montarTabs(t.querySelector('[data-tabs]'));
+
+  document.getElementById('estados').innerHTML =
+    estadoVacio({ titulo: 'Aún no tienes rifas', texto: 'Pon puntos en una rifa para verla aquí.', accion: { texto: 'Ver rifas', href: '#' } }) +
+    estadoError() +
+    `<div class="card">${cargando({ texto: 'Cargando rifas…' })}</div>`;
+
+  document.getElementById('abrir-modal').addEventListener('click', () => {
+    let cantidad;
+    const { dialog } = abrirModal({
+      titulo: 'Poner puntos',
+      contenido: `<p>${badgeEstado('ARMANDO')}</p><p>Tus puntos quedan retenidos y solo se usan si la Chance se arma.</p>${selectorCantidad({ valor: 5, max: 35 })}`,
+      acciones: [
+        { texto: 'Cancelar', variante: 'ghost' },
+        { texto: 'Confirmar', alHacerClic: cerrar => { cerrar(); mostrarToast(`¡Listo! Pusiste ${cantidad.valor()} puntos en la rifa.`); } },
+      ],
+    });
+    cantidad = montarSelectorCantidad(dialog.querySelector('.qty'));
+  });
+  document.getElementById('toast-ok').addEventListener('click', () => mostrarToast('Enlace copiado.'));
+  document.getElementById('toast-error').addEventListener('click', () => mostrarToast('Saldo insuficiente.', { tipo: 'error' }));
+</script>
+</body>
+</html>

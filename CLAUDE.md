@@ -39,10 +39,21 @@ Si algo no está definido en estas fuentes, **pregunta** antes de inventar. Si e
 
 ## Comandos del proyecto
 
-> Completar cuando Claude Code los detecte en el Paso 0 de `PROMPT-FASE0.md`.
+Stack: HTML, CSS y JavaScript estáticos con módulos ES, sin dependencias. Los módulos ES **no funcionan abriendo el archivo con doble clic** (`file://`): siempre usar el servidor local.
 
 | Acción | Comando |
 |--------|---------|
-| Levantar en desarrollo | _por definir_ |
-| Compilar | _por definir_ |
-| Lint / formato | _por definir_ |
+| Levantar en desarrollo | `python -m http.server 8000` → abrir http://localhost:8000 |
+| Compilar | No aplica (sitio estático, sin build) |
+| Lint / formato | No hay configurado (Node no está instalado; no se instalan herramientas sin permiso) |
+
+Catálogo de componentes: http://localhost:8000/dev/componentes/
+
+## Estructura de estilos y componentes
+
+- `assets/css/tokens.css`: todos los colores, tipografías, espaciados, radios y sombras. Los valores son los de las 3 pantallas originales.
+- `assets/css/base.css`: reset, contenedor, header, footer y botones.
+- `assets/css/components.css`: campos, badge de estado, selector de cantidad, barra de avance, modal, pestañas, estados (vacío, error, cargando) y toast.
+- `assets/js/layout.js`: dibuja `<header data-layout="header" data-variante="…">` y `<footer data-layout="footer">`.
+- `assets/js/components/`: un módulo por componente.
+- Cada pantalla conserva en su `<style>` solo sus reglas propias, escritas con tokens.
