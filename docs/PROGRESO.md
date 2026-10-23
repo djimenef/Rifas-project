@@ -7,10 +7,13 @@
 
 | | |
 |---|---|
-| **Paso actual** | Pasos 0 a 3 terminados. **Siguiente: Paso 4 (pantallas P1)**, todavía no empezado. |
-| **Rama con el trabajo** | `feature/fase0-mockups`, en revisión mediante Pull Request hacia `main`. |
-| **Antes del Paso 4** | Esperar a que el PR de los Pasos 0–3 se revise y se fusione. Después, crear `feature/paso4-pantallas-p1` desde `main` actualizado. |
+| **Paso actual** | Pasos 0 a 3 terminados y fusionados en `main` (PR #4). **Siguiente: Paso 4 (pantallas P1)**, todavía no empezado. |
+| **Responsable del Paso 4** | **David** |
+| **Rama del Paso 4** | `feature/paso4-pantallas-p1` (creada desde `main` actualizado, ya publicada en GitHub) |
+| **Revisión** | Al terminar el Paso 4, David abre un Pull Request hacia `main` y lo revisa el otro integrante del equipo. |
 | **Última actualización** | 2026-10-23 |
+
+> **Excepción temporal (23/10/2026):** el PR #4 (Fase 0, Pasos 0–3) se fusionó en `main` **sin la revisión del compañero**, por acuerdo del equipo. David puede revisar la Fase 0 directamente en `main`. A partir del Paso 4 vuelve la regla normal: todo PR lo revisa la otra persona.
 
 ## Hecho
 
@@ -29,19 +32,53 @@
 | 3 | Login y registro conectados a AuthService | `6936cb8` |
 | 3 | Inicio con textos y datos del modelo nuevo | `89ed564` |
 | Ajustes | Chances, nombres de estados, precio referencial y recarga libre | `66f0cac` |
-| Docs | Flujo de equipo, esta bitácora, diagramas y propuesta | el commit que agregó este archivo |
+| Docs | Flujo de equipo, esta bitácora, diagramas y propuesta | `2f6c9dd` |
+| Merge | PR #4 "Fase 0: especificación, base de diseño, dominio, estructura y navegación (Pasos 0–3)" fusionado en `main` | `896d494` |
+| Docs | Traspaso del Paso 4 a David | el commit que agregó esta fila |
 
 Verificación al cierre: **50/50 pruebas** en `dev/pruebas/` y 12/12 flujos de navegación revisados en Chrome.
 
 ## Sigue
 
-1. **Revisar y fusionar** el PR de `feature/fase0-mockups` hacia `main` (lo revisa el compañero).
-2. **Paso 4 — Pantallas P1** (ver `PROMPT-FASE0.md`): listado de rifas, detalle por estado, modal Poner Chances / Comprar opciones, Cómo funciona, Verificar cuenta, Billetera, Historial, Recargar, Mis rifas y Admin (Rifas y Cola de revisión). Rama: `feature/paso4-pantallas-p1`.
+1. **Paso 4 — Pantallas P1** (ver `PROMPT-FASE0.md`), a cargo de **David** en `feature/paso4-pantallas-p1`: listado de rifas, detalle por estado, modal Poner Chances / Comprar opciones, Cómo funciona, Verificar cuenta, Billetera, Historial, Recargar, Mis rifas y Admin (Rifas y Cola de revisión).
+2. Al terminar: `docs/PROGRESO.md` actualizado en el mismo commit, `dev/pruebas/` en verde, push y **Pull Request hacia `main`** con la plantilla. Lo revisa el otro integrante del equipo.
 
 ### Pendientes anotados para el Paso 4
 - **Header de Inicio:** hoy "Cómo funciona" y "Preguntas" bajan a `#como-funciona` y `#faq` de la misma página porque sus páginas están en construcción. Cuando se construyan `/como-funciona` y `/preguntas-frecuentes`, cambiarlo en `assets/js/components/header.js` (buscar `PENDIENTE`).
 - **Recargar (`/billetera/recargar`):** atajos 5/10/15/20 + monto libre de 5 a 500 con el mismo comportamiento que Inicio. Leer `?cantidad=` (lo manda Inicio) y usar `billeteraService.opcionesRecarga()`.
 - **Verificar (`/verificar`):** el registro ya llega aquí con `?volver=`; el código de demo es `123456`.
+
+## Traspaso: cómo arrancar el Paso 4 (David)
+
+**Si todavía no tienes el proyecto:**
+```bash
+git clone https://github.com/djimenef/Rifas-project.git
+cd Rifas-project
+git config user.name "Tu nombre"
+git config user.email "tu-correo@ejemplo.com"
+git switch feature/paso4-pantallas-p1
+```
+
+**Si ya lo tienes:**
+```bash
+git switch main
+git pull
+git fetch origin
+git switch feature/paso4-pantallas-p1
+git pull
+```
+
+**Levantar y comprobar:**
+```bash
+python -m http.server 8000
+```
+- Sitio: http://localhost:8000
+- Pruebas de reglas: http://localhost:8000/dev/pruebas/ → deben salir **50 de 50** en verde antes de empezar.
+- Catálogo de componentes: http://localhost:8000/dev/componentes/
+- Botón **🛠 Demo** (abajo a la izquierda): cambiar entre visitante, participante y admin, forzar cargando/vacío/error y reiniciar datos.
+- Credenciales: ver la tabla al final de este archivo (`lucia@dalechance.pe` / `demo123`, `admin@dalechance.pe` / `admin123`, código `123456`).
+
+**Lo que conviene leer antes de construir:** `CLAUDE.md` (reglas, vocabulario visible, organización de carpetas, panel de admin), `PROMPT-FASE0.md` (Paso 4 y mapa de rutas), README §6 (inventario y tarjeta de rifa), §7 (reglas) y §7.12 (compra y entrega), y `assets/js/lib/rutas.js` (todas las rutas ya existen como "En construcción").
 
 ## Decisiones tomadas (resumen)
 
