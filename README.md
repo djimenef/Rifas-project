@@ -3,6 +3,10 @@
 > **Estado del proyecto:** 🟡 Fase 0 · Mockups (en desarrollo inicial)
 > **Mercado:** Perú · **Moneda:** Soles (S/)
 > **Este documento es la introducción oficial del repositorio.** Explica qué estamos construyendo, cómo se trabaja en esta etapa y dónde vive cada definición.
+>
+> 📄 **[Propuesta del proyecto](docs/propuesta.md)** — resumen de negocio para socios e inversionistas.
+> 📍 **[Bitácora (PROGRESO)](docs/PROGRESO.md)** — en qué paso estamos, qué sigue y decisiones tomadas.
+> 🗺️ **Diagramas:** [flujo de trabajo](docs/diagramas/flujo-de-trabajo.md) · [ciclo de vida de una rifa](docs/diagramas/ciclo-de-vida-rifa.md) · [billetera](docs/diagramas/flujo-billetera.md) · [recorrido del usuario](docs/diagramas/recorrido-usuario.md) · [arquitectura](docs/diagramas/arquitectura.md)
 
 ---
 
@@ -72,6 +76,7 @@ Stack actual: **HTML, CSS y JavaScript estáticos**, sin framework.
 | `CLAUDE.md` | Reglas del proyecto. Claude Code lo carga solo en cada sesión. |
 | `README.md` | Este documento: especificación funcional completa (qué se construye y cómo funciona). |
 | `PROMPT-FASE0.md` | Plan paso a paso para que Claude Code construya todos los mockups conectados. |
+| `docs/PROGRESO.md` | Bitácora compartida del equipo: paso actual, hecho, pendiente y decisiones. Se lee al empezar y se actualiza al terminar cada paso. |
 
 Para empezar, en la terminal del proyecto: `claude` y luego
 `Lee CLAUDE.md, README.md y PROMPT-FASE0.md. Ejecuta el Paso 0 y espera mi aprobación.`
@@ -161,6 +166,9 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 ├── CLAUDE.md                     ← reglas para Claude Code
 ├── PROMPT-FASE0.md               ← plan de construcción de mockups
 ├── docs/
+│   ├── propuesta.md              ← propuesta de negocio (no técnica)
+│   ├── PROGRESO.md               ← bitácora del equipo
+│   ├── diagramas/                (Mermaid: flujo de trabajo, ciclo de vida, billetera, recorrido, arquitectura)
 │   ├── semantica/                ← CAPA 2: definición abstracta
 │   │   ├── 00-glosario.md
 │   │   ├── 01-identidad.md       (usuario, registro, verificación)
@@ -843,10 +851,14 @@ Puntos técnicos obligatorios:
 
 ## 12. Convenciones del equipo
 
-**Ramas**
-- `main`: siempre desplegable.
-- `develop`: integración.
-- `feature/<pantalla-o-modulo>`, `fix/<descripcion>`, `docs/<tema>`.
+**Flujo de trabajo en equipo** (dos personas, cada una con su propio Claude Code). Diagrama: [`docs/diagramas/flujo-de-trabajo.md`](docs/diagramas/flujo-de-trabajo.md).
+
+- **Antes de empezar:** `git pull` y leer [`docs/PROGRESO.md`](docs/PROGRESO.md).
+- **`main` protegida:** siempre desplegable; solo cambia por **Pull Request revisado por la otra persona**.
+- **Una rama por paso** o grupo de pantallas, creada desde `main` actualizado: `feature/paso4-pantallas-p1`, `feature/paso5-pantallas-p2`, … También `fix/<descripcion>` y `docs/<tema>`.
+- **Una sola persona por rama a la vez.** El traspaso es: commit + push + `docs/PROGRESO.md` actualizado.
+- **Nunca force push.**
+- Al terminar un paso: `docs/PROGRESO.md` actualizado en el mismo commit, pruebas de `dev/pruebas/` en verde y push.
 
 **Commits** — [Conventional Commits](https://www.conventionalcommits.org/es/):
 ```
@@ -856,8 +868,10 @@ docs(semantica): estados y transiciones de rifa
 ```
 
 **Pull requests**
-- Uno por pantalla o por documento.
+- Uno por paso o por grupo de pantallas, con la plantilla [`.github/pull_request_template.md`](.github/pull_request_template.md).
 - Incluir capturas en móvil y escritorio.
+- Pruebas de `dev/pruebas/` en verde.
+- Lo revisa y lo fusiona la otra persona, nunca quien lo abrió.
 - Enlazar la sección del inventario o de la semántica que implementa.
 - Si el PR introduce una regla de negocio nueva, debe actualizar también `docs/semantica/`.
 

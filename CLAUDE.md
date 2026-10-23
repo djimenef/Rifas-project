@@ -33,10 +33,15 @@ Si algo no está definido en estas fuentes, **pregunta** antes de inventar. Si e
 
 ## Flujo de trabajo
 
-- Trabaja en la rama `feature/fase0-mockups` (créala desde la rama principal si no existe).
-- **Un commit por paso** del plan, con [Conventional Commits](https://www.conventionalcommits.org/es/):
+- **Al iniciar cada sesión:** `git pull` y leer [`docs/PROGRESO.md`](docs/PROGRESO.md) (paso actual, qué sigue, decisiones y pendientes).
+- **`main` está protegida:** solo cambia por Pull Request revisado por la otra persona del equipo. Nunca hagas commit ni push directo a `main`.
+- **Una rama por paso** o grupo de pantallas, creada desde `main` actualizado: `feature/paso4-pantallas-p1`, `feature/paso5-pantallas-p2`, `feature/paso6-pantallas-p3`, `docs/<tema>`, `fix/<descripcion>`.
+- **Una sola persona por rama a la vez.** El traspaso es: commit + push + `docs/PROGRESO.md` actualizado. Quien sigue hace `git pull` antes de tocar nada.
+- **Nunca** `git push --force` ni reescribir historia ya publicada.
+- **Un commit por paso** (o por pantalla o grupo pequeño) con [Conventional Commits](https://www.conventionalcommits.org/es/):
   `feat(rifas): mockup de detalle de rifa`, `refactor(ui): extraer tokens de diseño`, `docs(semantica): estados de rifa`.
-- No hagas `push` ni abras PRs sin que te lo pida.
+- **Al terminar un paso:** actualizar `docs/PROGRESO.md` **en el mismo commit**, correr `dev/pruebas/` (todo en verde) y hacer `push` de la rama.
+- Los Pull Requests hacia `main` se abren cuando el usuario lo pida, con la plantilla de `.github/pull_request_template.md`. Nunca los fusiones tú: los revisa la otra persona.
 - Al terminar cada paso, resume en 3–5 líneas qué hiciste y qué sigue.
 
 ## Comandos del proyecto
@@ -96,7 +101,8 @@ Regla desde el Paso 3 en adelante:
 │       │   └── mock/             implementación Fase 0 (motor.js = reglas, db.js = persistencia)
 │       ├── mocks/                datos falsos; solo los lee services/mock
 │       └── lib/                  utilidades: rutas.js (MAPA DE RUTAS y acceso), formato, ids, hash, html, demo
-├── docs/                         documentación (Paso 7)
+├── docs/                         PROGRESO.md (bitácora), propuesta.md, diagramas/ (Mermaid) y, en el Paso 7, semantica/
+├── .github/pull_request_template.md
 ├── README.md · CLAUDE.md · PROMPT-FASE0.md
 └── .gitignore
 ```
