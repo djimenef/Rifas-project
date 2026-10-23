@@ -72,6 +72,10 @@ section { padding: var(--sp-56) 0; }
   margin-top: auto; padding-top: var(--sp-14); display: flex; justify-content: space-between; align-items: center;
   border-top: 1px solid var(--border); font-size: var(--fs-small);
 }
+.draw-body h3 a, .ticket h3 a { color: inherit; text-decoration: none; }
+.draw-body h3 a:hover, .ticket h3 a:hover { text-decoration: underline; }
+.draw-body h3 a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.ticket h3 a:focus-visible { outline: 2px solid var(--ink-on-color); outline-offset: var(--focus-offset); }
 .draw.unlocked { border-color: var(--ok); }
 .draw.unlocked .badge { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
 .draw.locked { opacity: .65; }

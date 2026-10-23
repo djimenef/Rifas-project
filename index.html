@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DaleChance · Sorteos</title>
+  <title>DaleChance · Rifas a demanda</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,34 +12,34 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/paginas/inicio.css">
 </head>
-<body>
+<body data-ruta="inicio">
 
-<header data-layout="header" data-variante="inicio"></header>
+<header data-layout="header"></header>
 
 <main>
   <!-- Hero -->
   <div class="wrap hero">
     <div>
-      <span class="pill"><span class="dot"></span> Sorteos activos esta semana</span>
-      <h1>Cada cupón a <em>S/ 5</em>.<br>Más cupones, más sorteos.</h1>
-      <p class="lead">Inscríbete gratis, compra tus cupones y desbloquea sorteos con premios cada vez más grandes. Mientras más cupones tengas, más oportunidades de ganar.</p>
+      <span class="pill"><span class="dot"></span> Rifas armándose esta semana</span>
+      <h1>Cada punto a <em>S/ 1</em>.<br>Tú eliges qué rifa va.</h1>
+      <p class="lead">Recarga puntos y ponlos en la rifa que quieras. Si se arma la Chance, tus puntos se vuelven opciones para el sorteo. Si no se arma, vuelven completos a tu billetera.</p>
       <div class="hero-cta">
-        <a href="#registro" class="btn btn-primary">Inscribirme gratis</a>
-        <a href="#sorteos" class="btn btn-ghost">Ver premios</a>
+        <a href="rifas/" class="btn btn-primary">Ver rifas</a>
+        <a href="#como-funciona" class="btn btn-ghost">Cómo funciona</a>
       </div>
       <div class="stats">
-        <div><strong>2,340+</strong><span>participantes</span></div>
-        <div><strong>48</strong><span>ganadores</span></div>
-        <div><strong>S/ 5</strong><span>por cupón</span></div>
+        <div><strong id="stat-personas">—</strong><span>personas participando</span></div>
+        <div><strong id="stat-rifas">—</strong><span>rifas armándose</span></div>
+        <div><strong>S/ 1</strong><span>por punto</span></div>
       </div>
     </div>
 
-    <div class="ticket" aria-label="Premio mayor">
-      <small>Premio mayor · Sorteo Oro</small>
-      <h3>PlayStation 5 + GTA VI</h3>
-      <div>Necesitas 10 cupones o más para participar</div>
+    <div class="ticket" aria-label="Rifa destacada">
+      <small id="destacada-etiqueta">Armando la Chance</small>
+      <h3><a id="destacada-enlace" href="rifas/">Cargando rifa destacada…</a></h3>
+      <div id="destacada-detalle">&nbsp;</div>
       <div class="divider"></div>
-      <small>El sorteo se realiza en</small>
+      <small>La Chance se cierra en</small>
       <div class="countdown" id="countdown">
         <div><b id="cd-d">00</b><span>días</span></div>
         <div><b id="cd-h">00</b><span>horas</span></div>
@@ -59,87 +59,62 @@
       <div class="steps">
         <div class="step">
           <div class="num">1</div>
-          <h3>Inscríbete</h3>
-          <p>Crea tu cuenta gratis con tu nombre, DNI y celular.</p>
+          <h3>Regístrate</h3>
+          <p>Crea tu cuenta gratis con tu DNI. Solo para mayores de 18 años.</p>
         </div>
         <div class="step">
           <div class="num">2</div>
-          <h3>Compra cupones</h3>
-          <p>Cada cupón cuesta S/ 5. Paga con Yape, Plin o tarjeta.</p>
+          <h3>Recarga puntos</h3>
+          <p>Paquetes de 5, 10, 15 o 20 puntos. 1 punto = S/ 1. Paga con Yape o tarjeta.</p>
         </div>
         <div class="step">
           <div class="num">3</div>
-          <h3>Participa y gana</h3>
-          <p>Según tus cupones, entras automáticamente a uno o más sorteos.</p>
+          <h3>Pon puntos y gana</h3>
+          <p>Pon tus puntos en la rifa que quieras. Si se arma la Chance, cada punto es una opción para el sorteo.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Sorteos -->
+  <!-- Rifas armándose -->
   <section id="sorteos">
     <div class="wrap">
       <div class="section-head">
-        <h2>Sorteos disponibles</h2>
-        <p>Cada nivel se desbloquea con una cantidad mínima de cupones. Al alcanzar un nivel, también participas en los anteriores.</p>
+        <h2>Rifas armándose</h2>
+        <p>Cada rifa necesita juntar puntos para confirmarse. Mientras se arma, tus puntos quedan retenidos y no se gastan.</p>
       </div>
-      <div class="draws" id="draws">
-        <article class="draw" data-min="1">
-          <div class="draw-img">🎧</div>
-          <div class="draw-body">
-            <h3>Sorteo Bronce</h3>
-            <p>Audífonos inalámbricos + parlante Bluetooth.</p>
-            <div class="req"><span>Desde <b>1 cupón</b> (S/ 5)</span><span class="badge">Bloqueado</span></div>
-          </div>
-        </article>
-        <article class="draw" data-min="5">
-          <div class="draw-img">📱</div>
-          <div class="draw-body">
-            <h3>Sorteo Plata</h3>
-            <p>Smartphone de última generación.</p>
-            <div class="req"><span>Desde <b>5 cupones</b> (S/ 25)</span><span class="badge">Bloqueado</span></div>
-          </div>
-        </article>
-        <article class="draw" data-min="10">
-          <div class="draw-img">🎮</div>
-          <div class="draw-body">
-            <h3>Sorteo Oro</h3>
-            <p>Consola PlayStation 5 + juego GTA VI.</p>
-            <div class="req"><span>Desde <b>10 cupones</b> (S/ 50)</span><span class="badge">Bloqueado</span></div>
-          </div>
-        </article>
-      </div>
+      <div id="rifas-destacadas"></div>
     </div>
   </section>
 
-  <!-- Comprar -->
+  <!-- Recargar -->
   <section id="comprar">
     <div class="wrap">
       <div class="buy">
         <div class="buy-grid">
           <div>
-            <h2 class="buy-title">¿Cuántos cupones quieres?</h2>
-            <p class="buy-sub">Elige un paquete o ajusta la cantidad. Cada cupón vale S/ 5.</p>
+            <h2 class="buy-title">¿Cuántos puntos quieres?</h2>
+            <p class="buy-sub">Elige un paquete. 1 punto = S/ 1 = 1 opción.</p>
             <div class="packs" id="packs">
-              <button class="pack" data-qty="1"><b>1</b><span>S/ 5</span></button>
-              <button class="pack" data-qty="5"><b>5</b><span>S/ 25</span></button>
-              <button class="pack active" data-qty="10"><b>10</b><span>S/ 50</span></button>
-              <button class="pack" data-qty="20"><b>20</b><span>S/ 100</span></button>
+              <button class="pack" data-qty="5"><b>5</b><span>S/ 5</span></button>
+              <button class="pack active" data-qty="10"><b>10</b><span>S/ 10</span></button>
+              <button class="pack" data-qty="15"><b>15</b><span>S/ 15</span></button>
+              <button class="pack" data-qty="20"><b>20</b><span>S/ 20</span></button>
             </div>
             <div class="qty">
-              <button type="button" id="minus" aria-label="Quitar cupón">−</button>
-              <input type="number" id="qty" value="10" min="1" max="500" aria-label="Cantidad de cupones">
-              <button type="button" id="plus" aria-label="Agregar cupón">+</button>
-              <span class="qty-unidad">cupones</span>
+              <button type="button" id="minus" aria-label="Paquete anterior">−</button>
+              <input type="number" id="qty" value="10" min="5" max="20" step="5" aria-label="Puntos a recargar">
+              <button type="button" id="plus" aria-label="Paquete siguiente">+</button>
+              <span class="qty-unidad">puntos</span>
             </div>
           </div>
 
           <div class="summary">
-            <div class="row"><span>Cupones</span><span id="sum-qty">10</span></div>
-            <div class="row"><span>Precio unitario</span><span>S/ 5.00</span></div>
-            <div class="row total"><span>Total</span><b id="sum-total">S/ 50.00</b></div>
+            <div class="row"><span>Puntos</span><span id="sum-qty">10</span></div>
+            <div class="row"><span>Precio por punto</span><span>S/ 1.00</span></div>
+            <div class="row total"><span>Total</span><b id="sum-total">S/ 10.00</b></div>
             <ul class="unlock-list" id="unlock-list"></ul>
-            <a href="#registro" class="btn btn-primary btn-block">Comprar cupones</a>
+            <a href="billetera/recargar/" class="btn btn-primary btn-block" id="recargar-cta">Recargar puntos</a>
           </div>
         </div>
       </div>
@@ -151,15 +126,15 @@
     <div class="wrap register">
       <div>
         <h2>Inscríbete y empieza a participar</h2>
-        <p>Tu cuenta es gratis. Solo pagas por los cupones que compres.</p>
+        <p>Tu cuenta es gratis. Solo pagas los puntos que recargues.</p>
         <ul class="perks">
-          <li>Revisa tus cupones y números en cualquier momento</li>
+          <li>Revisa tus puntos y opciones en cualquier momento</li>
           <li>Recibe aviso por WhatsApp si ganas</li>
           <li>Sorteos transmitidos en vivo</li>
         </ul>
       </div>
       <div class="register-cta">
-        <a href="crear-cuenta.html" class="btn btn-primary">Crear mi cuenta</a>
+        <a href="crear-cuenta.html" class="btn btn-primary" id="registro-cta">Crear mi cuenta</a>
       </div>
     </div>
   </section>
@@ -170,16 +145,16 @@
       <div class="section-head"><h2>Preguntas frecuentes</h2></div>
       <div class="faq">
         <details open>
-          <summary>¿Cuánto cuesta cada cupón?</summary>
-          <p>Cada cupón cuesta S/ 5. Puedes comprar la cantidad que quieras.</p>
+          <summary>¿Cuánto cuesta un punto?</summary>
+          <p>1 punto = S/ 1 = 1 opción. Recargas paquetes de 5, 10, 15 o 20 puntos con Yape o tarjeta.</p>
         </details>
         <details>
-          <summary>¿Cómo se desbloquean los sorteos?</summary>
-          <p>Con 1 cupón entras al Sorteo Bronce, con 5 o más también al Plata y con 10 o más participas en los tres, incluido el Oro.</p>
+          <summary>¿Qué significa "Armando la Chance"?</summary>
+          <p>Cada rifa necesita juntar suficientes puntos para confirmarse. Mientras tanto, tus puntos quedan retenidos: no se gastan hasta que la rifa va.</p>
         </details>
         <details>
-          <summary>¿Más cupones aumentan mis probabilidades?</summary>
-          <p>Sí. Cada cupón es un número más dentro de cada sorteo al que tienes acceso.</p>
+          <summary>¿Y si la Chance no se arma?</summary>
+          <p>Tus puntos vuelven completos a tu billetera para que los uses en otra rifa.</p>
         </details>
         <details>
           <summary>¿Cómo sé si gané?</summary>
