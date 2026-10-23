@@ -27,7 +27,7 @@ function validarRegistro(d) {
   if (Object.keys(campos).length) throw new ErrorDominio('VALIDACION', { campos });
 }
 
-/** @type {import('../interfaces/AuthService.js').AuthService} */
+/** @type {import('../interfaces/auth.js').AuthService} */
 export const authServiceMock = {
   registrar(datos) {
     return operacion(db => {

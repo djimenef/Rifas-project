@@ -83,7 +83,7 @@ export function slugUnico(db, nombre) {
   return slug;
 }
 
-/** @type {import('../interfaces/RifasService.js').RifasService} */
+/** @type {import('../interfaces/rifas.js').RifasService} */
 export const rifasServiceMock = {
   listar(filtro = {}) {
     return operacion(db => {

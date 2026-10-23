@@ -5,7 +5,7 @@ import {
   cambiarEstado, liberarCompromisos, reembolsarTickets, congelarAvance, declararNoArmada, cerrarRifa,
   evaluarAvance, fijarMargen, asegurarHash, apodoDeTicket, opcionesVendidas, ahora, sumarDias,
 } from './motor.js';
-import { codigoUnico, slugUnico } from './rifas.mock.js';
+import { codigoUnico, slugUnico } from './rifas.js';
 import { ErrorDominio } from '../../domain/errores.js';
 import { ESTADOS_RIFA, ESTADOS_COMPROMISO, CONFIG_POR_DEFECTO, MODALIDADES_ENVIO, calcularMeta } from '../../domain/rifa.js';
 import { esDniValido } from '../../domain/usuario.js';
@@ -59,7 +59,7 @@ const sobreRifa = (rifaId, fn) => operacion(db => {
   return vistaAdmin(db, rifa);
 });
 
-/** @type {import('../interfaces/AdminService.js').AdminService} */
+/** @type {import('../interfaces/admin.js').AdminService} */
 export const adminServiceMock = {
   dashboard() {
     return operacion(db => {

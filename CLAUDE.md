@@ -50,21 +50,53 @@ Stack: HTML, CSS y JavaScript estáticos con módulos ES, sin dependencias. Los 
 Catálogo de componentes: http://localhost:8000/dev/componentes/
 Pruebas de reglas de negocio (servicios mock): http://localhost:8000/dev/pruebas/ — al terminar restauran los datos de ejemplo.
 
-Credenciales de demo: `lucia@dalechance.pe` / `demo123` (participante) · `admin@dalechance.pe` / `admin123` (admin) · código de verificación `123456`.
+## Organización de carpetas
 
-## Estructura de estilos y componentes
+```
+/
+├── index.html                    Inicio (/)
+├── iniciar-sesion.html           Login (/login)     ← excepción: archivo suelto
+├── crear-cuenta.html             Registro (/registro) ← excepción: archivo suelto
+├── rifas/index.html              cada pantalla nueva: su carpeta con su index.html
+├── r/index.html                  (rutas dinámicas con ?slug=… o ?codigo=…)
+├── billetera/index.html · billetera/historial/index.html · billetera/recargar/index.html
+├── admin/index.html · admin/rifas/index.html · …
+├── dev/                          páginas internas de desarrollo (no son del sitio público)
+│   ├── componentes/index.html    catálogo de componentes
+│   └── pruebas/index.html        pruebas de reglas de negocio
+├── assets/                       TODO lo compartido
+│   ├── css/
+│   │   ├── tokens.css            colores, tipografía, espaciado, radios, sombras
+│   │   ├── base.css              reset, contenedor, header, footer, botones
+│   │   ├── components.css        componentes reutilizables
+│   │   └── paginas/<pantalla>.css   estilos propios de cada pantalla
+│   └── js/
+│       ├── layout.js             dibuja el header y el footer comunes
+│       ├── session.js            sesión simulada (localStorage)
+│       ├── components/           un módulo por componente (badge, barra-avance, modal…)
+│       ├── paginas/<pantalla>.js lógica de presentación de cada pantalla
+│       ├── domain/               tipos (JSDoc) y reglas puras del negocio
+│       ├── services/
+│       │   ├── index.js          ÚNICO punto que importan las pantallas
+│       │   ├── interfaces/       contratos (auth, billetera, rifas, admin)
+│       │   └── mock/             implementación Fase 0 (motor.js = reglas, db.js = persistencia)
+│       ├── mocks/                datos falsos; solo los lee services/mock
+│       └── lib/                  utilidades (formato, ids, hash, rutas, html)
+├── docs/                         documentación (Paso 7)
+├── README.md · CLAUDE.md · PROMPT-FASE0.md
+└── .gitignore
+```
 
-- `assets/css/tokens.css`: todos los colores, tipografías, espaciados, radios y sombras. Los valores son los de las 3 pantallas originales.
-- `assets/css/base.css`: reset, contenedor, header, footer y botones.
-- `assets/css/components.css`: campos, badge de estado, selector de cantidad, barra de avance, modal, pestañas, estados (vacío, error, cargando) y toast.
-- `assets/js/layout.js`: dibuja `<header data-layout="header" data-variante="…">` y `<footer data-layout="footer">`.
-- `assets/js/components/`: un módulo por componente.
-- Cada pantalla conserva en su `<style>` solo sus reglas propias, escritas con tokens.
+**Reglas**
+- Lo compartido vive en `assets/`. Cada pantalla vive en su carpeta con su `index.html`, que imita la ruta (`/billetera/historial` → `billetera/historial/index.html`).
+- **Nada de CSS ni JS dentro de los HTML**: ni `<style>`, ni `<script>` en línea, ni atributos `style="…"`. El HTML de una pantalla solo tiene estructura y enlaza `tokens.css`, `base.css`, `components.css`, `paginas/<pantalla>.css` y **un solo** script: `paginas/<pantalla>.js` (que importa `layout.js` si la pantalla lleva header y footer).
+- El nombre `<pantalla>` es la ruta con guiones: `billetera-historial.css`, `admin-rifas.js`. Las páginas de `dev/` usan el prefijo `dev-`.
+- Las pantallas importan datos **solo** desde `services/index.js`; nunca desde `services/mock/` ni `mocks/`.
+- **Excepción por decisión del proyecto:** login y registro se quedan como archivos sueltos en la raíz, `iniciar-sesion.html` y `crear-cuenta.html`, y con esos nombres se enlazan (también en `?volver=`). Sus estilos y scripts siguen la regla: `paginas/iniciar-sesion.*` y `paginas/crear-cuenta.*`.
 
-## Capas de datos (Paso 2)
+**Convención de nombres**
+- Carpetas y archivos en **español**, **minúsculas** y con **guiones**: `barra-avance.js`, `crear-cuenta.html`, `billetera/historial/`.
+- Términos técnicos genéricos en inglés cuando no hay uno mejor (`services`, `mock`, `index`, `lib`, `assets`, `dev`).
+- En el código: funciones y variables en español con camelCase (`montarHeader`, `puntosReunidos`), constantes en MAYÚSCULAS (`ESTADOS_RIFA`).
 
-- `assets/js/domain/`: tipos (JSDoc) y reglas puras: estados y transiciones de rifa, configuración por defecto, validaciones de usuario, errores.
-- `assets/js/mocks/`: datos falsos. Solo los lee `services/mock/`.
-- `assets/js/services/interfaces/`: contratos de AuthService, BilleteraService, RifasService y AdminService.
-- `assets/js/services/mock/`: implementación de la Fase 0. `motor.js` concentra las reglas; `db.js` persiste en localStorage, simula latencia y revierte operaciones fallidas.
-- `assets/js/services/index.js`: **único punto que importan las pantallas**.
+**Credenciales de demo:** `lucia@dalechance.pe` / `demo123` (participante) · `admin@dalechance.pe` / `admin123` (admin) · `vale@dalechance.pe` / `demo123` (creadora) · código de verificación `123456`.

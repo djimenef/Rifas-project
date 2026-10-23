@@ -1,0 +1,38 @@
+/* Iniciar sesión: estilos propios. Todo sale de los tokens. */
+main { padding: var(--sp-56) 0; }
+.login { max-width: 440px; margin: 0 auto; }
+.login h1 { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-8); }
+.login > p { color: var(--muted); margin: 0 0 var(--sp-24); }
+.card { display: grid; gap: var(--sp-18); }
+form { display: grid; gap: var(--sp-14); }
+input[type="text"], input[type="password"] { width: 100%; }
+.pass { position: relative; }
+.pass input { padding-right: 76px; }
+.pass button {
+  position: absolute; right: var(--sp-8); top: 50%; transform: translateY(-50%);
+  border: 0; background: none; color: var(--muted); font: inherit; font-size: var(--fs-label); font-weight: var(--fw-semibold); cursor: pointer; padding: var(--sp-6) var(--sp-8);
+}
+.row { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-12); flex-wrap: wrap; font-size: var(--fs-small); }
+.check { display: flex; gap: var(--sp-8); align-items: center; font-weight: var(--fw-regular); color: var(--muted); }
+.row a { color: var(--accent); font-weight: var(--fw-semibold); text-decoration: none; }
+.msg { display: none; font-weight: var(--fw-semibold); text-align: center; margin: 0; }
+.msg.ok { display: block; color: var(--ok); }
+.msg.error { display: block; color: var(--error); }
+
+/* Separador y Google */
+.or { display: flex; align-items: center; gap: var(--sp-12); color: var(--muted); font-size: var(--fs-label); }
+.or::before, .or::after { content: ""; flex: 1; border-top: 1px solid var(--border); }
+.google {
+  display: flex; align-items: center; justify-content: center; gap: var(--sp-10); width: 100%;
+  padding: var(--sp-11) var(--sp-22); border-radius: var(--radius-pill); border: 1px solid var(--google-border);
+  background: var(--google-bg); color: var(--google-ink); font: inherit; font-weight: var(--fw-medium); cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.google:hover { background: var(--google-bg-hover); box-shadow: var(--google-shadow-hover); }
+.google svg { width: var(--sp-18); height: var(--sp-18); flex: none; }
+#google-official { display: flex; justify-content: center; min-height: var(--size-control); }
+#google-official:empty { display: none; }
+
+@media (max-width: 520px) {
+  .card { padding: var(--sp-22); }
+}

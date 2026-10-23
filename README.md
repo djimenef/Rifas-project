@@ -213,6 +213,9 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
     └── ISSUE_TEMPLATE/
 ```
 
+> **Fase 0 (estado actual):** el sitio es HTML, CSS y JavaScript estáticos y vive en la raíz del repositorio, con todo lo compartido en `assets/` (ver "Organización de carpetas" en `CLAUDE.md`).
+> **Fase 1:** el frontend se moverá a `web/` y el backend irá en `api/`. Las pantallas no cambian: solo se reemplaza `services/mock` por `services/http`.
+
 > Si el repositorio actual no es un monorepo, `apps/web/src` equivale a la carpeta `src/` existente. No es obligatorio mover lo que ya está construido: basta con que lo nuevo siga esta organización y lo existente se migre gradualmente.
 
 ---

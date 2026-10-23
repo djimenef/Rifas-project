@@ -7,7 +7,7 @@ import { nuevoId } from '../../lib/ids.js';
 
 const masReciente = (a, b) => b.fecha.localeCompare(a.fecha) || b.numeroOperacion.localeCompare(a.numeroOperacion);
 
-/** @type {import('../interfaces/BilleteraService.js').BilleteraService} */
+/** @type {import('../interfaces/billetera.js').BilleteraService} */
 export const billeteraServiceMock = {
   obtener() {
     return operacion(db => {
