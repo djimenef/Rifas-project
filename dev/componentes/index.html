@@ -61,7 +61,7 @@
 
     <section class="bloque">
       <h2>Badge de estado de rifa</h2>
-      <p>Los marcados con * usan un neutro provisional: su color está pendiente de aprobación.</p>
+      <p>Una variante por estado; BORRADOR y DESCARTADA no tienen badge público.</p>
       <div class="fila" id="badges"></div>
     </section>
 
@@ -113,9 +113,8 @@
   import { abrirModal } from '../../assets/js/components/modal.js';
   import { mostrarToast } from '../../assets/js/components/toast.js';
 
-  const PENDIENTES = ['CAPTANDO', 'EN_REVISION', 'PROGRAMADA', 'COMPRANDO', 'EN_CAMINO'];
   document.getElementById('badges').innerHTML = ESTADOS_CON_BADGE
-    .map(e => badgeEstado(e, { fecha: '5 nov, 8:30 p. m.', apodo: 'lucho_23' }) + (PENDIENTES.includes(e) ? '*' : ''))
+    .map(e => badgeEstado(e, { fecha: '5 nov, 8:30 p. m.', apodo: 'lucho_23' }))
     .join('');
 
   document.getElementById('barras').innerHTML = [0, 12, 41, 65, 90, 100].map(barraAvance).join('');

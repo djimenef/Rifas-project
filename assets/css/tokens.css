@@ -24,7 +24,8 @@
 
   /* --- Colores fijos (no cambian con el tema) --- */
   --ink-on-color: #fff;                      /* texto sobre el ticket y sobre círculos de color */
-  --on-gold: #1d1a16;                        /* texto sobre fondo dorado */
+  --ink-oscuro: #1d1a16;                     /* texto oscuro fijo sobre fondos claros de color */
+  --on-gold: var(--ink-oscuro);              /* texto sobre fondo dorado */
   --logo-ink: #fff;                          /* segunda palabra del logo ("Chance") */
   --line-on-color: rgba(255, 255, 255, .5);  /* línea punteada del ticket */
   --overlay-soft: rgba(0, 0, 0, .18);        /* casillas de la cuenta regresiva, fondo de modales */
@@ -32,8 +33,13 @@
   /* --- Gradientes existentes --- */
   --grad-ticket: linear-gradient(135deg, #0f7a4b, #22b573);
   --grad-menta: linear-gradient(135deg, #d4f5e2, #9fe3bd);
-  --grad-cielo: linear-gradient(135deg, #c9e8ff, #8cc8f5);
+  --cielo-claro: #c9e8ff;
+  --cielo: #8cc8f5;
+  --grad-cielo: linear-gradient(135deg, var(--cielo-claro), var(--cielo));
   --grad-jade: linear-gradient(135deg, #c6efd9, #6fd3a0);
+
+  /* --- Naranja: mezcla 50/50 de dos tokens existentes (se adapta al tema) --- */
+  --naranja: color-mix(in srgb, var(--error) 50%, var(--gold));
 
   /* --- Barra de avance de la Chance: rojo (0 %) → dorado → verde (100 %) --- */
   --grad-avance: linear-gradient(90deg, var(--error), var(--gold), var(--accent));
@@ -132,8 +138,7 @@
   --size-icon-sm: 22px;
 
   /* --- Estados de rifa (badge): fondo y texto ---
-     Salen solo de la paleta existente. Los marcados PENDIENTE usan un neutro
-     provisional hasta que se apruebe su color. */
+     Salen solo de la paleta existente. */
   --estado-gris-bg: var(--surface-2);
   --estado-gris-ink: var(--muted);
   --estado-revision-link-bg: var(--estado-gris-bg);
@@ -154,19 +159,22 @@
   --estado-no-se-armo-ink: var(--bg);
   --estado-cancelada-bg: color-mix(in srgb, var(--error) 15%, transparent);
   --estado-cancelada-ink: var(--error);
-  /* PENDIENTE: naranja (CAPTANDO, EN_REVISION) y azul (PROGRAMADA, COMPRANDO, EN_CAMINO) */
-  --estado-pendiente-bg: var(--surface-2);
-  --estado-pendiente-ink: var(--text);
-  --estado-captando-bg: var(--estado-pendiente-bg);
-  --estado-captando-ink: var(--estado-pendiente-ink);
-  --estado-en-revision-bg: var(--estado-pendiente-bg);
-  --estado-en-revision-ink: var(--estado-pendiente-ink);
-  --estado-programada-bg: var(--estado-pendiente-bg);
-  --estado-programada-ink: var(--estado-pendiente-ink);
-  --estado-comprando-bg: var(--estado-pendiente-bg);
-  --estado-comprando-ink: var(--estado-pendiente-ink);
-  --estado-en-camino-bg: var(--estado-pendiente-bg);
-  --estado-en-camino-ink: var(--estado-pendiente-ink);
+  /* Naranja sólido con texto oscuro: contraste 5.7:1 (claro) y 7.9:1 (oscuro) */
+  --estado-naranja-bg: var(--naranja);
+  --estado-naranja-ink: var(--ink-oscuro);
+  --estado-captando-bg: var(--estado-naranja-bg);
+  --estado-captando-ink: var(--estado-naranja-ink);
+  --estado-en-revision-bg: var(--estado-naranja-bg);
+  --estado-en-revision-ink: var(--estado-naranja-ink);
+  /* Azul: celeste de la tarjeta "Plata" con texto oscuro, fijo en ambos temas: contraste 13.6:1 */
+  --estado-azul-bg: var(--cielo-claro);
+  --estado-azul-ink: var(--ink-oscuro);
+  --estado-programada-bg: var(--estado-azul-bg);
+  --estado-programada-ink: var(--estado-azul-ink);
+  --estado-comprando-bg: var(--estado-azul-bg);
+  --estado-comprando-ink: var(--estado-azul-ink);
+  --estado-en-camino-bg: var(--estado-azul-bg);
+  --estado-en-camino-ink: var(--estado-azul-ink);
 }
 
 @media (prefers-color-scheme: dark) {
