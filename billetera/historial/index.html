@@ -3,22 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DaleChance · Mi historial de puntos</title>
+  <title>DaleChance · Mi historial de Chances</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/tokens.css">
   <link rel="stylesheet" href="../../assets/css/base.css">
   <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/paginas/billetera-historial.css">
 </head>
 <body data-ruta="historial">
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <div class="wrap pagina">
+    <a class="enlace historial-volver" id="volver-billetera" href="../">← Mi billetera</a>
+    <h1 class="pagina-titulo">Mi historial de Chances</h1>
+    <p class="pagina-sub">Cada movimiento de tu billetera: recargas, Chances puestas, liberadas, usadas y reembolsos.</p>
+
+    <form class="filtros historial-filtros" id="filtros" aria-label="Filtrar movimientos">
+      <label>Tipo de movimiento<select id="filtro-tipo"><option value="">Todos los movimientos</option></select></label>
+      <label>Rifa<select id="filtro-rifa"><option value="">Todas las rifas</option></select></label>
+    </form>
+
+    <div id="movimientos"></div>
+  </div>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../../assets/js/paginas/billetera-historial.js"></script>
 </body>
 </html>

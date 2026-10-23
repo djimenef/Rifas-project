@@ -1,0 +1,28 @@
+/* Mi billetera: estilos propios. Todo sale de los tokens. */
+.saldos { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-20); }
+.saldo-card { display: grid; gap: var(--sp-6); }
+.saldo-card small { color: var(--muted); text-transform: uppercase; letter-spacing: var(--ls-caps); font-size: var(--fs-xs); font-weight: var(--fw-semibold); }
+.saldo-card b { font-size: var(--fs-5xl); line-height: var(--lh-snug); font-variant-numeric: tabular-nums; }
+.saldo-card p { margin: 0; color: var(--muted); font-size: var(--fs-small); }
+.saldo-disponible { background: var(--grad-ticket); border: 0; color: var(--ink-on-color); }
+.saldo-disponible small, .saldo-disponible p { color: var(--ink-on-color); opacity: .85; }
+
+.billetera-acciones { display: flex; gap: var(--sp-12); flex-wrap: wrap; margin: var(--sp-24) 0 var(--sp-40); }
+
+.retenidas h2 { margin: 0 0 var(--sp-6); font-size: var(--fs-xl); }
+.retenidas > p { margin: 0 0 var(--sp-16); color: var(--muted); }
+.lista-retenidas { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-10); }
+.lista-retenidas a {
+  display: flex; justify-content: space-between; align-items: center; gap: var(--sp-16);
+  padding: var(--sp-16) var(--sp-20); border: 1px solid var(--border); border-radius: var(--radius-14);
+  background: var(--surface); text-decoration: none;
+}
+.lista-retenidas a:hover { border-color: var(--accent); }
+.lista-retenidas a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.lista-retenidas small { display: block; color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+.lista-retenidas b { white-space: nowrap; }
+
+@media (max-width: 520px) {
+  .saldos { grid-template-columns: 1fr; }
+  .billetera-acciones .btn { flex: 1; }
+}

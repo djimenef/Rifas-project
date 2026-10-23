@@ -1,0 +1,25 @@
+/* Mi historial de Chances: estilos propios. Todo sale de los tokens. */
+.historial-volver { display: inline-block; margin-bottom: var(--sp-24); }
+.historial-filtros { grid-template-columns: 1fr 1fr; }
+.historial-filtros > :first-child { grid-column: auto; }
+
+.movimientos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-10); }
+.mov {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--sp-6) var(--sp-16); align-items: center;
+  padding: var(--sp-16) var(--sp-20); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-14);
+}
+.mov-tipo { margin: 0; font-weight: var(--fw-semibold); }
+.mov-info { margin: 0; color: var(--muted); font-size: var(--fs-small); }
+.mov-info a { color: var(--accent); font-weight: var(--fw-semibold); text-decoration: none; }
+.mov-info a:hover { text-decoration: underline; }
+.mov-montos { display: grid; justify-items: end; gap: var(--sp-4); grid-row: span 2; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mov-monto { font-weight: var(--fw-bold); font-size: var(--fs-md); }
+.mov-monto.positivo { color: var(--ok); }
+.mov-monto.negativo { color: var(--text); }
+.mov-retenido { color: var(--muted); font-size: var(--fs-sm); }
+.mov-op { color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+
+@media (max-width: 520px) {
+  .historial-filtros { grid-template-columns: 1fr; }
+  .mov { padding: var(--sp-14) var(--sp-16); }
+}
