@@ -9,7 +9,7 @@ import { codigoUnico, slugUnico } from './rifas.js';
 import { ErrorDominio } from '../../domain/errores.js';
 import { ESTADOS_RIFA, ESTADOS_COMPROMISO, ESTADOS_CONFIRMADOS, CONFIG_POR_DEFECTO, MODALIDADES_ENVIO, calcularMeta } from '../../domain/rifa.js';
 import { esDniValido } from '../../domain/usuario.js';
-import { sha256 } from '../../lib/hash.js';
+import { sortearOpciones } from '../../domain/sorteo.js';
 import { nuevoId } from '../../lib/ids.js';
 
 const exigirTexto = (valor, codigo = 'MOTIVO_OBLIGATORIO') => {
@@ -166,16 +166,17 @@ export const adminServiceMock = {
       exigirEstado(rifa, 'PROGRAMADA');
       const hash = asegurarHash(db, rifa);
       const total = opcionesVendidas(rifa);
-      // Semilla aleatoria; el ticket sale de la semilla + la huella publicada antes del sorteo (README §7.8).
+      // Semilla aleatoria; con ella y la huella publicada antes de rifar se mezclan las opciones y se elige una (README §7.8).
       const semilla = [...crypto.getRandomValues(new Uint8Array(8))].map(b => b.toString(16).padStart(2, '0')).join('');
-      let ticket = parseInt(sha256(semilla + hash).slice(0, 12), 16) % total + 1;
-      if (ticketGanador !== undefined) {
+      const { mezcla, posicion } = sortearOpciones(total, semilla, hash);
+      let ticket = mezcla[posicion - 1];
+      if (ticketGanador !== undefined) {   // solo para el panel de demo y las pruebas
         if (!Number.isInteger(ticketGanador) || ticketGanador < 1 || ticketGanador > total) throw new ErrorDominio('VALIDACION');
         ticket = ticketGanador;
       }
       const real = db.tickets.find(t => t.rifaId === rifa.id && t.numero === ticket);
       rifa.ganador = { apodo: apodoDeTicket(db, rifa, ticket), ticket, usuarioId: real?.usuarioId ?? null };
-      rifa.sorteo = { semilla, ticketGanador: ticket, fecha: ahora() };
+      rifa.sorteo = { semilla, ticketGanador: ticket, posicion: mezcla.indexOf(ticket) + 1, totalOpciones: total, fecha: ahora() };
       cambiarEstado(rifa, 'SORTEADA', { actor: admin.apodo });
     });
   },

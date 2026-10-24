@@ -344,7 +344,8 @@ Reglas visuales de la tarjeta:
 | **Enlace de rifa** | URL pública y compartible de una rifa (`/r/slug`). |
 | **Categoría** | Agrupación de rifas: zapatillas, ropa, relojes, consolas, TVs, etc. |
 | **Punto** | Nombre **interno** (código y especificación) de la Chance. 1 punto = S/ 1. En pantalla siempre se muestra como "Chance". |
-| **Opción / ticket** | Una participación en una rifa. Cuesta 1 Chance. |
+| **Opción / ticket** | Una participación en una rifa. Cuesta 1 Chance: 10 Chances puestas = 10 opciones de ganar, cada una con su número. |
+| **Rifa / sorteo** | **Rifa** es el hecho en general (la rifa se arma, se confirma, se cierra, se rifa). **Sorteo** es solo el acto técnico de elegir al ganador al azar entre todas las opciones (§7.8). En los textos visibles se dice "se rifa" o "cómo se eligió al ganador". |
 | **Saldo disponible** | Puntos libres para usar. |
 | **Saldo retenido** | Puntos comprometidos en rifas aún no confirmadas. Bloqueados pero no gastados. |
 | **Compromiso** | Puntos que un participante pone en una rifa que aún se está armando. Quedan retenidos. |
@@ -374,7 +375,7 @@ Reglas visuales de la tarjeta:
 | **Rifa** | producto, autor (admin, participante o creador), estado, meta, margen (interno), opciones comprometidas, opciones vendidas, número de participantes, configuración (§7.9), fechas | **Código** alfanumérico único y visible (ej. `RF-7K3Q9XM2`) + **slug** para su enlace |
 | **Compromiso** | rifa, participante, cantidad de opciones, estado | — |
 | **Ticket** | rifa, participante, número correlativo | Número único dentro de su rifa |
-| **Sorteo** | rifa, snapshot, huella (hash), método, ticket ganador | Uno por rifa |
+| **Sorteo** | rifa, snapshot, huella (hash), semilla, ticket ganador, posición en la lista mezclada | Uno por rifa |
 | **Ganador** | sorteo, participante, estado de entrega, evidencia | — |
 | **Enlace de autor** *(Fase 2)* | rifa, autor, código de atribución, visitas, registros y puntos generados | Código único |
 
@@ -577,8 +578,18 @@ El participante ve estos movimientos en **Mi historial de puntos**, con la rifa 
 
 1. Al cerrar la rifa se congela la lista de tickets (número + apodo).
 2. Se calcula una huella digital (hash) de esa lista y se **publica antes de rifar**.
-3. El ganador se elige con una fuente aleatoria verificable (Random.org firmado, o semilla comprometida de antemano).
-4. Se publica el resultado junto con la evidencia para que cualquiera pueda verificarlo.
+3. **Sorteo** (el acto técnico de elegir al ganador): cada Chance es una opción numerada. Antes de elegir, la lista completa de opciones se **mezcla al azar** ("se chocolatea", algoritmo Fisher–Yates), así las opciones de una misma persona no quedan juntas; después se elige **una posición** de la lista mezclada y gana la opción que está ahí.
+4. La mezcla y la elección salen de una **semilla aleatoria** (en la Fase 1, de una fuente verificable como Random.org firmado o una semilla comprometida de antemano) y de la **huella publicada**: cada paso usa SHA-256(semilla : huella : paso). Implementación: `assets/js/domain/sorteo.js`.
+5. Se publican la semilla, la opción ganadora y su posición en la lista mezclada: con la huella y la semilla, cualquiera puede repetir la mezcla y obtener el mismo ganador.
+
+```mermaid
+flowchart LR
+    A["Lista congelada<br/>1 opción por cada Chance"] --> B["Huella SHA-256<br/>publicada antes de rifar"]
+    B --> C["Semilla aleatoria"]
+    C --> D["Mezcla al azar<br/>(Fisher–Yates)"]
+    D --> E["Se elige 1 posición<br/>de la lista mezclada"]
+    E --> F(["Opción ganadora<br/>y su dueño"])
+```
 
 ### 7.9 Configuración por rifa (solo administradores)
 

@@ -5,6 +5,7 @@ import { ESTADOS_RIFA } from '../domain/rifa.js';
 import { TIPOS_MOVIMIENTO } from '../domain/billetera.js';
 import { esCodigoRifaValido } from '../lib/ids.js';
 import { sha256 } from '../lib/hash.js';
+import { sortearOpciones } from '../domain/sorteo.js';
 
 const resultados = [];
 const lista = document.getElementById('lista');
@@ -346,6 +347,23 @@ await prueba('Sorteo verificable: el hash publicado coincide con la lista de tic
   const r = await adminService.obtenerRifa('r-iphone');
   const lista = leerAhora(db => db.rifas.find(x => x.id === 'r-iphone'));
   esperar(r.hashLista && r.hashLista === lista.hashLista, 'hash');
+});
+await prueba('Sorteo: las opciones se mezclan al azar, de forma reproducible, y se elige una de la lista mezclada', async () => {
+  const a = sortearOpciones(500, 'semilla-a', 'huella');
+  esperar(new Set(a.mezcla).size === 500 && a.mezcla.every(n => n >= 1 && n <= 500), 'la mezcla debe tener cada opción una sola vez');
+  esperar(a.opcion === a.mezcla[a.posicion - 1], 'la opción ganadora es la de esa posición');
+  const b = sortearOpciones(500, 'semilla-a', 'huella');
+  esperar(b.opcion === a.opcion && b.mezcla.join() === a.mezcla.join(), 'con la misma semilla y huella se repite el resultado');
+  const c = sortearOpciones(500, 'semilla-b', 'huella');
+  esperar(c.mezcla.join() !== a.mezcla.join(), 'otra semilla da otra mezcla');
+  // 10 opciones seguidas (las de una persona) quedan repartidas por la lista mezclada
+  const pos = [401, 402, 403, 404, 405, 406, 407, 408, 409, 410].map(n => a.mezcla.indexOf(n)).sort((x, y) => x - y);
+  esperar(pos.at(-1) - pos[0] > 50, 'las opciones de una persona no deberían quedar juntas');
+});
+await prueba('Sortear una rifa con fecha anunciada: guarda la posición en la lista mezclada', async () => {
+  const r = await adminService.sortear('r-iphone');
+  const verif = sortearOpciones(r.sorteo.totalOpciones, r.sorteo.semilla, r.hashLista);
+  esperar(r.estado === 'SORTEADA' && verif.opcion === r.sorteo.ticketGanador && verif.posicion === r.sorteo.posicion, 'cualquiera debe poder repetir el sorteo');
 });
 await prueba('Sortear la TV a favor de Lucía: el ganador es su apodo', async () => {
   await adminService.cerrarRifa(TV);
