@@ -22,7 +22,7 @@ header {
   border-bottom: 1px solid var(--border);
 }
 .nav { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
-.logo { font-weight: var(--fw-extrabold); font-size: var(--fs-2xl); text-decoration: none; letter-spacing: var(--ls-tight); color: var(--accent); }
+.logo { font-weight: var(--fw-extrabold); font-size: var(--fs-logo, var(--fs-2xl)); text-decoration: none; letter-spacing: var(--ls-tight); color: var(--accent); }
 .logo span { color: var(--logo-ink); }
 .nav-links { display: flex; gap: var(--sp-28); align-items: center; }
 .nav-links a { text-decoration: none; color: var(--muted); font-weight: var(--fw-medium); }
@@ -96,5 +96,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: var(--sp-16);
   .solo-escritorio { display: none; }
   .usuario-apodo { display: none; }
   .usuario-icono { display: inline; }
+  .logo { font-size: var(--fs-logo-movil); }
+  /* Header con sesión en celular: saldo y menú de usuario más compactos para que entren en 360 px */
+  .nav-links .saldo, .nav-links #usuario-btn { padding-left: var(--sp-12); padding-right: var(--sp-12); }
   .pagina { padding-top: var(--sp-40); padding-bottom: var(--sp-40); }
 }

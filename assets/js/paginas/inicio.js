@@ -1,9 +1,12 @@
 // Página de inicio. Los datos (rifas, personas, avance) salen de RifasService.
 import { listo } from '../layout.js';
 import { rifasService, billeteraService } from '../services/index.js';
-import { url } from '../lib/rutas.js';
+import { url, recurso } from '../lib/rutas.js';
 import { soles, puntos } from '../lib/formato.js';
 import { tarjetaRifa } from '../components/tarjeta-rifa.js';
+import { montarCarrusel } from '../components/carrusel.js';
+import { cuentaRegresiva, iniciarCuentas } from '../components/cuenta-regresiva.js';
+import { esc } from '../lib/html.js';
 import { cargarSeccion } from '../components/estados.js';
 
 const PRECIO_PUNTO = 1;                      // 1 Chance = S/ 1
@@ -50,18 +53,41 @@ qtyInput.addEventListener('input', () => update({ ajustar: false }));
 qtyInput.addEventListener('change', () => update());
 update();
 
-// --- Cuenta regresiva hasta el cierre de la rifa destacada ---
-const pad = n => String(n).padStart(2, '0');
-function iniciarCuentaRegresiva(fechaIso) {
-  const objetivo = new Date(fechaIso);
-  function tick() {
-    let s = Math.max(0, Math.floor((objetivo - new Date()) / 1000));
-    document.getElementById('cd-d').textContent = pad(Math.floor(s / 86400)); s %= 86400;
-    document.getElementById('cd-h').textContent = pad(Math.floor(s / 3600)); s %= 3600;
-    document.getElementById('cd-m').textContent = pad(Math.floor(s / 60));
-    document.getElementById('cd-s').textContent = pad(s % 60);
+// --- Carrusel de rifas destacadas (en el ticket) ---
+const ETIQUETA_DESTACADA = { ARMANDO: 'Rifa Armándose', ABIERTA: 'Rifa Confirmada' };
+
+function diapositiva(r, i, total) {
+  const hasta = r.fechaLimiteArmado ?? r.fechaCierre;
+  const fondo = r.producto.imagen
+    ? `<img class="destacada-foto" src="${esc(recurso(r.producto.imagen))}" alt="">`
+    : `<span class="destacada-fondo" aria-hidden="true">${r.producto.emoji}</span>`;
+  return `
+    <a class="destacada" href="${url('rifa', { slug: r.slug })}" role="group" aria-roledescription="diapositiva"
+       aria-label="${i + 1} de ${total}: ${esc(r.producto.nombre)}">
+      ${fondo}
+      <small>${ETIQUETA_DESTACADA[r.estado] ?? 'Rifa destacada'} · ${esc(r.categoria)}</small>
+      <h3>${esc(r.producto.nombre)}</h3>
+      <span class="destacada-detalle">Precio referencial: ${soles(r.producto.precioTienda)}</span>
+      <span class="destacada-detalle">👥 ${r.participantes} personas · ${r.progreso} %</span>
+      ${hasta ? `
+      <div class="divider"></div>
+      <small>La rifa se cierra en</small>
+      ${cuentaRegresiva(hasta)}` : ''}
+    </a>`;
+}
+
+async function cargarDestacadas() {
+  const carrusel = document.getElementById('destacadas');
+  const pista = carrusel.querySelector('.carrusel-pista');
+  try {
+    const rifas = await rifasService.destacadas();
+    if (!rifas.length) throw new Error('sin destacadas');
+    pista.innerHTML = rifas.map((r, i) => diapositiva(r, i, rifas.length)).join('');
+    iniciarCuentas();
+    montarCarrusel(carrusel, { nombre: (i, total) => `Ver rifa destacada ${i + 1} de ${total}` });
+  } catch {
+    pista.querySelector('h3').textContent = 'Mira todas las rifas';
   }
-  tick(); setInterval(tick, 1000);
 }
 
 const { usuario } = await listo;
@@ -75,28 +101,34 @@ if (usuario?.rol === 'PARTICIPANTE') {
   cta.href = url('misRifas');
 }
 
+// Rifas Confirmadas: las 3 que se cierran primero, con la foto nítida y su cuenta regresiva.
+cargarSeccion(document.getElementById('rifas-confirmadas'), {
+  textoCargando: 'Cargando rifas…',
+  cargar: () => rifasService.listar({ estados: ['ABIERTA'] }),
+  vacio: { titulo: 'No hay rifas confirmadas ahora', texto: 'Cuando una rifa llegue al 100 %, aparecerá aquí.', accion: { texto: 'Ver todas las rifas', href: url('rifas') } },
+  mostrar: rifas => {
+    const proximas = rifas.filter(r => r.fechaCierre).toSorted((a, b) => new Date(a.fechaCierre) - new Date(b.fechaCierre));
+    document.getElementById('rifas-confirmadas').innerHTML =
+      `<div class="draws">${proximas.slice(0, 3).map(r => tarjetaRifa(r, { cuenta: true })).join('')}</div>`;
+    iniciarCuentas();
+  },
+});
+
 cargarSeccion(document.getElementById('rifas-destacadas'), {
   textoCargando: 'Cargando rifas…',
   cargar: () => rifasService.listar({ estados: ['ARMANDO', 'ABIERTA'] }),
   vacio: { titulo: 'No hay rifas armándose ahora', texto: 'Vuelve pronto: publicamos rifas nuevas cada semana.', accion: { texto: 'Ver todas las rifas', href: url('rifas') } },
   mostrar: rifas => {
     const armando = rifas.filter(r => r.estado === 'ARMANDO');
+    // Primero las que tienen foto del producto y, entre ellas, las más avanzadas.
+    const vitrina = (armando.length ? armando : rifas)
+      .toSorted((a, b) => !!b.producto.imagen - !!a.producto.imagen || b.progreso - a.progreso);
     document.getElementById('rifas-destacadas').innerHTML =
-      `<div class="draws">${(armando.length ? armando : rifas).slice(0, 3).map(r => tarjetaRifa(r)).join('')}</div>`;
+      `<div class="draws">${vitrina.slice(0, 6).map(r => tarjetaRifa(r)).join('')}</div>`;
 
     document.getElementById('stat-personas').textContent = rifas.reduce((t, r) => t + r.participantes, 0).toLocaleString('es-PE');
     document.getElementById('stat-rifas').textContent = armando.length;
-
-    // Rifa destacada: la de mayor precio que se está armando.
-    const destacada = [...armando].sort((a, b) => b.producto.precioTienda - a.producto.precioTienda)[0];
-    if (destacada) {
-      document.getElementById('destacada-etiqueta').textContent = `Armando Rifa · ${destacada.categoria}`;
-      const enlace = document.getElementById('destacada-enlace');
-      enlace.textContent = destacada.producto.nombre;
-      enlace.href = url('rifa', { slug: destacada.slug });
-      document.getElementById('destacada-detalle').textContent =
-        `Precio referencial: ${soles(destacada.producto.precioTienda)} · ${destacada.participantes} personas · ${destacada.progreso} %`;
-      iniciarCuentaRegresiva(destacada.fechaLimiteArmado);
-    }
   },
 });
+
+cargarDestacadas();

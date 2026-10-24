@@ -21,8 +21,8 @@
   <div class="wrap hero">
     <div>
       <span class="pill"><span class="dot"></span> Rifas armándose esta semana</span>
-      <h1>Cada Chance a <em>S/ 1</em>.<br>Tú eliges qué rifa va.</h1>
-      <p class="lead">Recarga Chances y ponlas en la rifa que quieras. Si la rifa se arma, tus Chances se vuelven opciones para el sorteo. Si no se arma, vuelven completas a tu billetera.</p>
+      <h1>Cada Chance a <em>S/ 1</em>.<br>Tú eliges qué se Rifa.</h1>
+      <p class="lead">Recarga Chances y ponlas en la rifa que quieras. Si la rifa se arma, tus Chances se vuelven opciones de ganar. Si no se arma, vuelven completas a tu billetera.</p>
       <div class="hero-cta">
         <a href="rifas/" class="btn btn-primary">Ver rifas</a>
         <a href="#como-funciona" class="btn btn-ghost">Cómo funciona</a>
@@ -34,19 +34,30 @@
       </div>
     </div>
 
-    <div class="ticket" aria-label="Rifa destacada">
-      <small id="destacada-etiqueta">Armando Rifa</small>
-      <h3><a id="destacada-enlace" href="rifas/">Cargando rifa destacada…</a></h3>
-      <div id="destacada-detalle">&nbsp;</div>
-      <div class="divider"></div>
-      <small>La rifa se cierra en</small>
-      <div class="countdown" id="countdown">
-        <div><b id="cd-d">00</b><span>días</span></div>
-        <div><b id="cd-h">00</b><span>horas</span></div>
-        <div><b id="cd-m">00</b><span>min</span></div>
-        <div><b id="cd-s">00</b><span>seg</span></div>
+    <section class="ticket" id="destacadas" aria-roledescription="carrusel" aria-label="Rifas destacadas">
+      <div class="carrusel-ventana">
+        <div class="carrusel-pista">
+          <a class="destacada" href="rifas/">
+            <small>Rifas destacadas</small>
+            <h3>Cargando…</h3>
+            <span class="destacada-detalle">&nbsp;</span>
+            <div class="divider"></div>
+            <small>La rifa se cierra en</small>
+            <div class="countdown">
+              <div><b>00</b><span>días</span></div>
+              <div><b>00</b><span>horas</span></div>
+              <div><b>00</b><span>min</span></div>
+              <div><b>00</b><span>seg</span></div>
+            </div>
+          </a>
+        </div>
       </div>
-    </div>
+      <div class="carrusel-controles" hidden>
+        <button type="button" class="carrusel-flecha" data-direccion="-1" aria-label="Rifa anterior">‹</button>
+        <div class="carrusel-puntos"></div>
+        <button type="button" class="carrusel-flecha" data-direccion="1" aria-label="Rifa siguiente">›</button>
+      </div>
+    </section>
   </div>
 
   <!-- Cómo funciona -->
@@ -76,14 +87,27 @@
     </div>
   </section>
 
+  <!-- Rifas confirmadas: las que se cierran primero -->
+  <section id="confirmadas">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Rifas confirmadas</h2>
+        <p>Rifas que ya llegaron al 100 % de recaudación. Aún tienes un tiempo para poner tus Chances: no pierdas la opción de participar de la Rifa.</p>
+      </div>
+      <div id="rifas-confirmadas"></div>
+      <p class="ver-mas"><a href="rifas/?estado=CONFIRMADA" class="btn btn-ghost">Ver más…</a></p>
+    </div>
+  </section>
+
   <!-- Rifas armándose -->
   <section id="sorteos">
     <div class="wrap">
       <div class="section-head">
         <h2>Rifas armándose</h2>
-        <p>Cada rifa necesita juntar Chances para confirmarse. Mientras se arma, tus Chances quedan retenidas y no se gastan.</p>
+        <p>Cada rifa aún necesita juntar Chances para confirmarse. Mientras se arma, tus Chances quedan retenidas y no se gastan.</p>
       </div>
       <div id="rifas-destacadas"></div>
+      <p class="ver-mas"><a href="rifas/?estado=ARMANDOSE" class="btn btn-ghost">Ver más…</a></p>
     </div>
   </section>
 
@@ -131,7 +155,7 @@
         <ul class="perks">
           <li>Revisa tus Chances y opciones en cualquier momento</li>
           <li>Recibe aviso por WhatsApp si ganas</li>
-          <li>Sorteos transmitidos en vivo</li>
+          <li>Rifas transmitidas en vivo</li>
         </ul>
       </div>
       <div class="register-cta">
@@ -150,8 +174,8 @@
           <p>1 Chance = S/ 1 = 1 opción de ganar. Recarga con los atajos de 5, 10, 15 o 20 Chances, o cualquier cantidad de 5 a 500, con Yape o tarjeta.</p>
         </details>
         <details>
-          <summary>¿Qué significa "Armando Rifa"?</summary>
-          <p>Cada rifa necesita juntar suficientes Chances para confirmarse. Mientras tanto, tus Chances quedan retenidas: no se gastan hasta que la rifa va.</p>
+          <summary>¿Qué significa "Rifa Armándose"?</summary>
+          <p>Es una rifa que todavía no llega al 100 % de lo que necesita. Cuando llega, pasa a Rifa Confirmada. Mientras tanto, tus Chances quedan retenidas: no se gastan hasta que la rifa se confirma.</p>
         </details>
         <details>
           <summary>¿Y si la rifa no se arma?</summary>
@@ -159,7 +183,7 @@
         </details>
         <details>
           <summary>¿Cómo sé si gané?</summary>
-          <p>Los sorteos se transmiten en vivo y avisamos a los ganadores por WhatsApp y correo.</p>
+          <p>Las rifas se realizan en vivo y avisamos a los ganadores por WhatsApp y correo.</p>
         </details>
       </div>
     </div>
