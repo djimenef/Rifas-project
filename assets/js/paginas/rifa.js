@@ -10,6 +10,7 @@ import { barraAvance } from '../components/barra-avance.js';
 import { badgeRifa } from '../components/tarjeta-rifa.js';
 import { cargarSeccion } from '../components/estados.js';
 import { mostrarToast } from '../components/toast.js';
+import { descargarTexto } from '../lib/descarga.js';
 import { abrirModalChances, listaTickets } from '../components/modal-chances.js';
 
 const slug = parametro('slug');
@@ -56,7 +57,7 @@ function accionPorEstado(r) {
     };
     case 'PROGRAMADA': return {
       titulo: `📅 Rifa Cerrada · se rifa el ${esc(fechaLarga(r.fechaSorteo))}`,
-      texto: `Se rifa el ${esc(fechaHora(r.fechaSorteo))} en vivo. Ya publicamos la huella de la lista de opciones para que cualquiera pueda verificarla.`,
+      texto: `Rifa en vivo: ${esc(fechaHora(r.fechaSorteo))}. Ya publicamos la lista de opciones y su huella para que cualquiera pueda verificarla.`,
     };
     case 'SORTEADA': case 'COMPRANDO': case 'EN_CAMINO': return {
       titulo: `🏆 Rifa Realizada · Ganador: ${esc(r.ganadorApodo ?? '—')}`,
@@ -118,7 +119,8 @@ function bloqueTransparencia(r) {
   return `
     <section class="card detalle-seccion" id="transparencia" aria-labelledby="transparencia-titulo">
       <h2 id="transparencia-titulo">Transparencia: cómo se elige al ganador</h2>
-      <p>Cada Chance puesta es una opción con su número: si pusiste 10 Chances, tienes 10 opciones de ganar. Al cerrar la rifa congelamos la lista de opciones (número y apodo) y publicamos su huella digital antes de rifarla. Así nadie puede cambiarla después.</p>
+      <p>Cada Chance puesta es una opción con su número: si pusiste 10 Chances, tienes 10 opciones de ganar. Al cerrar la rifa congelamos la lista de opciones y publicamos su huella digital antes de rifarla. Así nadie puede cambiarla después.</p>
+      <p>La lista tiene el número y el código de cada opción, <b>sin datos de quién es</b>. Tú ves los códigos de tus opciones en "Mis tickets" y puedes comprobar que están en la lista.</p>
       <p>Para elegir al ganador, mezclamos todas las opciones al azar, así las de una misma persona no quedan juntas, y elegimos una de la lista mezclada. La mezcla y la elección salen de la semilla aleatoria y de la huella: con esos dos datos cualquiera puede repetirlas y obtener el mismo resultado.</p>
       <dl class="datos">
         <div><dt>Huella de la lista (SHA-256)</dt><dd class="texto-mono">${esc(r.hashLista)}</dd></div>
@@ -129,7 +131,19 @@ function bloqueTransparencia(r) {
         ${r.sorteo.posicion ? `<div><dt>Posición en la lista mezclada</dt><dd>${r.sorteo.posicion} de ${r.sorteo.totalOpciones}</dd></div>` : ''}
         <div><dt>Ganador</dt><dd>${esc(r.ganadorApodo ?? '—')}</dd></div>` : ''}
       </dl>
+      <div class="detalle-lista-acciones">
+        <button type="button" class="btn btn-ghost btn-sm" data-lista>Descargar lista de opciones (CSV)</button>
+      </div>
     </section>`;
+}
+
+async function descargarLista(r) {
+  try {
+    const lista = await rifasService.listaOpciones(r.codigo);
+    descargarTexto(lista.nombreArchivo, lista.csv);
+  } catch (e) {
+    mostrarToast(e.message, { tipo: 'error' });
+  }
 }
 
 function bloquePremio(r) {
@@ -187,6 +201,7 @@ function dibujar(r) {
     ${secundarias ? `<div class="detalle-secciones">${secundarias}</div>` : ''}`;
 
   contenedor.querySelector('[data-compartir]').addEventListener('click', () => compartir(r));
+  contenedor.querySelector('[data-lista]')?.addEventListener('click', () => descargarLista(r));
   contenedor.querySelector('[data-accion]')?.addEventListener('click', e => abrir(r, e.currentTarget.dataset.accion));
   if (esParticipante) mostrarParticipacion(r);
 }

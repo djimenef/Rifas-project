@@ -4,6 +4,7 @@ export const MENSAJES_ERROR = Object.freeze({
   SIN_SESION: 'Inicia sesión para continuar.',
   NO_AUTORIZADO: 'No tienes acceso a esta acción.',
   NO_ENCONTRADA: 'No encontramos lo que buscas.',
+  LISTA_NO_DISPONIBLE: 'La lista de opciones se publica cuando la rifa se cierra.',
   VALIDACION: 'Revisa los datos ingresados.',
   DNI_REGISTRADO: 'Ya existe una cuenta con este DNI.',
   CORREO_REGISTRADO: 'Ya existe una cuenta con este correo.',

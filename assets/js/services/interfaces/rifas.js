@@ -24,7 +24,11 @@
  * @property {(rifaId: string, opciones: number, claveIdempotencia: string) => Promise<Comprobante>} comprar
  *   Compra directa en una rifa ABIERTA. Errores: SALDO_INSUFICIENTE, ESTADO_NO_ACEPTA_PUNTOS, SUPERA_MAXIMO, TOPE_ALCANZADO.
  * @property {() => Promise<{ grupo: 'ARMANDO'|'ABIERTAS'|'FINALIZADAS', rifa: Rifa, retenido: number, tickets: number[] }[]>} misRifas
- * @property {(codigo: string) => Promise<{ rifa: Rifa, retenido: number, tickets: number[] }>} misTickets
+ * @property {(codigo: string) => Promise<{ rifa: Rifa, retenido: number, tickets: number[], opciones: { numero: number, codigo: string }[], listaDisponible: boolean }>} misTickets
+ *   Mis opciones en una rifa, cada una con su número y su código alfanumérico (solo los ve su dueño).
+ * @property {(codigo: string) => Promise<{ csv: string, huella: string, total: number, nombreArchivo: string }>} listaOpciones
+ *   Lista pública de opciones (número y código, sin dueños) desde Rifa Cerrada; su SHA-256 es la huella publicada.
+ *   Error: LISTA_NO_DISPONIBLE (la rifa aún no se cierra).
  * @property {() => Promise<Rifa[]>} destacadas   Rifas del carrusel de Inicio, en su orden. Solo rifas listadas.
  * @property {() => Promise<Rifa[]>} ganadores   Rifas sorteadas, más reciente primero.
  * @property {(link: string) => Promise<{ nombre: string|null, precio: number|null, emoji: string, tiendaConfiable: boolean, motivoRevision: string|null }>} leerLink
@@ -37,6 +41,6 @@
 
 export const METODOS_RIFAS = Object.freeze([
   'listar', 'obtenerPorSlug', 'obtenerPorCodigo', 'listarCategorias', 'miParticipacion',
-  'comprometer', 'comprar', 'misRifas', 'misTickets', 'destacadas', 'ganadores',
+  'comprometer', 'comprar', 'misRifas', 'misTickets', 'listaOpciones', 'destacadas', 'ganadores',
   'leerLink', 'proponer', 'misPropuestas',
 ]);

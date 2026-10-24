@@ -5,7 +5,7 @@ import { ESTADOS_RIFA } from '../domain/rifa.js';
 import { TIPOS_MOVIMIENTO } from '../domain/billetera.js';
 import { esCodigoRifaValido } from '../lib/ids.js';
 import { sha256 } from '../lib/hash.js';
-import { sortearOpciones } from '../domain/sorteo.js';
+import { sortearOpciones, codigosDeLista } from '../domain/sorteo.js';
 
 const resultados = [];
 const lista = document.getElementById('lista');
@@ -78,7 +78,7 @@ await prueba('Visitante: filtros por estado, categoría y búsqueda', async () =
 });
 await prueba('Visitante: la vista pública nunca expone meta, margen, puntos reunidos ni opciones vendidas', async () => {
   const todas = [...await rifasService.listar(), await rifasService.obtenerPorSlug('zapas-edicion-creador')];
-  const prohibidas = ['meta', 'margen', 'margenPct', 'puntosReunidos', 'opcionesVendidas', 'puntosExternos', 'config', 'maxOpcionesPorUsuario'];
+  const prohibidas = ['salOpciones', 'meta', 'margen', 'margenPct', 'puntosReunidos', 'opcionesVendidas', 'puntosExternos', 'config', 'maxOpcionesPorUsuario'];
   for (const r of todas) esperar(!prohibidas.some(k => k in r), `${r.codigo} expone ${prohibidas.filter(k => k in r)}`);
   esperar(todas.every(r => Number.isInteger(r.progreso) && r.progreso >= 0 && r.progreso <= 100), 'progreso fuera de 0–100');
 });
@@ -373,6 +373,22 @@ await prueba('Sortear la TV a favor de Lucía: el ganador es su apodo', async ()
   const c = await adminService.registrarCompra(TV, { fecha: new Date().toISOString(), tienda: 'Tienda', montoPagado: 1599, numeroComprobante: 'B001-9', archivoComprobante: 'b.pdf' });
   esperar(c.registros.compra.aNombreDe.dni === '45871236', 'debía comprarse a nombre de la titular de la cuenta');
   esperar((await rifasService.ganadores()).some(g => g.id === TV), 'no figura en ganadores');
+});
+await prueba('Opciones: cada una con su código; la lista pública (CSV) es anónima, coincide con la huella y contiene las de Lucía', async () => {
+  await esperarError(rifasService.listaOpciones('RF-3HK7WQ9P'), 'LISTA_NO_DISPONIBLE');   // iPhone 17: aún armándose
+  await entrar('lucia@dalechance.pe');
+  const mios = await rifasService.misTickets('RF-4TW8N6PA');                              // la TV, ya rifada
+  esperar(mios.opciones.length === mios.tickets.length && mios.opciones.length > 0, 'una opción por cada Chance');
+  esperar(mios.opciones.every(o => /^[2-9A-HJKMNP-Z]{4}-[2-9A-HJKMNP-Z]{4}$/.test(o.codigo)), 'formato del código');
+  esperar(mios.listaDisponible, 'la lista debía estar disponible');
+  const lista = await rifasService.listaOpciones('RF-4TW8N6PA');
+  const lineas = lista.csv.trim().split('\n');
+  esperar(lineas[0] === 'opcion,codigo' && lineas.length === lista.total + 1, 'cabecera y una línea por opción');
+  esperar(sha256(lista.csv) === lista.huella, 'la huella debe ser el SHA-256 del CSV');
+  esperar(!/lucia|kathy|lucho/i.test(lista.csv), 'la lista no debe tener datos de quién es cada opción');
+  const codigos = codigosDeLista(lista.csv);
+  esperar(codigos.size === lista.total, 'códigos únicos');
+  esperar(mios.opciones.every(o => codigos.has(o.codigo)), 'las opciones de Lucía deben estar en la lista');
 });
 await prueba('Cancelar una rifa armándose: libera los puntos retenidos', async () => {
   await entrar('lucia@dalechance.pe');

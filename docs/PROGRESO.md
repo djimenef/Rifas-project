@@ -78,7 +78,7 @@ Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos 
 
 ### Pendientes anotados para el Paso 5
 - **Header de Inicio:** "Preguntas" todavía baja a `#faq` de la misma página porque `/preguntas-frecuentes` está en construcción. Al construirla, cambiarlo en `assets/js/components/header.js` (buscar `PENDIENTE`). "Cómo funciona" ya va a su página.
-- **Enlaces que ya apuntan a pantallas P2:** "Ver mis tickets" (`/mis-rifas/tickets/?codigo=`), "Ejecutar sorteo" (`/admin/sorteo/?codigo=`) y "Registrar compra y entrega" (`/admin/entrega/?codigo=`) muestran "En construcción" hasta el Paso 5.
+- **Enlaces que ya apuntan a pantallas P2:** "Rifar (elegir ganador)" (`/admin/sorteo/?codigo=`) y "Registrar compra y entrega" (`/admin/entrega/?codigo=`) muestran "En construcción" hasta el Paso 5.
 - **Header con sesión a 360 px:** con barra de desplazamiento visible, el header de participante desborda unos 5 px (saldo + botón de usuario). En móviles reales la barra no ocupa espacio; revisar si hace falta ajustarlo.
 - **Toast detrás del modal:** el aviso "¡Listo!" queda detrás del fondo del modal abierto; el modal ya muestra el éxito, así que no se pierde información.
 
@@ -148,6 +148,7 @@ python dev/servidor.py
 - Público: **Rifa Sugerida** (solo por enlace; quien la crea es responsable de juntar el mínimo) → **Rifa Armándose** (< 100 %) → **Rifa Confirmada** (≥ 100 %, sigue abierta) → **Rifa Cerrada** (por rifar) → **Rifa Realizada** (ya hay ganador) → **Premio Entregado**. **Validando producto** es el estado de validez; **Rifa Descartada** agrupa no armadas, canceladas y propuestas descartadas.
 - Los estados internos se mantienen; solo cambia cómo se muestran.
 - **Tiempo extra:** con 5 minutos o menos, cada 5 personas distintas que pongan Chances suman 5 minutos al tiempo que quedaba; al agotarse, pasa sola a Rifa Cerrada.
+- **Mis tickets** (`/mis-rifas/tickets/?codigo=`) ya está hecha: cada opción con número y código alfanumérico (solo la ve su dueño), descarga de la lista pública y "Verificar mis opciones". La lista pública (CSV `opcion,codigo`) es anónima y se publica desde Rifa Cerrada; la huella es su SHA-256. El acto público se llama **"Rifa en vivo"**.
 - **No se usa "sortear/sorteo"** en textos visibles. "Sorteo" es solo el acto técnico de elegir al ganador: cada Chance es una opción, la lista se mezcla al azar (Fisher–Yates, reproducible con semilla + huella) y se elige una posición (`domain/sorteo.js`).
 - **Foto en las tarjetas:** desenfocada hasta Rifa Armándose y nítida desde Rifa Confirmada. Inicio muestra primero "Rifas confirmadas" (las 3 que se cierran antes, foto nítida y cuenta regresiva) y luego hasta 6 rifas armándose (primero las que tienen foto), cada una con "Ver más…" hacia `/rifas`, que agrupa por categoría cuando no hay filtro de categoría.
 - **Productos de ejemplo reales** (foto, precio y descripción de la tienda): iPhone 17 Pro Max, PS5 Pro, adidas Megaride S4, TV LG QNED 85", RTX 5060 Ti, Ryzen 5 9600X, combo proyector + parlante (armándose); Galaxy Tab S10 FE, Lenovo LOQ, Galaxy S26 Ultra (confirmadas). Categorías nuevas: Tablets, Cómputo, Audio y video.

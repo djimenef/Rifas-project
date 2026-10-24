@@ -37,6 +37,7 @@
 .detalle-secciones { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-20); margin-top: var(--sp-40); }
 .detalle-seccion { display: grid; gap: var(--sp-14); align-content: start; }
 .detalle-seccion > p { margin: 0; color: var(--muted); }
+.detalle-lista-acciones { display: flex; flex-wrap: wrap; gap: var(--sp-10); }
 
 /* Seguimiento del premio */
 .pasos-premio { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-12); }

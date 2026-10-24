@@ -5,6 +5,7 @@ import {
   verificarCuadre, conIdempotencia, compromisoActivo, ticketsDe, maxPorParticipante, puntosReunidos,
   participantes, umbral, puntosMinAutor, emitirTickets, evaluarAvance, cerrarRifa, cambiarEstado,
   congelarAvance, liberarCompromisos, opcionesVendidas, refRifa, ahora, sumarDias, registrarActividadCierre,
+  asegurarHash, snapshot, codigosOpciones,
 } from './motor.js';
 import { ErrorDominio } from '../../domain/errores.js';
 import {
@@ -213,11 +214,24 @@ export const rifasServiceMock = {
     return operacion(db => {
       const u = exigirParticipante(db);
       const rifa = rifaVisible(db, db.rifas.find(r => r.codigo === String(codigo ?? '').trim().toUpperCase()));
+      const tickets = misTicketsEn(db, rifa.id, u.id);
       return {
         rifa: vistaPublica(db, rifa),
         retenido: compromisoActivo(db, rifa.id, u.id)?.cantidad ?? 0,
-        tickets: misTicketsEn(db, rifa.id, u.id),
+        tickets,
+        opciones: codigosOpciones(rifa, tickets),   // solo el dueño ve los códigos de sus opciones
+        listaDisponible: !!asegurarHash(db, rifa),
       };
+    });
+  },
+
+  // Lista pública de opciones (CSV con número y código, sin dueños). Disponible desde Rifa Cerrada (README §7.8).
+  listaOpciones(codigo) {
+    return operacion(db => {
+      const rifa = rifaVisible(db, db.rifas.find(r => r.codigo === String(codigo ?? '').trim().toUpperCase()));
+      const huella = asegurarHash(db, rifa);
+      if (!huella) throw new ErrorDominio('LISTA_NO_DISPONIBLE');
+      return { csv: snapshot(db, rifa), huella, total: opcionesVendidas(rifa), nombreArchivo: `opciones-${rifa.codigo}.csv` };
     });
   },
 
