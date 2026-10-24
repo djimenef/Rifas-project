@@ -4,7 +4,7 @@ import {
   usuarioActual, exigirSesion, exigirParticipante, buscarRifa, vistaPublica, saldo, registrarMovimiento,
   verificarCuadre, conIdempotencia, compromisoActivo, ticketsDe, maxPorParticipante, puntosReunidos,
   participantes, umbral, puntosMinAutor, emitirTickets, evaluarAvance, cerrarRifa, cambiarEstado,
-  congelarAvance, liberarCompromisos, opcionesVendidas, refRifa, ahora, sumarDias,
+  congelarAvance, liberarCompromisos, opcionesVendidas, refRifa, ahora, sumarDias, registrarActividadCierre,
 } from './motor.js';
 import { ErrorDominio } from '../../domain/errores.js';
 import {
@@ -123,7 +123,6 @@ export const rifasServiceMock = {
       return {
         retenido, tickets,
         maxPuedoPoner: aceptaPuntos ? Math.max(0, Math.min(saldo(db, u.id).disponible, restanteMaximo, restanteTope)) : 0,
-        puedeRetirar: ESTADOS_COMPROMISO.includes(rifa.estado) && rifa.config.permiteRetiro && retenido > 0,
       };
     });
   },
@@ -162,30 +161,6 @@ export const rifasServiceMock = {
     });
   },
 
-  retirarCompromiso(rifaId) {
-    return operacion(db => {
-      const u = exigirParticipante(db);
-      const rifa = rifaVisible(db, buscarRifa(db, rifaId));
-      if (!ESTADOS_COMPROMISO.includes(rifa.estado) || !rifa.config.permiteRetiro) throw new ErrorDominio('RETIRO_NO_PERMITIDO');
-      const c = compromisoActivo(db, rifa.id, u.id);
-      if (!c) throw new ErrorDominio('SIN_COMPROMISO');
-
-      const antes = saldo(db, u.id);
-      const mov = registrarMovimiento(db, { usuarioId: u.id, tipo: 'LIBERACION', deltaDisponible: c.cantidad, deltaRetenido: -c.cantidad, rifaId: rifa.id, motivo: 'Retiraste tus Chances.' });
-      c.estado = 'LIBERADO';
-
-      // Decisión #21: si el autor retira sus puntos mínimos, la propuesta se cae.
-      if (rifa.estado === 'CAPTANDO' && rifa.autor.usuarioId === u.id) {
-        congelarAvance(db, rifa);
-        liberarCompromisos(db, rifa, 'El autor retiró su propuesta.');
-        cambiarEstado(rifa, 'DESCARTADA', { actor: u.apodo, motivo: 'El autor retiró sus Chances mínimas' });
-        rifa.motivo = 'El autor retiró su propuesta. Se devolvieron todas las Chances.';
-      }
-      verificarCuadreTodos(db);
-      return comprobante(db, { mov, tipo: 'RETIRO', cantidad: c.cantidad, antes, usuarioId: u.id, rifa });
-    });
-  },
-
   comprar(rifaId, n, claveIdempotencia) {
     return operacion(db => {
       const u = exigirParticipante(db);
@@ -206,9 +181,10 @@ export const rifasServiceMock = {
 
         const mov = registrarMovimiento(db, { usuarioId: u.id, tipo: 'COMPRA_DIRECTA', deltaDisponible: -n, rifaId: rifa.id });
         const tickets = emitirTickets(db, rifa, u.id, n);
+        const tiempoExtra = registrarActividadCierre(db, rifa, u.id);
         if (tope != null && opcionesVendidas(rifa) >= tope) cerrarRifa(db, rifa);   // tope alcanzado → se cierra
         verificarCuadreTodos(db);
-        return comprobante(db, { mov, tipo: 'COMPRA', cantidad: n, antes, usuarioId: u.id, rifa, clave: claveIdempotencia, extra: { tickets } });
+        return comprobante(db, { mov, tipo: 'COMPRA', cantidad: n, antes, usuarioId: u.id, rifa, clave: claveIdempotencia, extra: { tickets, tiempoExtra } });
       });
     });
   },
@@ -243,6 +219,15 @@ export const rifasServiceMock = {
         tickets: misTicketsEn(db, rifa.id, u.id),
       };
     });
+  },
+
+  // Rifas destacadas del carrusel de Inicio, en el orden fijado en los datos.
+  // PENDIENTE: definir el criterio (alcance, atractivo) y que un admin pueda fijarlas.
+  destacadas() {
+    return operacion(db => db.rifas
+      .filter(r => r.destacada != null && r.visibilidad === 'LISTADA' && ORDEN_LISTADO.includes(r.estado))
+      .sort((a, b) => a.destacada - b.destacada)
+      .map(r => vistaPublica(db, r)));
   },
 
   ganadores() {

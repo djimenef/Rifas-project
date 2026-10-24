@@ -3,11 +3,11 @@ import { operacion } from './db.js';
 import {
   exigirAdmin, buscarRifa, vistaAdmin, vistaUsuario, saldo, registrarMovimiento, verificarCuadre,
   cambiarEstado, liberarCompromisos, reembolsarTickets, congelarAvance, declararNoArmada, cerrarRifa,
-  evaluarAvance, fijarMargen, asegurarHash, apodoDeTicket, opcionesVendidas, ahora, sumarDias,
+  evaluarAvance, fijarMargen, asegurarHash, apodoDeTicket, opcionesVendidas, ahora, sumarDias, registrarActividadCierre,
 } from './motor.js';
 import { codigoUnico, slugUnico } from './rifas.js';
 import { ErrorDominio } from '../../domain/errores.js';
-import { ESTADOS_RIFA, ESTADOS_COMPROMISO, CONFIG_POR_DEFECTO, MODALIDADES_ENVIO, calcularMeta } from '../../domain/rifa.js';
+import { ESTADOS_RIFA, ESTADOS_COMPROMISO, ESTADOS_CONFIRMADOS, CONFIG_POR_DEFECTO, MODALIDADES_ENVIO, calcularMeta } from '../../domain/rifa.js';
 import { esDniValido } from '../../domain/usuario.js';
 import { sha256 } from '../../lib/hash.js';
 import { nuevoId } from '../../lib/ids.js';
@@ -146,9 +146,12 @@ export const adminServiceMock = {
     });
   },
 
-  cancelarRifa(rifaId, motivo) {
+  // Una Rifa Confirmada siempre se rifa: si el producto cambió o ya no existe, se entrega uno equivalente (§7.11).
+  // Solo se puede cancelar por fuerza mayor legal, con reembolso total.
+  cancelarRifa(rifaId, motivo, { fuerzaMayorLegal = false } = {}) {
     return sobreRifa(rifaId, (db, rifa, admin) => {
       const texto = exigirTexto(motivo);
+      if (ESTADOS_CONFIRMADOS.includes(rifa.estado) && !fuerzaMayorLegal) throw new ErrorDominio('RIFA_CONFIRMADA_NO_SE_CANCELA');
       if (ESTADOS_COMPROMISO.includes(rifa.estado)) congelarAvance(db, rifa);
       liberarCompromisos(db, rifa, 'Rifa cancelada.');
       reembolsarTickets(db, rifa, 'Rifa cancelada.');
@@ -376,10 +379,21 @@ export const adminServiceMock = {
         rifa.ticketsExternos += n;
         rifa.siguienteTicket += n;
         rifa.participantesExternos += personas;
+        for (let i = 0; i < personas; i++) registrarActividadCierre(db, rifa, nuevoId('persona'));   // cada una cuenta para el tiempo extra
         if (tope != null && opcionesVendidas(rifa) >= tope) cerrarRifa(db, rifa);
       } else {
         throw new ErrorDominio('ESTADO_NO_ACEPTA_PUNTOS');
       }
+    });
+  },
+
+  /** Fija cuántos minutos le quedan a una Rifa Confirmada (para probar el tiempo extra y el cierre automático). */
+  simularTiempoRestante(rifaId, minutos) {
+    return sobreRifa(rifaId, (db, rifa) => {
+      exigirEstado(rifa, 'ABIERTA');
+      if (!Number.isFinite(minutos)) throw new ErrorDominio('CANTIDAD_INVALIDA');
+      rifa.fechas.cierre = new Date(Date.now() + minutos * 60000).toISOString();
+      rifa.extension = { personas: [], minutosExtra: rifa.extension?.minutosExtra ?? 0 };
     });
   },
 

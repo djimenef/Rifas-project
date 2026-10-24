@@ -63,7 +63,7 @@ export function abrirModalChances({ rifa, modo, alTerminar }) {
       <p class="modal-rifa">${rifa.producto.emoji} <b>${esc(rifa.producto.nombre)}</b></p>
       <p class="modal-texto">${poner
         ? 'Tus Chances quedan retenidas y solo se usan si la rifa se arma. Si no se arma, vuelven completas a tu billetera.'
-        : 'La rifa ya va: cada Chance es una opción de ganar en el sorteo.'}</p>
+        : 'La rifa ya está confirmada: cada Chance es una opción de ganar.'}</p>
       <p class="modal-saldo">Tienes <b>${puntos(disponible)}</b> disponibles.</p>
       <div class="modal-cantidad"><span>${poner ? '¿Cuántas Chances quieres poner?' : '¿Cuántas opciones quieres comprar?'}</span>
         ${selectorCantidad({ valor: cantidad, min: 1, max, etiqueta: poner ? 'Chances a poner' : 'Opciones a comprar' })}
@@ -102,8 +102,8 @@ export function abrirModalChances({ rifa, modo, alTerminar }) {
         ${poner ? fila('Retenidas', `${puntos(retenido)} → <b>${puntos(retenido + cantidad)}</b>`) : ''}
       </dl>
       <p class="modal-nota">${poner
-        ? 'Puedes retirar tus Chances mientras la rifa se está armando, si la rifa lo permite.'
-        : 'La compra no se puede deshacer. Si la rifa se cancela, te devolvemos tus Chances.'}</p>
+        ? 'Tus Chances quedan bloqueadas: no se pueden retirar. Si la rifa se confirma, se vuelven opciones de ganar; si se descarta, vuelven completas a tu billetera.'
+        : 'La compra no se puede deshacer: una Rifa Confirmada siempre se rifa.'}</p>
       ${error ? `<p class="aviso aviso-error" role="alert"><span class="aviso-icono" aria-hidden="true">!</span><span>${esc(error)}</span></p>` : ''}
       <div class="modal-acciones">
         <button type="button" class="btn btn-ghost" data-volver>Volver</button>
@@ -160,37 +160,3 @@ export function abrirModalChances({ rifa, modo, alTerminar }) {
   iniciar();
 }
 
-/**
- * Confirmación para retirar las Chances retenidas de una rifa que se está armando.
- * @param {{ rifa: import('../domain/rifa.js').Rifa, retenido: number, alTerminar?: () => void }} opciones
- */
-export function abrirModalRetiro({ rifa, retenido, alTerminar }) {
-  const { dialog } = abrirModal({
-    titulo: 'Retirar mis Chances',
-    contenido: `
-      <p class="modal-texto">Vas a retirar <b>${puntos(retenido)}</b> de <b>${esc(rifa.producto.nombre)}</b>. Vuelven a tu saldo disponible y dejas de participar en esta rifa.</p>
-      <div id="modal-aviso" role="status" aria-live="polite"></div>`,
-    acciones: [
-      { texto: 'Cancelar', variante: 'ghost' },
-      {
-        texto: 'Retirar mis Chances',
-        alHacerClic: async cerrar => {
-          const boton = dialog.querySelector('.modal-acciones .btn-primary');
-          boton.disabled = true;
-          boton.textContent = 'Retirando…';
-          try {
-            const c = await rifasService.retirarCompromiso(rifa.id);
-            cerrar();
-            mostrarToast(`Retiraste ${puntos(c.cantidad)}. Ya están en tu saldo disponible.`);
-            actualizarSaldo();
-            alTerminar?.();
-          } catch (e) {
-            boton.disabled = false;
-            boton.textContent = 'Retirar mis Chances';
-            dialog.querySelector('#modal-aviso').innerHTML = `<p class="aviso aviso-error" role="alert"><span class="aviso-icono" aria-hidden="true">!</span><span>${esc(e.message)}</span></p>`;
-          }
-        },
-      },
-    ],
-  });
-}

@@ -95,5 +95,8 @@ export function destinoVolver(porDefecto = url('rifas')) {
   return v && v.startsWith('/') && !v.startsWith('//') && !v.includes('\\') ? v : porDefecto;
 }
 
+/** Ruta de un recurso del sitio (p. ej. una foto en assets/img/) o una URL externa tal cual. */
+export const recurso = destino => (/^https?:\/\//.test(destino) ? destino : ruta(destino));
+
 /** Valor de un parámetro de la URL actual. */
 export const parametro = nombre => new URLSearchParams(location.search).get(nombre);

@@ -31,7 +31,7 @@ export const movimientosMock = t => [
   mov(108, 'u-lucia', 'REEMBOLSO', 5, 0, t(-3), { rifaId: 'r-xbox', motivo: 'Rifa cancelada.' }),
   mov(109, 'u-lucia', 'RECARGA', 15, 0, t(-2), { referencia: 'rc-4' }),
   mov(110, 'u-lucia', 'RETENCION', -10, 10, t(-1, -6), { rifaId: 'r-ps5' }),
-  mov(111, 'u-lucia', 'LIBERACION', 5, -5, t(-1), { rifaId: 'r-reloj', motivo: 'No se armó la Rifa.' }),
+  mov(111, 'u-lucia', 'LIBERACION', 5, -5, t(-1), { rifaId: 'r-reloj', motivo: 'Rifa Descartada: no llegó al 100 % a tiempo.' }),
   mov(112, 'u-lucia', 'CAPTURA', 0, -8, t(-1), { rifaId: 'r-tv' }),
   mov(113, 'u-lucia', 'COMPRA_DIRECTA', -2, 0, t(0, -12), { rifaId: 'r-tv' }),
   // Valeria

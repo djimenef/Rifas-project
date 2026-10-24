@@ -7,6 +7,9 @@ export const categoriasMock = [
   { id: 'cat-consolas', nombre: 'Consolas', icono: '🎮', orden: 4, activa: true },
   { id: 'cat-tvs', nombre: 'TVs', icono: '📺', orden: 5, activa: true },
   { id: 'cat-celulares', nombre: 'Celulares', icono: '📱', orden: 6, activa: true },
+  { id: 'cat-tablets', nombre: 'Tablets', icono: '📲', orden: 7, activa: true },
+  { id: 'cat-computo', nombre: 'Cómputo', icono: '💻', orden: 8, activa: true },
+  { id: 'cat-audio-video', nombre: 'Audio y video', icono: '🔊', orden: 9, activa: true },
 ];
 
 export const paquetesRecargaMock = [
@@ -24,6 +27,10 @@ export const tiendasConfiablesMock = [
   { dominio: 'oechsle.pe', nombre: 'Oechsle', activa: true },
   { dominio: 'hiraoka.com.pe', nombre: 'Hiraoka', activa: true },
   { dominio: 'coolbox.pe', nombre: 'Coolbox', activa: true },
+  { dominio: 'adidas.pe', nombre: 'adidas Perú', activa: true },
+  { dominio: 'promart.pe', nombre: 'Promart', activa: true },
+  { dominio: 'lacuracao.pe', nombre: 'La Curacao', activa: true },
+  { dominio: 'impacto.com.pe', nombre: 'Impacto', activa: true },
   { dominio: 'tienda-ejemplo.pe', nombre: 'Tienda de ejemplo', activa: true },
 ];
 

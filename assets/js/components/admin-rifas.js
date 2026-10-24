@@ -29,7 +29,7 @@ function modalAccion({ titulo, contenido, textoBoton, enviar, alTerminar }) {
     titulo,
     contenido: `${contenido}<div data-error role="status" aria-live="polite"></div>`,
     acciones: [
-      { texto: 'Cancelar', variante: 'ghost' },
+      { texto: 'Volver', variante: 'ghost' },
       {
         texto: textoBoton,
         alHacerClic: async cerrar => {
@@ -78,17 +78,39 @@ export function modalProgramar(rifa, alTerminar) {
   });
 }
 
-/** Cancelar con motivo obligatorio: libera lo retenido y reembolsa lo consumido. */
+/** Cancelar con motivo: solo ANTES de confirmarse (Sugerida, Armándose). Libera las Chances retenidas. */
 export function modalCancelar(rifa, alTerminar) {
   modalAccion({
-    titulo: 'Cancelar rifa',
+    titulo: 'Cancelar con motivo',
     contenido: `
-      <p class="modal-texto">Se cancela <b>${esc(rifa.producto.nombre)}</b> y se devuelven íntegramente todas las Chances (retenidas y opciones). No se puede deshacer.</p>
-      <label>Motivo (lo verá el público)<textarea name="motivo" required maxlength="300" placeholder="Ej.: el producto ya no está disponible al precio esperado."></textarea></label>`,
+      <p class="modal-texto">Se cancela <b>${esc(rifa.producto.nombre)}</b>, que todavía no se confirma. Pasa a <b>Rifa Descartada</b> y todas las Chances retenidas vuelven completas a las billeteras. No se puede deshacer.</p>
+      <label>Motivo (lo verá el público)<textarea name="motivo" required maxlength="300" placeholder="Ej.: el producto ya no está disponible en ninguna tienda confiable."></textarea></label>`,
     textoBoton: 'Cancelar rifa',
     enviar: async dialog => {
       await adminService.cancelarRifa(rifa.id, dialog.querySelector('[name="motivo"]').value);
-      return 'Rifa cancelada. Se devolvieron todas las Chances.';
+      return 'Rifa cancelada. Se devolvieron todas las Chances retenidas.';
+    },
+    alTerminar,
+  });
+}
+
+/**
+ * Cancelar por fuerza mayor: la ÚNICA forma de cancelar una Rifa Confirmada (Confirmada, Cerrada, con fecha para rifar).
+ * Una Rifa Confirmada siempre se rifa; si el producto cambió o ya no existe, se entrega uno equivalente (README §7.11).
+ */
+export function modalCancelarFuerzaMayor(rifa, alTerminar) {
+  modalAccion({
+    titulo: 'Cancelar por fuerza mayor',
+    contenido: `
+      <p class="modal-texto"><b>${esc(rifa.producto.nombre)}</b> ya está confirmada y <b>siempre se rifa</b>. Si el producto cambió de precio o ya no existe, no se cancela: se entrega uno equivalente de igual o mayor valor.</p>
+      <p class="modal-texto">Solo cancela si hay una causa de <b>fuerza mayor legal</b>. Se reembolsan íntegramente todas las Chances y opciones, y la rifa pasa a <b>Rifa Descartada</b>. No se puede deshacer.</p>
+      <label class="check"><input type="checkbox" name="fuerzaMayorLegal" required> Confirmo que es un caso de fuerza mayor legal</label>
+      <label>Motivo (lo verá el público)<textarea name="motivo" required maxlength="300" placeholder="Ej.: orden de la autoridad competente."></textarea></label>`,
+    textoBoton: 'Cancelar por fuerza mayor',
+    enviar: async dialog => {
+      await adminService.cancelarRifa(rifa.id, dialog.querySelector('[name="motivo"]').value,
+        { fuerzaMayorLegal: !!dialog.querySelector('[name="fuerzaMayorLegal"]')?.checked });
+      return 'Rifa cancelada por fuerza mayor. Se reembolsaron todas las Chances.';
     },
     alTerminar,
   });

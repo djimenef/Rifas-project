@@ -8,6 +8,7 @@ import {
 import { enmascararDni } from '../../domain/usuario.js';
 import { apodosRellenoMock } from '../../mocks/catalogos.js';
 import { leerSesion } from '../../session.js';
+import { alIniciarOperacion } from './db.js';
 import { sha256 } from '../../lib/hash.js';
 import { nuevoId } from '../../lib/ids.js';
 
@@ -185,17 +186,17 @@ export function vistaPublica(db, rifa) {
     id: rifa.id, codigo: rifa.codigo, slug: rifa.slug,
     categoria: categoria?.nombre ?? '—', categoriaId: rifa.categoriaId,
     producto: {
-      nombre: rifa.producto.nombre, imagen: rifa.producto.imagen, emoji: rifa.producto.emoji,
+      nombre: rifa.producto.nombre, imagen: rifa.producto.imagen, emoji: rifa.producto.emoji, descripcion: rifa.producto.descripcion ?? null,
       precioTienda: rifa.producto.precioTienda, linkTienda: rifa.producto.linkCompra,
     },
     estado: rifa.estado, visibilidad: rifa.visibilidad,
     progreso: progreso(db, rifa), participantes: participantes(db, rifa),
-    permiteRetiro: ESTADOS_COMPROMISO.includes(rifa.estado) && rifa.config.permiteRetiro,
   };
   if (autor) v.autorApodo = autor.apodo;
   if (rifa.fechas.limiteArmado && rifa.estado === 'ARMANDO') v.fechaLimiteArmado = rifa.fechas.limiteArmado;
   if (rifa.fechas.limiteCaptacion && rifa.estado === 'CAPTANDO') v.fechaLimiteArmado = rifa.fechas.limiteCaptacion;
   if (rifa.fechas.cierre) v.fechaCierre = rifa.fechas.cierre;
+  if (rifa.extension?.minutosExtra) v.minutosExtra = rifa.extension.minutosExtra;
   if (rifa.fechas.sorteo) v.fechaSorteo = rifa.fechas.sorteo;
   const hash = asegurarHash(db, rifa);
   if (hash) v.hashLista = hash;
@@ -289,13 +290,13 @@ export function congelarAvance(db, rifa) {
 export function declararNoArmada(db, rifa, actor = 'SISTEMA') {
   if (!ESTADOS_COMPROMISO.includes(rifa.estado)) throw new ErrorDominio('TRANSICION_INVALIDA');
   congelarAvance(db, rifa);
-  liberarCompromisos(db, rifa, 'No se armó la Rifa.');
+  liberarCompromisos(db, rifa, 'Rifa Descartada: no llegó al 100 % a tiempo.');
   cambiarEstado(rifa, 'NO_SE_ARMO', { actor, motivo: 'Venció la ventana sin cubrir la meta' });
 }
 
 /** Cierre: lista congelada y huella publicada; pasa directo a revisión (README §9.4). */
 export function cerrarRifa(db, rifa, actor = 'SISTEMA') {
-  cambiarEstado(rifa, 'CERRADA', { actor });
+  cambiarEstado(rifa, 'CERRADA', { actor, motivo: 'Se agotó el tiempo: Rifa Cerrada, por rifar' });
   rifa.fechas.cierre = ahora();
   asegurarHash(db, rifa);
   cambiarEstado(rifa, 'EN_REVISION', { actor: 'SISTEMA', motivo: 'Revisión posterior al cierre' });
@@ -314,6 +315,51 @@ export function evaluarAvance(db, rifa) {
   }
   return null;
 }
+
+// ---------------------------------------------------------------------------
+// Relojes: tiempo extra al final de una Rifa Confirmada y vencimientos (README §7.13 y §9.4)
+// ---------------------------------------------------------------------------
+
+/**
+ * Registra que una persona puso Chances en una Rifa Confirmada. Si faltan `ventanaFinalMin` minutos o menos,
+ * cada `personasPorExtension` personas DISTINTAS (no tickets) dentro de esa ventana suman `minutosPorExtension`
+ * minutos al tiempo que quedaba. Se repite mientras sigan llegando personas, hasta que el tiempo se agote.
+ * @returns {boolean} true si se agregó tiempo extra
+ */
+export function registrarActividadCierre(db, rifa, personaId) {
+  if (rifa.estado !== 'ABIERTA' || !rifa.fechas.cierre) return false;
+  const { ventanaFinalMin, personasPorExtension, minutosPorExtension } = rifa.config;
+  const ahoraMs = Date.now();
+  const cierreMs = Date.parse(rifa.fechas.cierre);
+  const ventanaMs = ventanaFinalMin * 60000;
+  if (cierreMs <= ahoraMs || cierreMs - ahoraMs > ventanaMs) return false;   // solo en los últimos minutos
+
+  const ext = rifa.extension ?? (rifa.extension = { personas: [], minutosExtra: 0 });
+  ext.personas = ext.personas.filter(p => ahoraMs - Date.parse(p.fecha) <= ventanaMs);
+  if (!ext.personas.some(p => p.id === personaId)) ext.personas.push({ id: personaId, fecha: ahora() });
+  if (ext.personas.length < personasPorExtension) return false;
+
+  rifa.fechas.cierre = new Date(cierreMs + minutosPorExtension * 60000).toISOString();
+  ext.minutosExtra += minutosPorExtension;
+  ext.personas = [];   // las siguientes personas cuentan para la próxima extensión
+  rifa.historial.push({ desde: 'ABIERTA', hacia: 'ABIERTA', actor: 'SISTEMA', motivo: `Tiempo extra: +${minutosPorExtension} min (${personasPorExtension} personas en los últimos ${ventanaFinalMin} min)`, fecha: ahora() });
+  return true;
+}
+
+/** Cierra las Rifas Confirmadas cuyo tiempo se agotó y descarta las que no se armaron a tiempo. */
+export function procesarVencimientos(db) {
+  const ahoraMs = Date.now();
+  for (const rifa of db.rifas) {
+    if (rifa.estado === 'ABIERTA' && rifa.fechas.cierre && Date.parse(rifa.fechas.cierre) <= ahoraMs) {
+      cerrarRifa(db, rifa, 'SISTEMA');
+    } else if (rifa.estado === 'ARMANDO' && rifa.fechas.limiteArmado && Date.parse(rifa.fechas.limiteArmado) <= ahoraMs) {
+      declararNoArmada(db, rifa);
+    } else if (rifa.estado === 'CAPTANDO' && rifa.fechas.limiteCaptacion && Date.parse(rifa.fechas.limiteCaptacion) <= ahoraMs) {
+      declararNoArmada(db, rifa);
+    }
+  }
+}
+alIniciarOperacion(procesarVencimientos);
 
 /** Recalcula la meta con un margen nuevo (solo admins, antes de abrirse). */
 export function fijarMargen(rifa, margenPct) {

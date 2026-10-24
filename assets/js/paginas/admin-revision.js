@@ -1,12 +1,12 @@
 // Admin · Cola de revisión (/admin/revision): rifas CERRADAS o EN_REVISION.
-// Aprobar y programar → PROGRAMADA (y sale de la cola) · Cancelar con motivo → CANCELADA con reembolso.
+// Aprobar y programar → PROGRAMADA (y sale de la cola) · Cancelar por fuerza mayor → CANCELADA con reembolso total.
 import { listo } from '../layout.js';
 import { adminService } from '../services/index.js';
 import { url } from '../lib/rutas.js';
 import { esc } from '../lib/html.js';
 import { soles, puntos, opciones, fechaHora } from '../lib/formato.js';
 import { cargarSeccion } from '../components/estados.js';
-import { badgeAdmin, modalProgramar, modalCancelar } from '../components/admin-rifas.js';
+import { badgeAdmin, modalProgramar, modalCancelarFuerzaMayor } from '../components/admin-rifas.js';
 
 const cola = document.getElementById('cola');
 const { permitido } = await listo;
@@ -29,14 +29,14 @@ function item(r) {
         </dl>
         <p class="admin-nota">Antes de aprobar, verifica:</p>
         <ul class="cola-checklist">
-          <li>El producto sigue disponible al precio esperado.</li>
+          <li>El producto sigue disponible al precio esperado. Si no, se entregará uno equivalente de igual o mayor valor (la rifa no se cancela).</li>
           <li>La recaudación cuadra con las opciones vendidas.</li>
           <li>No hay indicios de fraude ni compras sospechosas.</li>
         </ul>
       </div>
       <div class="admin-acciones">
         <button type="button" class="btn btn-primary" data-programar="${esc(r.id)}">Aprobar y programar</button>
-        <button type="button" class="btn btn-ghost" data-cancelar="${esc(r.id)}">Cancelar con motivo</button>
+        <button type="button" class="btn btn-ghost" data-cancelar="${esc(r.id)}">Cancelar por fuerza mayor</button>
       </div>
     </article>`;
 }
@@ -50,7 +50,7 @@ function cargar() {
       cola.innerHTML = `<div class="cola">${rifas.map(item).join('')}</div>`;
       const buscar = id => rifas.find(r => r.id === id);
       cola.querySelectorAll('[data-programar]').forEach(b => b.addEventListener('click', () => modalProgramar(buscar(b.dataset.programar), cargar)));
-      cola.querySelectorAll('[data-cancelar]').forEach(b => b.addEventListener('click', () => modalCancelar(buscar(b.dataset.cancelar), cargar)));
+      cola.querySelectorAll('[data-cancelar]').forEach(b => b.addEventListener('click', () => modalCancelarFuerzaMayor(buscar(b.dataset.cancelar), cargar)));
     },
   });
 }

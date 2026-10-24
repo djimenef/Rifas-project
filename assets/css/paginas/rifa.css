@@ -7,6 +7,14 @@
   font-size: var(--fs-display); background: var(--grad-menta);
 }
 .detalle-media span { font-size: calc(var(--fs-ilustracion) * 2); }
+.detalle-media.detalle-foto { display: block; background: var(--foto-fondo); padding: var(--sp-20); }
+.detalle-foto img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Descripción del producto (tomada de la tienda) */
+.detalle-descripcion { display: grid; gap: var(--sp-8); padding-top: var(--sp-20); margin-top: var(--sp-8); border-top: 1px solid var(--border); }
+.detalle-descripcion h2 { margin: 0; font-size: var(--fs-xl); letter-spacing: var(--ls-tight); }
+.detalle-descripcion p { margin: 0; line-height: var(--lh-body); }
+.detalle-descripcion .detalle-fuente { color: var(--muted); font-size: var(--fs-sm); }
 .detalle-info { display: grid; gap: var(--sp-12); margin-top: var(--sp-24); }
 .detalle-cat { margin: 0; color: var(--muted); text-transform: uppercase; letter-spacing: var(--ls-caps); font-size: var(--fs-xs); font-weight: var(--fw-semibold); }
 .detalle-info h1 { font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--ls-tight); margin: 0; }

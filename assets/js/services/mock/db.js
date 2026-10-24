@@ -8,6 +8,12 @@ import { crearSemilla, VERSION_DATOS } from '../../mocks/semilla.js';
 const CLAVE = 'dalechance.datos';
 let estado = null;
 let latencia = { min: 300, max: 600 };
+let antesDeCadaOperacion = null;
+
+/** Registra una función que corre al inicio de cada operación, dentro de la misma transacción (p. ej. cerrar rifas vencidas). */
+export function alIniciarOperacion(fn) {
+  antesDeCadaOperacion = fn;
+}
 
 function leerAlmacen() {
   try {
@@ -41,6 +47,7 @@ export async function operacion(fn) {
   const db = cargar();
   const respaldo = structuredClone(db);
   try {
+    antesDeCadaOperacion?.(db);
     const resultado = fn(db);
     escribirAlmacen();
     return resultado === undefined ? undefined : structuredClone(resultado);
