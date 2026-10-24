@@ -104,7 +104,7 @@ git pull
 
 **Levantar y comprobar:**
 ```bash
-python -m http.server 8000
+python dev/servidor.py
 ```
 - Sitio: http://localhost:8000
 - Pruebas de reglas: http://localhost:8000/dev/pruebas/ → deben salir **50 de 50** en verde antes de empezar.
@@ -123,7 +123,7 @@ python -m http.server 8000
 - Barra de avance: `--error` → `--gold` → `--accent`.
 
 **Estructura y técnica**
-- Sitio estático con módulos ES; se levanta con `python -m http.server 8000`. Sin dependencias.
+- Sitio estático con módulos ES; se levanta con `python dev/servidor.py` (servidor sin caché). Sin dependencias.
 - Cada pantalla en su carpeta con `index.html`; CSS y JS propios en `assets/css/paginas/` y `assets/js/paginas/`. Nada de CSS/JS dentro de los HTML.
 - **Excepción:** login y registro son archivos sueltos (`iniciar-sesion.html`, `crear-cuenta.html`) y así se enlazan, también en `?volver=`.
 - Nombres en español, minúsculas y con guiones. En el código se dice "puntos" y `precioTienda`.
@@ -132,7 +132,7 @@ python -m http.server 8000
 
 **Producto y textos**
 - La moneda visible se llama **Chance/Chances**, en femenino. "Chance" se usa solo para la moneda.
-- Estados visibles: **Armando Rifa**, **Calentando Rifa**, **No se armó la Rifa**.
+- Estados visibles: **Rifa Armándose**, **Rifa Sugerida**, **Rifa Descartada**.
 - Precio: **"Precio referencial: S/ X"**.
 - Recarga: atajos 5/10/15/20 + **monto libre de 5 a 500** por recarga (configurable por admin).
 - El público nunca ve meta, margen, Chances reunidas ni opciones vendidas: solo personas y % de avance. El máximo por persona tampoco se expone en la vista pública.
@@ -144,6 +144,21 @@ python -m http.server 8000
 - **Compra del premio:** se hace fuera de la web; aquí solo se registran compra (fecha, tienda, monto, comprobante, a nombre del ganador), envío (recojo o courier) y entrega (DNI físico verificado y evidencia). Solo los admins ven esos datos; el público ve estado y fecha.
 - Aviso en el registro: "¡IMPORTANTE SI GANAS!" (solo con tu propio DNI; el premio se compra a nombre del ganador).
 
+**Estados visibles y tiempo extra (README §7.13)**
+- Público: **Rifa Sugerida** (solo por enlace; quien la crea es responsable de juntar el mínimo) → **Rifa Armándose** (< 100 %) → **Rifa Confirmada** (≥ 100 %, sigue abierta) → **Rifa Cerrada** (por rifar) → **Rifa Realizada** (ya hay ganador) → **Premio Entregado**. **Validando producto** es el estado de validez; **Rifa Descartada** agrupa no armadas, canceladas y propuestas descartadas.
+- Los estados internos se mantienen; solo cambia cómo se muestran.
+- **Tiempo extra:** con 5 minutos o menos, cada 5 personas distintas que pongan Chances suman 5 minutos al tiempo que quedaba; al agotarse, pasa sola a Rifa Cerrada.
+- **No se usa "sortear/sorteo"** en textos visibles.
+- **Foto en las tarjetas:** desenfocada hasta Rifa Armándose y nítida desde Rifa Confirmada. Inicio muestra primero "Rifas confirmadas" (las 3 que se cierran antes, foto nítida y cuenta regresiva) y luego hasta 6 rifas armándose (primero las que tienen foto), cada una con "Ver más…" hacia `/rifas`, que agrupa por categoría cuando no hay filtro de categoría.
+- **Productos de ejemplo reales** (foto, precio y descripción de la tienda): iPhone 17 Pro Max, PS5 Pro, adidas Megaride S4, TV LG QNED 85", RTX 5060 Ti, Ryzen 5 9600X, combo proyector + parlante (armándose); Galaxy Tab S10 FE, Lenovo LOQ, Galaxy S26 Ultra (confirmadas). Categorías nuevas: Tablets, Cómputo, Audio y video.
+- **Chances bloqueadas:** desde la Rifa Sugerida no se pueden retirar; vuelven solo si la rifa se descarta. Al confirmarse quedan como opciones de ganar para siempre.
+- **Una Rifa Confirmada siempre se rifa:** si el producto cambia, se entrega uno equivalente; solo se cancela por fuerza mayor legal (reembolso total).
+
+**Inicio (ajustes visuales)**
+- Logo a 2.1rem (+50 %) en escritorio; en celular se mantiene 1.4rem. Título "Tú eliges qué se Rifa."
+- Ticket de Inicio = carrusel de rifas destacadas (orden fijado en los datos; criterio pendiente), base blanca, foto del producto y descripción en el detalle.
+- Servidor de desarrollo sin caché: `python dev/servidor.py`.
+
 **Panel de administración**
 - Layout propio: menú lateral fijo (Dashboard, Rifas, Revisión, Sorteos, Compras y entregas, Productos, Categorías, Usuarios, Propuestas), tablas con filtros y búsqueda, acciones por fila y detalle; "Modo administrador" y "Ver sitio"; en móvil, menú desplegable. Misma paleta.
 
@@ -154,7 +169,7 @@ python -m http.server 8000
 
 ## Dudas abiertas
 
-- Decisiones pendientes del README §13: #2 límite al retiro de Chances, #5 vencimiento, #8 qué pasa con lo recaudado sobre la meta, #9 plazo para reclamar, #15 beneficio para creadores, #23 límite diario de recarga (recomendado S/ 500).
+- Decisiones pendientes del README §13: #5 vencimiento, #8 qué pasa con lo recaudado sobre la meta, #9 plazo para reclamar, #15 beneficio para creadores, #23 límite diario de recarga (recomendado S/ 500).
 - Rango de precio definitivo para proponer rifas (hoy S/ 50–10,000).
 - Validación legal (Ministerio del Interior / MINCETUR) antes de cualquier lanzamiento.
 
@@ -162,7 +177,7 @@ python -m http.server 8000
 
 ```bash
 git pull
-python -m http.server 8000
+python dev/servidor.py
 ```
 
 Abrir http://localhost:8000. Los módulos ES **no funcionan con doble clic** en el HTML (`file://`).

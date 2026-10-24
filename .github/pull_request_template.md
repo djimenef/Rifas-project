@@ -21,7 +21,7 @@
 - [ ] Muestra todos sus estados (cargando, vacío, error y los de negocio del inventario §6).
 - [ ] Consume datos solo a través de `assets/js/services/index.js`, nunca importando mocks.
 - [ ] Los tipos usados están en `assets/js/domain/` y coinciden con la semántica (§7).
-- [ ] Textos en español de Perú con el vocabulario visible: **Chances** (femenino), **Armando Rifa**, **Precio referencial**.
+- [ ] Textos en español de Perú con el vocabulario visible: **Chances** (femenino), estados visibles de README §7.13 (sin "sortear/sorteo"), **Precio referencial**.
 - [ ] Nada de CSS ni JS dentro de los HTML.
 - [ ] Capturas de móvil y escritorio en este PR.
 

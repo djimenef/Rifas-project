@@ -10,7 +10,7 @@
 
 Construir **todas las interfaces** del inventario de `README.md` §6 como **mockups navegables**, conectadas entre sí, con datos falsos y con el mismo estilo visual de las 3 pantallas que ya existen (inicio, login, registro). Al final debe poder recorrerse el flujo completo con clics:
 
-> visitante entra por un enlace de rifa → se registra → verifica su cuenta → recarga Chances → pone Chances en una rifa "Armando Rifa" → ve sus Chances retenidas → la rifa "va" → ve sus tickets → ve el sorteo y al ganador.
+> visitante entra por un enlace de rifa → se registra → verifica su cuenta → recarga Chances → pone Chances en una rifa "Rifa Armándose" → ve sus Chances retenidas y bloqueadas → la rifa pasa a "Rifa Confirmada" → ve sus tickets → "Rifa Cerrada" → "Rifa Realizada" con el ganador → "Premio Entregado".
 
 Sin backend, sin base de datos, sin pagos reales, sin llamadas a APIs externas.
 
@@ -64,7 +64,7 @@ En cualquier caso, respeta la **separación por capas** de `README.md` §3: pant
 3. Crea las **interfaces de servicio** y su **implementación mock**:
    - `AuthService`: registrar, iniciar sesión, cerrar sesión, verificar código, sesión actual.
    - `BilleteraService`: obtener (con retenido por rifa), historial con filtros, recargar.
-   - `RifasService`: listar (filtros por estado, categoría, búsqueda), obtener por slug o por código, comprometer, retirar compromiso, comprar, proponer.
+   - `RifasService`: listar (filtros por estado, categoría, búsqueda), obtener por slug o por código, comprometer (las Chances quedan bloqueadas: no hay retiro), comprar, proponer.
    - `AdminService`: listar rifas por estado, crear, publicar, aprobar/cancelar revisión, sortear, registrar compra y entrega, validar o reemplazar link, ajustar saldo.
 4. Los servicios mock deben:
    - Responder con un pequeño retraso (300–600 ms) para que se vean los estados de carga.
@@ -204,30 +204,26 @@ Commit: `docs(semantica): separar semántica funcional por dominio`.
 | Billetera | "Ver historial" / "Recargar" / rifa con puntos retenidos | `/billetera/historial` / `/billetera/recargar` / `/r/[slug]` |
 | Historial | Movimiento con rifa | `/r/[slug]` |
 | Mis rifas | Tarjeta | `/mis-rifas/[codigo]` (tickets) con enlace a `/r/[slug]` |
-| Detalle (sorteada) | "Ver sorteo" | Sección de transparencia (hash, ganador) en el mismo detalle |
+| Detalle (Rifa Realizada) | "Ver cómo se eligió al ganador" | Sección de transparencia (hash, ganador) en el mismo detalle |
 | Admin rifas | Rifa | Detalle admin con acciones según estado (publicar, revisar, sortear, entrega) |
 | Cola de revisión | "Aprobar y programar" | Rifa pasa a `PROGRAMADA` y vuelve a la cola |
 | Footer | Enlaces legales | `/legal/*`, `/libro-de-reclamaciones` |
 
 ## Estados de rifa y su presentación
 
-| Estado | Badge | Color | Visible en listado |
-|--------|-------|-------|--------------------|
-| `REVISION_LINK` | 🔎 Link en revisión | Gris | No |
-| `CAPTANDO` | 🔥 Calentando Rifa · 🔒 | Naranja | No (solo por enlace) |
-| `PROPUESTA` | 📝 En moderación | Gris | No |
-| `ARMANDO` | 🍀 Armando Rifa | Amarillo | Sí |
-| `ABIERTA` | 🟢 ¡Va! Rifa confirmada | Verde | Sí |
-| `CERRADA` | ⚪ Cerrada | Gris claro | Sí |
-| `EN_REVISION` | 🟠 En revisión | Naranja | Sí |
-| `PROGRAMADA` | 📅 Sorteo el *fecha* | Azul | Sí |
-| `SORTEADA` | 🏆 Ganador: *apodo* | Dorado | Sí |
-| `COMPRANDO` | 🛒 Comprando el premio | Azul | Sí |
-| `EN_CAMINO` | 🚚 En camino | Azul | Sí |
-| `ENTREGADA` | ✅ Entregada | Verde oscuro | Sí |
-| `NO_SE_ARMO` | ⚫ No se armó la Rifa | Gris oscuro | Sí (en "Finalizadas") |
-| `CANCELADA` | 🔴 Cancelada | Rojo | Sí (en "Finalizadas") |
-| `BORRADOR` · `DESCARTADA` | — | — | No |
+| Estado visible | Internos | Badge | Color | Visible en listado |
+|----------------|----------|-------|-------|--------------------|
+| Rifa Sugerida | `CAPTANDO` | 💡 Rifa Sugerida · 🔒 | Naranja | No (solo por enlace) |
+| Validando producto | `REVISION_LINK`, `PROPUESTA` | 🔎 Validando producto | Gris | No |
+| Rifa Armándose | `ARMANDO` | 🍀 Rifa Armándose | Amarillo | Sí |
+| Rifa Confirmada | `ABIERTA` | 🟢 Rifa Confirmada | Verde | Sí |
+| Rifa Cerrada | `CERRADA`, `EN_REVISION`, `PROGRAMADA` | ⏳ Rifa Cerrada · Por rifar / 📅 se rifa el *fecha* | Azul | Sí |
+| Rifa Realizada | `SORTEADA`, `COMPRANDO`, `EN_CAMINO` | 🏆 Rifa Realizada · Ganador: *apodo* | Dorado | Sí |
+| Premio Entregado | `ENTREGADA` | ✅ Premio Entregado | Verde oscuro | Sí |
+| Rifa Descartada | `NO_SE_ARMO`, `CANCELADA`, `DESCARTADA` | ⚫ Rifa Descartada | Gris oscuro | Sí (en "Finalizadas") |
+| — | `BORRADOR` | — | — | No |
+
+> En los textos visibles no se usa "sortear/sorteo". Tiempo extra al final de una Rifa Confirmada: README §7.13.
 
 > Usa los colores de la paleta existente que más se acerquen; los nombres de color son orientativos.
 

@@ -12,10 +12,10 @@ flowchart LR
 
     PAGO -- "RECARGA +N" --> D
     D -- "RETENCION<br/>poner Chances" --> R
-    R -- "LIBERACION<br/>retiro · no se armó · descartada · cancelada" --> D
+    R -- "LIBERACION<br/>no se armó · descartada · cancelada antes de confirmarse" --> D
     R -- "CAPTURA<br/>la rifa se armó" --> C
     D -- "COMPRA_DIRECTA<br/>rifa abierta" --> C
-    C -- "REEMBOLSO<br/>rifa cancelada" --> D
+    C -- "REEMBOLSO<br/>solo fuerza mayor legal" --> D
     D -- "AJUSTE ±N<br/>admin, con motivo" --> D
     D -- "VENCIMIENTO<br/>si se aplica" --> FUERA
 ```
@@ -26,7 +26,8 @@ flowchart LR
 - Una Chance está en **un solo lugar** a la vez: disponible, retenida en una rifa o consumida en una rifa.
 - Retenido = suma de los compromisos activos.
 - Poner Chances o comprar lleva una **clave de idempotencia**: si la operación llega dos veces, se aplica una sola vez.
-- Si la rifa no se arma o se cancela, **todas** las Chances vuelven al disponible.
+- Las Chances retenidas **no se pueden retirar**: vuelven solo si la rifa no se arma o se descarta.
+- Una vez confirmada, la rifa **siempre se rifa**: las Chances quedan como opciones de ganar (solo hay reembolso por fuerza mayor legal).
 
 ## Ejemplo: Lucía (datos de demo)
 
