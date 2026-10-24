@@ -8,7 +8,7 @@ import { soles, puntos, opciones, fechaHora } from '../lib/formato.js';
 import { barraAvance } from '../components/barra-avance.js';
 import { NOMBRE_ESTADO } from '../components/badge.js';
 import { cargarSeccion } from '../components/estados.js';
-import { badgeAdmin, modalCancelar, modalSimularAporte, modalConfirmar } from '../components/admin-rifas.js';
+import { badgeAdmin, modalCancelar, modalCancelarFuerzaMayor, modalSimularAporte, modalConfirmar } from '../components/admin-rifas.js';
 import { ESTADOS_RIFA, ESTADOS_COMPROMISO } from '../domain/rifa.js';
 
 const pagina = document.getElementById('pagina');
@@ -102,9 +102,9 @@ function filaRifa(r) {
 function confirmarPublicar(r, alTerminar) {
   modalConfirmar({
     titulo: 'Publicar rifa',
-    texto: `<b>${esc(r.producto.nombre)}</b> pasa a <b>Armando Rifa</b>: aparece en el listado público y empieza su ventana de armado de ${r.config.ventanaArmadoDias} días.`,
+    texto: `<b>${esc(r.producto.nombre)}</b> pasa a <b>Rifa Armándose</b>: aparece en el listado público y empieza su ventana de armado de ${r.config.ventanaArmadoDias} días.`,
     textoBoton: 'Publicar',
-    accion: async () => { await adminService.publicarRifa(r.id); return 'Rifa publicada: ya está Armando Rifa.'; },
+    accion: async () => { await adminService.publicarRifa(r.id); return 'Rifa publicada: ya está como Rifa Armándose.'; },
     alTerminar,
   });
 }
@@ -121,10 +121,10 @@ function accionesPorEstado(r, recargar) {
     case 'ARMANDO': case 'CAPTANDO':
       acciones.push([`Simular aporte ${demo}`, 'ghost', () => modalSimularAporte(r, recargar)]);
       acciones.push([`Vencer ventana ${demo}`, 'ghost', () => modalConfirmar({
-        titulo: 'Vencer ventana (demo)', texto: 'Solo Fase 0: simula que se acabó el tiempo sin cubrir la meta. La rifa pasa a <b>No se armó la Rifa</b> y se liberan todas las Chances retenidas.',
+        titulo: 'Vencer ventana (demo)', texto: 'Solo Fase 0: simula que se acabó el tiempo sin cubrir la meta. La rifa pasa a <b>Rifa Descartada</b> (no se armó) y se liberan todas las Chances retenidas.',
         textoBoton: 'Vencer ventana', accion: async () => { await adminService.vencerVentana(r.id); return 'La rifa no se armó: se liberaron las Chances.'; }, alTerminar: recargar,
       })]);
-      acciones.push(['Cancelar rifa', 'ghost', () => modalCancelar(r, recargar)]);
+      acciones.push(['Cancelar con motivo', 'ghost', () => modalCancelar(r, recargar)]);
       break;
     case 'ABIERTA':
       acciones.push([`Simular compras ${demo}`, 'ghost', () => modalSimularAporte(r, recargar)]);
@@ -132,14 +132,14 @@ function accionesPorEstado(r, recargar) {
         titulo: 'Cerrar rifa (demo)', texto: 'Solo Fase 0: simula que venció el tiempo abierta. La rifa se cierra, se congela la lista de opciones y pasa a revisión.',
         textoBoton: 'Cerrar rifa', accion: async () => { await adminService.cerrarRifa(r.id); return 'Rifa cerrada: ya está en la cola de revisión.'; }, alTerminar: recargar,
       })]);
-      acciones.push(['Cancelar rifa', 'ghost', () => modalCancelar(r, recargar)]);
+      acciones.push(['Cancelar por fuerza mayor', 'ghost', () => modalCancelarFuerzaMayor(r, recargar)]);
       break;
     case 'CERRADA': case 'EN_REVISION':
       acciones.push(['Ir a la cola de revisión', 'primary', url('adminRevision')]);
       break;
     case 'PROGRAMADA':
       acciones.push(['Ejecutar sorteo', 'primary', url('adminSorteo', { codigo: r.codigo })]);
-      acciones.push(['Cancelar rifa', 'ghost', () => modalCancelar(r, recargar)]);
+      acciones.push(['Cancelar por fuerza mayor', 'ghost', () => modalCancelarFuerzaMayor(r, recargar)]);
       break;
     case 'SORTEADA': case 'COMPRANDO': case 'EN_CAMINO':
       acciones.push(['Registrar compra y entrega', 'primary', url('adminEntrega', { codigo: r.codigo })]);
@@ -217,7 +217,6 @@ function dibujarDetalle(r, recargar) {
           ${fila('Tope de opciones', c.topeTickets == null ? 'Sin tope' : opciones(c.topeTickets))}
           ${fila('Mínimo por persona', puntos(c.minPorParticipante))}
           ${fila('Máximo por persona', `${c.maxPorParticipantePct} % de la meta`)}
-          ${fila('Permite retirar Chances', c.permiteRetiro ? 'Sí' : 'No')}
         </dl>
       </section>
 

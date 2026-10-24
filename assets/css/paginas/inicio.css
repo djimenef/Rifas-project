@@ -25,26 +25,64 @@ h1 em { font-style: normal; color: var(--accent); }
   box-shadow: var(--shadow); transform: rotate(-2deg);
 }
 .ticket::before, .ticket::after {
-  content: ""; position: absolute; top: 62%; width: 34px; height: 34px;
+  content: ""; position: absolute; top: calc(50% - 17px); width: 34px; height: 34px;   /* centrados en la altura del ticket */
   background: var(--bg); border-radius: var(--radius-circle);
 }
 .ticket::before { left: -17px; }
 .ticket::after { right: -17px; }
+.ticket::before, .ticket::after { z-index: 2; }   /* los semicírculos van sobre las diapositivas */
+
+/* Carrusel de rifas destacadas dentro del ticket: base blanca (como las fotos de tienda) y textos de la paleta */
+.ticket { padding: 0; min-width: 0; isolation: isolate; background: var(--ticket-bg); color: var(--ticket-ink); }   /* min-width: 0 evita que las diapositivas ensanchen la columna del hero */
+.ticket .carrusel-ventana { border-radius: var(--radius-24); }
+.destacada {
+  position: relative; display: block; color: inherit; text-decoration: none; isolation: isolate; background: var(--ticket-bg);
+  padding: var(--sp-32);
+}
+/* El título usa todo el ancho; el resto del texto queda a la izquierda de la foto */
+.destacada .destacada-detalle, .destacada .divider, .destacada .countdown, .destacada small:not(:first-of-type) { max-width: 60%; }
+.destacada small { opacity: 1; color: var(--ticket-muted); }
+.destacada small:first-of-type { color: var(--ticket-acento); font-weight: var(--fw-bold); }
+.destacada h3 { color: var(--ticket-ink); }
+.destacada-detalle { display: block; color: var(--ticket-muted); }
+.destacada-detalle + .destacada-detalle { margin-top: var(--sp-4); }
+.destacada .divider { border-top-color: var(--ticket-linea); }
+.destacada .countdown div { background: color-mix(in srgb, var(--ticket-acento) 10%, var(--ticket-bg)); }
+.destacada .countdown b { color: var(--ticket-acento); }
+.destacada .countdown span { color: var(--ticket-muted); opacity: 1; }
+.destacada-foto {
+  position: absolute; z-index: -1; top: 20%; right: 0; width: 50%; height: 80%;   /* más abajo: el título queda libre */
+  object-fit: contain; object-position: center; pointer-events: none;
+  filter: var(--blur-fondo);   /* desenfoque leve: ~10 % del original */
+  /* bordes desvanecidos: si la foto trae fondo gris (p. ej. adidas), no se ve un rectángulo sobre el blanco */
+  -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+}
+.destacada-fondo {
+  position: absolute; z-index: -1; right: var(--sp-20); top: 50%; transform: translateY(-50%);
+  font-size: var(--fs-fondo-destacada); line-height: 1; filter: var(--blur-fondo); opacity: .55; pointer-events: none;
+}
+.destacada:hover h3 { text-decoration: underline; }
+.destacada:focus-visible { outline: 2px solid var(--ticket-acento); outline-offset: calc(-1 * var(--sp-8)); border-radius: var(--radius-24); }
+/* La cuenta regresiva deja libre la esquina de los controles y sus casillas se adaptan al ancho */
+.destacada .countdown { max-width: calc(100% - 200px); }
+.destacada .countdown div { flex: 1; min-width: 0; padding-inline: var(--sp-4); }   /* casillas angostas: la etiqueta usa todo el ancho y queda centrada */
+/* Flechas y puntos en la esquina inferior derecha, sobre la zona de la foto: sin fila extra */
+.ticket .carrusel-controles { position: absolute; right: 0; bottom: 0; padding: 0 var(--sp-24) var(--sp-24); gap: var(--sp-6); justify-content: flex-end; color: var(--ticket-acento); }
+.ticket .carrusel-flecha { background: color-mix(in srgb, var(--ticket-acento) 10%, var(--ticket-bg)); color: var(--ticket-acento); }
 .ticket small { opacity: .85; text-transform: uppercase; letter-spacing: var(--ls-caps); font-size: var(--fs-xs); }
 .ticket h3 { font-size: var(--fs-4xl); margin: var(--sp-6) 0 var(--sp-4); line-height: var(--lh-snug); }
 .ticket .price { font-size: var(--fs-display); font-weight: var(--fw-extrabold); margin-top: var(--sp-18); }
 .ticket .price sup { font-size: var(--fs-lg); vertical-align: top; position: relative; top: var(--sp-14); }
 .ticket .divider { border-top: 2px dashed var(--line-on-color); margin: var(--sp-26) 0 var(--sp-18); }
-.countdown { display: flex; gap: var(--sp-12); }
-.countdown div { background: var(--overlay-soft); border-radius: var(--radius-12); padding: var(--sp-8) var(--sp-12); text-align: center; min-width: 62px; }
-.countdown b { display: block; font-size: var(--fs-2xl); }
-.countdown span { font-size: var(--fs-2xs); opacity: .85; text-transform: uppercase; }
+/* La cuenta regresiva (.countdown) vive en components.css */
 
 /* Sections */
 section { padding: var(--sp-56) 0; }
 .section-head { text-align: center; max-width: 620px; margin: 0 auto var(--sp-40); }
 .section-head h2 { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-10); }
 .section-head p { color: var(--muted); margin: 0; }
+.ver-mas { text-align: center; margin: var(--sp-32) 0 0; }
 
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-20); }
 .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-28); }
@@ -91,6 +129,12 @@ details { background: var(--surface); border: 1px solid var(--border); border-ra
 summary { cursor: pointer; font-weight: var(--fw-semibold); }
 details p { color: var(--muted); margin: var(--sp-10) 0 0; }
 
+/* Con el ticket angosto (entre celular y escritorio), los controles van en su propia fila */
+@media (max-width: 1100px) {
+  .destacada { padding-bottom: calc(var(--sp-24) + var(--size-control-sm) + var(--sp-18)); }
+  .destacada .countdown { max-width: 60%; }
+  .ticket .carrusel-controles { left: 0; justify-content: space-between; padding: 0 var(--sp-32) var(--sp-24); }
+}
 @media (max-width: 900px) {
   .hero, .buy-grid, .register { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr; }
@@ -100,5 +144,8 @@ details p { color: var(--muted); margin: var(--sp-10) 0 0; }
   /* En el diseño original, el padding móvil de .wrap reemplazaba al del hero (sin espacio superior) */
   .hero { padding: 0 var(--gutter-mobile); }
   .buy { padding: var(--sp-22); }
-  .countdown div { min-width: 0; flex: 1; }
+  .destacada { padding-bottom: calc(var(--sp-24) + var(--size-control-sm) + var(--sp-18)); }   /* en celular los controles van en su propia fila */
+  .destacada .destacada-detalle, .destacada .divider, .destacada .countdown, .destacada small:not(:first-of-type) { max-width: none; }
+  .ticket .carrusel-controles { left: 0; justify-content: space-between; padding: 0 var(--sp-32) var(--sp-24); }
+  .destacada-foto { width: 55%; opacity: .18; }
 }

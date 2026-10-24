@@ -13,11 +13,11 @@ const PESTANAS = [
     ayuda: 'Rifas que todavía se están armando. Tus Chances están retenidas y solo se usan si la rifa se arma.',
     vacio: { icono: '🍀', titulo: 'No tienes Chances en rifas que se están armando', texto: 'Elige una rifa y pon tus Chances para ayudar a que se arme.', accion: { texto: 'Ver rifas', href: url('rifas') } } },
   { id: 'abiertas', grupo: 'ABIERTAS', texto: 'Abiertas',
-    ayuda: 'Rifas que ya van: tus Chances son opciones de ganar. Aquí esperan la revisión y el sorteo.',
+    ayuda: 'Rifas Confirmadas y Cerradas: tus Chances ya son opciones de ganar y esperan a ser rifadas.',
     vacio: { icono: '🎟️', titulo: 'Aún no tienes opciones en rifas confirmadas', texto: 'Cuando una de tus rifas se arme, o compres opciones en una rifa abierta, aparecerá aquí.' } },
   { id: 'finalizadas', grupo: 'FINALIZADAS', texto: 'Finalizadas',
-    ayuda: 'Rifas sorteadas, que no se armaron o que se cancelaron.',
-    vacio: { icono: '🏁', titulo: 'Todavía no tienes rifas finalizadas', texto: 'Aquí verás tus rifas sorteadas y las que no se armaron.' } },
+    ayuda: 'Rifas Realizadas, con Premio Entregado o Descartadas.',
+    vacio: { icono: '🏁', titulo: 'Todavía no tienes rifas finalizadas', texto: 'Aquí verás tus rifas realizadas y las descartadas.' } },
 ];
 
 const seccion = document.getElementById('mis-rifas');

@@ -69,7 +69,7 @@ await prueba('Visitante: el listado excluye rifas solo por enlace, borradores y 
 });
 await prueba('Visitante: filtros por estado, categoría y búsqueda', async () => {
   const armando = await rifasService.listar({ estados: ['ARMANDO'] });
-  esperar(armando.length === 3 && armando.every(r => r.estado === 'ARMANDO'), 'filtro de estado');
+  esperar(armando.length === 10 && armando.every(r => r.estado === 'ARMANDO'), 'filtro de estado: ' + armando.length);
   const zapas = await rifasService.listar({ categoriaId: 'cat-zapatillas' });
   esperar(zapas.length && zapas.every(r => r.categoriaId === 'cat-zapatillas'), 'filtro de categoría');
   const busq = await rifasService.listar({ busqueda: 'playstation' });
@@ -83,10 +83,20 @@ await prueba('Visitante: la vista pública nunca expone meta, margen, puntos reu
 });
 await prueba('Textos visibles: badges con los nombres nuevos y errores en "Chances"', async () => {
   const { badgeEstado } = await import('../components/badge.js');
-  esperar(badgeEstado('ARMANDO').includes('Armando Rifa') && badgeEstado('CAPTANDO').includes('Calentando Rifa') && badgeEstado('NO_SE_ARMO').includes('No se armó la Rifa'), 'badges');
+  const casos = { CAPTANDO: 'Rifa Sugerida', ARMANDO: 'Rifa Armándose', ABIERTA: 'Rifa Confirmada', CERRADA: 'Rifa Cerrada', EN_REVISION: 'Rifa Cerrada',
+    PROGRAMADA: 'Rifa Cerrada', SORTEADA: 'Rifa Realizada', COMPRANDO: 'Rifa Realizada', ENTREGADA: 'Premio Entregado', NO_SE_ARMO: 'Rifa Descartada', CANCELADA: 'Rifa Descartada' };
+  for (const [estado, texto] of Object.entries(casos)) esperar(badgeEstado(estado, { fecha: '5 nov', apodo: 'x' }).includes(texto), `${estado} debía decir ${texto}`);
+  esperar(!Object.keys(casos).some(e => /sorte/i.test(badgeEstado(e, { fecha: '5 nov', apodo: 'x' }))), 'un badge dice "sorteo"');
   const { MENSAJES_ERROR } = await import('../domain/errores.js');
   const conPuntos = Object.values(MENSAJES_ERROR).filter(m => /\bpuntos?\b/i.test(m));
   esperar(!conPuntos.length, conPuntos.join(' | '));
+});
+await prueba('Visitante: rifas destacadas del carrusel en su orden y sin datos internos', async () => {
+  const d = await rifasService.destacadas();
+  esperar(igual(d.map(r => r.slug), ['iphone-17-pro-max-256gb', 'ps5-pro-digital', 'zapatillas-adidas-megaride-s4']), d.map(r => r.slug).join(','));
+  esperar(d.every(r => r.producto.imagen && r.producto.descripcion), 'faltan foto o descripción');
+  esperar(d[0].producto.descripcion.startsWith('Color: Deep Blue'), 'la descripción debe empezar con color o modelo');
+  esperar(d.every(r => r.visibilidad === 'LISTADA' && !('meta' in r) && !('destacada' in r)), 'datos internos o rifa no listada');
 });
 await prueba('Visitante: PS5 muestra 148 personas y 65 %', async () => {
   const r = await rifasService.obtenerPorSlug('ps5-slim');
@@ -164,13 +174,42 @@ await prueba('Comprar 3 opciones en la TV abierta: emite tickets correlativos', 
   const p = await rifasService.miParticipacion(TV);
   esperar(p.tickets.length === 13 && p.retenido === 0, JSON.stringify(p));
 });
-await prueba('Retirar puntos de la PS5: vuelven al disponible', async () => {
-  const c = await rifasService.retirarCompromiso(PS5);
-  esperar(c.cantidad === 17 && c.retenidoDespues === 0 && c.disponibleDespues === 42, JSON.stringify(c));
-  await esperarError(rifasService.retirarCompromiso(PS5), 'SIN_COMPROMISO');
+await prueba('Chances bloqueadas: no existe forma de retirarlas; siguen retenidas en la PS5', async () => {
+  esperar(typeof rifasService.retirarCompromiso === 'undefined', 'RifasService no debe permitir retirar Chances');
+  const p = await rifasService.miParticipacion(PS5);
+  esperar(p.retenido === 17 && !('puedeRetirar' in p), JSON.stringify(p));
+  const b = await billeteraService.obtener();
+  esperar(b.disponible === 25 && b.retenido === 17, `${b.disponible}/${b.retenido}`);
 });
-await prueba('Retirar en una rifa abierta no se permite', async () => {
-  await esperarError(rifasService.retirarCompromiso(TV), 'RETIRO_NO_PERMITIDO');
+
+// --- Tiempo extra al final de una Rifa Confirmada (README §7.13) ---
+await prueba('Tiempo extra: faltando 3 min, 5 personas distintas suman 5 min; 4 no alcanzan; se repite', async () => {
+  await entrar('admin@dalechance.pe', 'admin123');
+  await adminService.simularTiempoRestante(TV, 3);
+  const minutos = r => Math.round((Date.parse(r.fechaCierre) - Date.now()) / 60000);
+  let r = await adminService.simularAporteExterno(TV, 4, 4);
+  esperar(minutos(r) === 3 && !r.minutosExtra, `con 4 personas: ${minutos(r)} min`);
+  await entrar('lucia@dalechance.pe');
+  const c = await rifasService.comprar(TV, 1, clave());                       // Lucía es la 5.ª persona
+  esperar(c.tiempoExtra === true, 'la compra debía activar el tiempo extra');
+  r = await rifasService.obtenerPorSlug('tv-55');
+  esperar(minutos(r) === 8 && r.minutosExtra === 5, `tras 5 personas: ${minutos(r)} min, extra ${r.minutosExtra}`);
+  await entrar('admin@dalechance.pe', 'admin123');
+  r = await adminService.simularAporteExterno(TV, 5, 5);                        // fuera de la ventana (quedan 8 min): no suma
+  esperar(minutos(r) === 8, `fuera de los últimos 5 min no debía sumar: ${minutos(r)}`);
+  await adminService.simularTiempoRestante(TV, 2);
+  r = await adminService.simularAporteExterno(TV, 5, 5);
+  esperar(minutos(r) === 7 && r.minutosExtra === 10, `segunda extensión: ${minutos(r)} min, extra ${r.minutosExtra}`);
+  await adminService.simularTiempoRestante(TV, 60 * 24);                       // deja la TV abierta para las pruebas siguientes
+});
+await prueba('Cierre automático: al agotarse el tiempo la Rifa Confirmada pasa a Rifa Cerrada (por rifar)', async () => {
+  let r = await adminService.simularAporteExterno('r-megaride', 196, 20);
+  esperar(r.estado === 'ABIERTA', 'la Megaride debía confirmarse: ' + r.estado);
+  await adminService.simularTiempoRestante('r-megaride', -1);
+  const pub = await rifasService.obtenerPorSlug('zapatillas-adidas-megaride-s4');
+  esperar(['CERRADA', 'EN_REVISION'].includes(pub.estado) && pub.hashLista, 'estado ' + pub.estado);
+  await esperarError(adminService.simularAporteExterno('r-megaride', 1, 1), 'ESTADO_NO_ACEPTA_PUNTOS');
+  await entrar('lucia@dalechance.pe');
 });
 
 // --- Ajuste de saldo y máximo por persona ---
@@ -181,11 +220,11 @@ await prueba('Admin: ajuste de saldo exige motivo y queda en el historial', asyn
   esperar(m.tipo === 'AJUSTE' && m.deltaDisponible === 700, JSON.stringify(m));
 });
 await entrar('lucia@dalechance.pe');
-await prueba('Máximo por persona: 20 % de la meta (PS5: 594 puntos)', async () => {
-  const e = await esperarError(rifasService.comprometer(PS5, 595, clave()), 'SUPERA_MAXIMO');
-  esperar(e.datos.puedesPoner === 594, 'puedesPoner ' + e.datos.puedesPoner);
+await prueba('Máximo por persona: 20 % de la meta (PS5: 594; Lucía ya tiene 17 retenidas → puede 577)', async () => {
+  const e = await esperarError(rifasService.comprometer(PS5, 578, clave()), 'SUPERA_MAXIMO');
+  esperar(e.datos.puedesPoner === 577, 'puedesPoner ' + e.datos.puedesPoner);
   const p = await rifasService.miParticipacion(PS5);
-  esperar(p.maxPuedoPoner === 594, 'maxPuedoPoner ' + p.maxPuedoPoner);
+  esperar(p.maxPuedoPoner === 577, 'maxPuedoPoner ' + p.maxPuedoPoner);
 });
 
 // --- La rifa se arma ---
@@ -199,7 +238,7 @@ await prueba('Cubrir la meta: la rifa pasa a ABIERTA y los puntos retenidos se v
   const h = await billeteraService.historial({ rifaId: 'r-zapas-urbanas' });
   esperar(igual(h.map(m => m.tipo).sort(), ['CAPTURA', 'RETENCION']), 'movimientos ' + h.map(m => m.tipo));
 });
-await prueba('Calentando Rifa: al llegar al umbral (20 % de la meta y 10 personas) pasa a moderación', async () => {
+await prueba('Rifa Sugerida: al llegar al umbral (20 % de la meta y 10 personas) pasa a moderación', async () => {
   const c = await rifasService.comprometer('r-zapas-creador', 97, clave());
   esperar(c.pasoAModeracion === true, JSON.stringify(c));
   const r = await rifasService.obtenerPorSlug('zapas-edicion-creador');
@@ -209,7 +248,7 @@ await prueba('Calentando Rifa: al llegar al umbral (20 % de la meta y 10 persona
 await prueba('Mis rifas: agrupa en Armando, Abiertas y Finalizadas', async () => {
   const m = await rifasService.misRifas();
   const grupos = Object.fromEntries(['ARMANDO', 'ABIERTAS', 'FINALIZADAS'].map(g => [g, m.filter(x => x.grupo === g).map(x => x.rifa.slug).sort()]));
-  esperar(igual(grupos.ARMANDO, ['zapas-edicion-creador']), 'armando ' + grupos.ARMANDO);
+  esperar(igual(grupos.ARMANDO, ['ps5-slim', 'zapas-edicion-creador']), 'armando ' + grupos.ARMANDO);
   esperar(igual(grupos.ABIERTAS, ['tv-55', 'zapatillas-urbanas-blancas']), 'abiertas ' + grupos.ABIERTAS);
   esperar(igual(grupos.FINALIZADAS, ['reloj-smart', 'xbox-series-x']), 'finalizadas ' + grupos.FINALIZADAS);
 });
@@ -253,11 +292,15 @@ await prueba('Proponer: link de tienda confiable nace en CAPTANDO con los puntos
 await prueba('Proponer: exige los puntos mínimos del autor (1 % de la meta)', async () => {
   await esperarError(rifasService.proponer({ link: 'https://www.ripley.com.pe/producto/casaca-impermeable-outdoor', precioTienda: 329, categoriaId: 'cat-ropa', puntosAutor: 1 }), 'BAJO_MINIMO');
 });
-await prueba('El autor retira sus puntos: la propuesta se cae y se liberan todos', async () => {
+await prueba('Rifa Sugerida que no junta el mínimo: se descarta y las Chances del autor vuelven', async () => {
   const r = (await rifasService.misPropuestas()).find(p => p.rifa.slug.startsWith('audifonos'));
-  await rifasService.retirarCompromiso(r.rifa.id);
-  const despues = (await rifasService.misPropuestas()).find(p => p.rifa.id === r.rifa.id);
-  esperar(despues.rifa.estado === 'DESCARTADA', despues.rifa.estado);
+  const antes = await billeteraService.obtener();
+  await entrar('admin@dalechance.pe', 'admin123');
+  await adminService.vencerVentana(r.rifa.id);
+  await entrar('vale@dalechance.pe');
+  const despues = await billeteraService.obtener();
+  const estado = (await rifasService.misPropuestas()).find(p => p.rifa.id === r.rifa.id).rifa.estado;
+  esperar(estado === 'NO_SE_ARMO' && despues.disponible === antes.disponible + 7 && despues.retenido === antes.retenido - 7, `${estado} ${antes.disponible}→${despues.disponible}`);
 });
 
 // --- Administración: ciclo completo ---
@@ -324,19 +367,20 @@ await prueba('Cancelar una rifa armándose: libera los puntos retenidos', async 
   const despues = await billeteraService.obtener();
   esperar(despues.retenido === antes.retenido - 5 && despues.disponible === antes.disponible + 5, `${antes.disponible}/${antes.retenido} → ${despues.disponible}/${despues.retenido}`);
 });
-await prueba('Cancelar una rifa abierta: reembolsa íntegramente los tickets', async () => {
+await prueba('Rifa Confirmada: no se cancela por un problema del producto; solo por fuerza mayor legal, con reembolso íntegro', async () => {
   const antes = await billeteraService.obtener();
   await entrar('admin@dalechance.pe', 'admin123');
-  await adminService.cancelarRifa('r-zapas-urbanas', 'Fuerza mayor.');
+  await esperarError(adminService.cancelarRifa('r-zapas-urbanas', 'El producto subió de precio.'), 'RIFA_CONFIRMADA_NO_SE_CANCELA');
+  await adminService.cancelarRifa('r-zapas-urbanas', 'Orden de la autoridad competente.', { fuerzaMayorLegal: true });
   await entrar('lucia@dalechance.pe');
   const despues = await billeteraService.obtener();
   esperar(despues.disponible === antes.disponible + 18, `${antes.disponible} → ${despues.disponible}`);
 });
-await prueba('Vencer la ventana de la PS5: NO_SE_ARMO con avance congelado (1,924 de 2,970 → 64 %)', async () => {
+await prueba('Vencer la ventana de la PS5: Rifa Descartada con avance congelado (1,941 de 2,970 → 65 %)', async () => {
   await rifasService.comprometer(PS5, 3, clave());
   await entrar('admin@dalechance.pe', 'admin123');
   const r = await adminService.vencerVentana(PS5);
-  esperar(r.estado === 'NO_SE_ARMO' && r.progreso === 64 && r.participantes === 148, `${r.estado} ${r.progreso} ${r.participantes}`);
+  esperar(r.estado === 'NO_SE_ARMO' && r.progreso === 65 && r.participantes === 148, `${r.estado} ${r.progreso} ${r.participantes}`);
 });
 await prueba('Moderar: aprobar la propuesta la publica en ARMANDO conservando sus compromisos', async () => {
   const r = await adminService.moderarPropuesta('r-polo-creador', { accion: 'APROBAR' });
@@ -346,6 +390,10 @@ await prueba('Validar link: reemplazar por uno de tienda confiable lo pasa a CAP
   await esperarError(adminService.validarLink('r-casaca', { accion: 'REEMPLAZAR', nuevoLink: 'https://otra.com/x' }), 'LINK_INVALIDO');
   const r = await adminService.validarLink('r-casaca', { accion: 'REEMPLAZAR', nuevoLink: 'https://www.ripley.com.pe/producto/casaca' });
   esperar(r.estado === 'CAPTANDO' && r.linkOriginal === 'https://bit.ly/3casaca' && r.estadoLink === 'REEMPLAZADO', JSON.stringify(r));
+});
+await prueba('Cancelar con motivo una Rifa Sugerida (antes de confirmarse): pasa a Rifa Descartada', async () => {
+  const r = await adminService.cancelarRifa('r-casaca', 'El producto ya no existe en ninguna tienda confiable.');
+  esperar(r.estado === 'CANCELADA' && r.visibilidad === 'LISTADA', r.estado);
 });
 await prueba('Invariantes: saldos = suma de movimientos y retenido = compromisos activos, para todos', async () => {
   const malos = leerAhora(db => db.usuarios.filter(u => {

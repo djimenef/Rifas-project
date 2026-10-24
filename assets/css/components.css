@@ -24,20 +24,14 @@ input[aria-invalid="true"] { border-color: var(--error); }
 /* --- Badge (base) y Badge de estado de rifa --- */
 .badge { padding: var(--sp-4) var(--sp-10); border-radius: var(--radius-pill); font-weight: var(--fw-semibold); font-size: var(--fs-sm); background: var(--surface-2); color: var(--lock); }
 .badge-estado { display: inline-flex; align-items: center; gap: var(--sp-6); white-space: nowrap; }
-.badge-estado[data-estado="REVISION_LINK"] { background: var(--estado-revision-link-bg); color: var(--estado-revision-link-ink); }
-.badge-estado[data-estado="CAPTANDO"] { background: var(--estado-captando-bg); color: var(--estado-captando-ink); }
-.badge-estado[data-estado="PROPUESTA"] { background: var(--estado-propuesta-bg); color: var(--estado-propuesta-ink); }
-.badge-estado[data-estado="ARMANDO"] { background: var(--estado-armando-bg); color: var(--estado-armando-ink); }
-.badge-estado[data-estado="ABIERTA"] { background: var(--estado-abierta-bg); color: var(--estado-abierta-ink); }
-.badge-estado[data-estado="CERRADA"] { background: var(--estado-cerrada-bg); color: var(--estado-cerrada-ink); }
-.badge-estado[data-estado="EN_REVISION"] { background: var(--estado-en-revision-bg); color: var(--estado-en-revision-ink); }
-.badge-estado[data-estado="PROGRAMADA"] { background: var(--estado-programada-bg); color: var(--estado-programada-ink); }
-.badge-estado[data-estado="SORTEADA"] { background: var(--estado-sorteada-bg); color: var(--estado-sorteada-ink); }
-.badge-estado[data-estado="COMPRANDO"] { background: var(--estado-comprando-bg); color: var(--estado-comprando-ink); }
-.badge-estado[data-estado="EN_CAMINO"] { background: var(--estado-en-camino-bg); color: var(--estado-en-camino-ink); }
+.badge-estado[data-estado="SUGERIDA"] { background: var(--estado-captando-bg); color: var(--estado-captando-ink); }
+.badge-estado[data-estado="VALIDANDO"] { background: var(--estado-revision-link-bg); color: var(--estado-revision-link-ink); }
+.badge-estado[data-estado="ARMANDOSE"] { background: var(--estado-armando-bg); color: var(--estado-armando-ink); }
+.badge-estado[data-estado="CONFIRMADA"] { background: var(--estado-abierta-bg); color: var(--estado-abierta-ink); }
+.badge-estado[data-estado="CERRADA"] { background: var(--estado-programada-bg); color: var(--estado-programada-ink); }
+.badge-estado[data-estado="REALIZADA"] { background: var(--estado-sorteada-bg); color: var(--estado-sorteada-ink); }
 .badge-estado[data-estado="ENTREGADA"] { background: var(--estado-entregada-bg); color: var(--estado-entregada-ink); }
-.badge-estado[data-estado="NO_SE_ARMO"] { background: var(--estado-no-se-armo-bg); color: var(--estado-no-se-armo-ink); }
-.badge-estado[data-estado="CANCELADA"] { background: var(--estado-cancelada-bg); color: var(--estado-cancelada-ink); }
+.badge-estado[data-estado="DESCARTADA"] { background: var(--estado-no-se-armo-bg); color: var(--estado-no-se-armo-ink); }
 
 /* --- Selector de cantidad (− N +) --- */
 .qty { display: flex; align-items: center; gap: var(--sp-12); }
@@ -80,6 +74,21 @@ input[aria-invalid="true"] { border-color: var(--error); }
 .draw:nth-child(3n + 1) .draw-img { background: var(--grad-menta); }
 .draw:nth-child(3n + 2) .draw-img { background: var(--grad-cielo); }
 .draw:nth-child(3n) .draw-img { background: var(--grad-jade); }
+/* Con foto real del producto: fondo blanco, como la publican las tiendas */
+.draw .draw-img.draw-foto { display: block; background: var(--foto-fondo); padding: var(--sp-10); }
+.draw-foto img { width: 100%; height: 100%; object-fit: contain; }
+/* Hasta "Rifa Armándose" el producto se ve desenfocado; desde "Rifa Confirmada", nítido */
+.draw-velada > * { filter: var(--blur-fondo); }
+.draw-body .draw-cuenta { color: var(--text); font-weight: var(--fw-medium); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: var(--ls-caps); }
+.draw .countdown { gap: var(--sp-8); }
+.draw .countdown div { flex: 1; min-width: 0; padding-inline: var(--sp-4); }
+.draw .countdown b { font-size: var(--fs-xl); color: var(--ok); }
+
+/* --- Cuenta regresiva en casillas (ticket de Inicio y tarjetas de Rifas Confirmadas) --- */
+.countdown { display: flex; gap: var(--sp-12); }
+.countdown div { background: var(--overlay-soft); border-radius: var(--radius-12); padding: var(--sp-8) var(--sp-12); text-align: center; min-width: 62px; }
+.countdown b { display: block; font-size: var(--fs-2xl); }
+.countdown span { display: block; font-size: var(--fs-2xs); opacity: .85; text-transform: uppercase; white-space: nowrap; }
 .draw-body { padding: var(--sp-22); flex: 1; display: flex; flex-direction: column; gap: var(--sp-8); }
 .draw-body h3 { margin: 0; font-size: var(--fs-xl); }
 .draw-body p { margin: 0; color: var(--muted); font-size: var(--fs-body-sm); }
@@ -237,6 +246,25 @@ button.enlace:disabled { color: var(--lock); cursor: not-allowed; text-decoratio
 .toast-error .toast-icono { background: var(--error); }
 @keyframes entrar { from { opacity: 0; transform: translateY(var(--sp-10)); } }
 
+/* --- Carrusel (avance automático, flechas, puntos y deslizar) --- */
+.carrusel-ventana { overflow: hidden; width: 100%; }
+.carrusel-pista { display: flex; transition: transform .5s ease; touch-action: pan-y; }
+.carrusel-pista > * { flex: 0 0 100%; min-width: 0; }
+.carrusel-controles { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12); }
+.carrusel-controles[hidden] { display: none; }
+.carrusel-puntos { display: flex; gap: var(--sp-4); }
+.carrusel-punto { width: var(--size-icon); height: var(--size-icon); padding: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
+.carrusel-punto::before { content: ""; width: var(--sp-8); height: var(--sp-8); border-radius: var(--radius-pill); background: currentColor; opacity: .5; transition: width .2s, opacity .2s; }
+.carrusel-punto[aria-current="true"]::before { width: var(--sp-22); opacity: 1; }
+.carrusel-flecha {
+  width: var(--size-control-sm); height: var(--size-control-sm); border: 0; border-radius: var(--radius-circle);
+  font: inherit; font-size: var(--fs-xl); line-height: 1; cursor: pointer; display: grid; place-items: center;
+}
+.carrusel-flecha:focus-visible, .carrusel-punto:focus-visible { outline: 2px solid currentColor; outline-offset: var(--focus-offset); }
+@media (prefers-reduced-motion: reduce) {
+  .carrusel-pista { transition: none; }
+}
+
 /* --- Panel de demo (solo Fase 0) --- */
 .demo { position: fixed; left: var(--sp-16); bottom: var(--sp-16); z-index: 30; }
 .demo-boton {
@@ -272,6 +300,7 @@ button.enlace:disabled { color: var(--lock); cursor: not-allowed; text-decoratio
 }
 @media (max-width: 520px) {
   .two { grid-template-columns: 1fr; }
+  .countdown div { min-width: 0; flex: 1; }
   .modal { padding: var(--sp-22); }
   .filtros { grid-template-columns: 1fr; }
   .packs { grid-template-columns: repeat(2, 1fr); }

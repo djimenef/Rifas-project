@@ -3,14 +3,14 @@
 // con ?accion=poner|comprar para abrir el modal directamente (PROMPT-FASE0, "Flujos").
 import { listo } from '../layout.js';
 import { rifasService } from '../services/index.js';
-import { url, parametro } from '../lib/rutas.js';
+import { url, parametro, recurso } from '../lib/rutas.js';
 import { esc } from '../lib/html.js';
 import { soles, puntos, opciones, fechaHora, fechaLarga, tiempoRestante } from '../lib/formato.js';
 import { barraAvance } from '../components/barra-avance.js';
 import { badgeRifa } from '../components/tarjeta-rifa.js';
 import { cargarSeccion } from '../components/estados.js';
 import { mostrarToast } from '../components/toast.js';
-import { abrirModalChances, abrirModalRetiro, listaTickets } from '../components/modal-chances.js';
+import { abrirModalChances, listaTickets } from '../components/modal-chances.js';
 
 const slug = parametro('slug');
 const contenedor = document.getElementById('detalle');
@@ -27,58 +27,59 @@ function accionPorEstado(r) {
   const autor = r.autorApodo ? ` Propuesta por <b>${esc(r.autorApodo)}</b>.` : '';
   switch (r.estado) {
     case 'CAPTANDO': return {
-      titulo: '🔥 Calentando Rifa',
-      texto: `🔒 Esta rifa es privada: solo se entra por su enlace y todavía no aparece en el listado.${autor} Si junta el apoyo mínimo, pasa a <b>Armando Rifa</b>. Tus Chances quedan retenidas y solo se usan si la rifa se arma.`,
+      titulo: '💡 Rifa Sugerida',
+      texto: `🔒 Esta rifa es privada: solo se entra por su enlace y todavía no aparece en el portal.${autor} Quien la sugirió es responsable de juntar el apoyo mínimo; al lograrlo pasa a <b>Rifa Armándose</b>. Tus Chances quedan retenidas y solo se usan si la rifa se arma.`,
       boton: { modo: 'poner', texto: 'Poner Chances' },
     };
     case 'ARMANDO': return {
-      titulo: '🍀 Armando Rifa',
-      texto: 'Pon tus Chances para que esta rifa se arme. Tus Chances quedan retenidas y solo se usan si la rifa se arma. Si no se arma, vuelven completas a tu billetera.',
+      titulo: '🍀 Rifa Armándose',
+      texto: `Lleva el ${r.progreso} % de lo que necesita. Al llegar al 100 % pasa a <b>Rifa Confirmada</b>. Tus Chances quedan retenidas y solo se usan si la rifa se arma; si no se arma, vuelven completas a tu billetera.`,
       boton: { modo: 'poner', texto: 'Poner Chances' },
     };
     case 'ABIERTA': return {
-      titulo: '🟢 ¡Va! Rifa confirmada',
-      texto: `La rifa se armó y sigue abierta${r.fechaCierre ? ` hasta el ${esc(fechaHora(r.fechaCierre))}` : ''}. Cada Chance que pongas ahora es una opción de ganar.`,
+      titulo: '🟢 Rifa Confirmada',
+      texto: `Llegó al 100 % y sigue abierta${r.fechaCierre ? ` hasta el ${esc(fechaHora(r.fechaCierre))}` : ''}${r.minutosExtra ? ` (con ${r.minutosExtra} min de tiempo extra)` : ''}. Cada Chance que pongas ahora es una opción de ganar. <b>Tiempo extra:</b> si faltan 5 minutos o menos, cada 5 personas que se unan suman 5 minutos más.`,
       boton: { modo: 'comprar', texto: 'Comprar opciones' },
     };
     case 'PROPUESTA': return {
-      titulo: '📝 En moderación',
-      texto: `Esta propuesta juntó el apoyo mínimo y el equipo la está revisando.${autor} Por ahora no recibe Chances nuevas; las que ya se pusieron siguen retenidas.`,
+      titulo: '🔎 Validando producto',
+      texto: `Esta rifa sugerida juntó el apoyo mínimo y el equipo está validando el producto y su precio.${autor} Por ahora no recibe Chances nuevas; las que ya se pusieron siguen retenidas.`,
     };
     case 'REVISION_LINK': return {
-      titulo: '🔎 Link en revisión',
-      texto: 'Un administrador está validando el link del producto. Mientras tanto, esta rifa no recibe Chances.',
+      titulo: '🔎 Validando producto',
+      texto: 'El equipo está validando el link del producto (que exista y que sea de una tienda confiable). Mientras tanto, esta rifa no recibe Chances.',
     };
     case 'BORRADOR': return { titulo: 'Borrador', texto: 'Esta rifa todavía no se publica. Solo la ve el equipo de administración.' };
-    case 'CERRADA': return {
-      titulo: '⚪ Cerrada',
-      texto: 'Ya no se venden opciones. Ahora revisamos que todo esté en orden y luego publicamos la fecha del sorteo.',
-    };
-    case 'EN_REVISION': return {
-      titulo: '🟠 En revisión',
-      texto: 'Estamos revisando que el producto siga disponible, que la recaudación esté correcta y que no haya indicios de fraude. Luego publicamos la fecha del sorteo.',
+    case 'CERRADA': case 'EN_REVISION': return {
+      titulo: '⏳ Rifa Cerrada · Por rifar',
+      texto: 'Se acabó el tiempo: ya nadie puede poner más Chances. Estamos validando que el producto siga disponible y que todo esté en orden; luego anunciamos la fecha en que se rifa.',
     };
     case 'PROGRAMADA': return {
-      titulo: `📅 Sorteo el ${esc(fechaLarga(r.fechaSorteo))}`,
-      texto: `El sorteo es el ${esc(fechaHora(r.fechaSorteo))} y se transmite en vivo. Antes publicamos la huella de la lista de opciones para que cualquiera pueda verificarla.`,
+      titulo: `📅 Rifa Cerrada · se rifa el ${esc(fechaLarga(r.fechaSorteo))}`,
+      texto: `Se rifa el ${esc(fechaHora(r.fechaSorteo))} en vivo. Ya publicamos la huella de la lista de opciones para que cualquiera pueda verificarla.`,
     };
-    case 'SORTEADA': case 'COMPRANDO': case 'EN_CAMINO': case 'ENTREGADA': return {
-      titulo: `🏆 Ganador: ${esc(r.ganadorApodo ?? '—')}`,
-      texto: `${r.sorteo ? `Salió la opción <b>#${r.sorteo.ticketGanador}</b>. ` : ''}El premio se compra a nombre del ganador y se entrega solo al titular del DNI de la cuenta.`,
-      enlace: { href: '#transparencia', texto: 'Ver sorteo' },
+    case 'SORTEADA': case 'COMPRANDO': case 'EN_CAMINO': return {
+      titulo: `🏆 Rifa Realizada · Ganador: ${esc(r.ganadorApodo ?? '—')}`,
+      texto: `${r.sorteo ? `Salió la opción <b>#${r.sorteo.ticketGanador}</b>. ` : ''}Ahora compramos el premio a nombre del ganador; se entrega solo al titular del DNI de la cuenta.`,
+      enlace: { href: '#transparencia', texto: 'Ver cómo se eligió al ganador' },
+    };
+    case 'ENTREGADA': return {
+      titulo: `✅ Premio Entregado · Ganador: ${esc(r.ganadorApodo ?? '—')}`,
+      texto: `${r.sorteo ? `Salió la opción <b>#${r.sorteo.ticketGanador}</b>. ` : ''}El premio ya se entregó al titular del DNI de la cuenta ganadora.`,
+      enlace: { href: '#transparencia', texto: 'Ver cómo se eligió al ganador' },
     };
     case 'NO_SE_ARMO': return {
-      titulo: '⚫ No se armó la Rifa',
-      texto: 'No se juntaron las Chances a tiempo. Todas las Chances puestas volvieron completas a las billeteras.',
+      titulo: '⚫ Rifa Descartada',
+      texto: 'No llegó al 100 % a tiempo. Todas las Chances puestas volvieron completas a las billeteras.',
       enlace: { href: url('rifas'), texto: 'Ver otras rifas' },
     };
     case 'CANCELADA': return {
-      titulo: '🔴 Cancelada',
+      titulo: '⚫ Rifa Descartada',
       texto: `${r.motivo ? esc(r.motivo) + ' ' : ''}Todas las Chances se devolvieron íntegramente.`,
       enlace: { href: url('rifas'), texto: 'Ver otras rifas' },
     };
     case 'DESCARTADA': return {
-      titulo: 'Propuesta descartada',
+      titulo: '⚫ Rifa Descartada',
       texto: `${r.motivo ? esc(r.motivo) + ' ' : ''}Las Chances puestas volvieron a las billeteras.`,
     };
     default: return { titulo: '', texto: '' };
@@ -87,7 +88,7 @@ function accionPorEstado(r) {
 
 function lineaTiempo(r) {
   if (['ARMANDO', 'CAPTANDO'].includes(r.estado) && r.fechaLimiteArmado) return `⏳ ${tiempoRestante(r.fechaLimiteArmado)} · hasta el ${fechaHora(r.fechaLimiteArmado)}`;
-  if (r.estado === 'ABIERTA' && r.fechaCierre) return `⏳ Cierra el ${fechaHora(r.fechaCierre)}`;
+  if (r.estado === 'ABIERTA' && r.fechaCierre) return `⏳ Cierra el ${fechaHora(r.fechaCierre)}${r.minutosExtra ? ` · +${r.minutosExtra} min de tiempo extra` : ''}`;
   return '';
 }
 
@@ -116,11 +117,11 @@ function bloqueTransparencia(r) {
   if (!r.hashLista) return '';
   return `
     <section class="card detalle-seccion" id="transparencia" aria-labelledby="transparencia-titulo">
-      <h2 id="transparencia-titulo">Transparencia del sorteo</h2>
-      <p>Al cerrar la rifa congelamos la lista de opciones (número y apodo) y publicamos su huella digital antes del sorteo. Así nadie puede cambiarla después.</p>
+      <h2 id="transparencia-titulo">Transparencia: cómo se elige al ganador</h2>
+      <p>Al cerrar la rifa congelamos la lista de opciones (número y apodo) y publicamos su huella digital antes de rifarla. Así nadie puede cambiarla después.</p>
       <dl class="datos">
         <div><dt>Huella de la lista (SHA-256)</dt><dd class="texto-mono">${esc(r.hashLista)}</dd></div>
-        ${r.fechaSorteo ? `<div><dt>Fecha del sorteo</dt><dd>${esc(fechaHora(r.fechaSorteo))}</dd></div>` : ''}
+        ${r.fechaSorteo ? `<div><dt>Fecha en que se rifa</dt><dd>${esc(fechaHora(r.fechaSorteo))}</dd></div>` : ''}
         ${r.sorteo ? `
         <div><dt>Semilla aleatoria</dt><dd class="texto-mono">${esc(r.sorteo.semilla)}</dd></div>
         <div><dt>Opción ganadora</dt><dd>#${r.sorteo.ticketGanador}</dd></div>
@@ -133,7 +134,7 @@ function bloquePremio(r) {
   if (!['SORTEADA', 'COMPRANDO', 'EN_CAMINO', 'ENTREGADA'].includes(r.estado)) return '';
   const e = r.entrega ?? {};
   const pasos = [
-    ['Sorteo realizado', r.sorteo?.fecha],
+    ['Rifa realizada', r.sorteo?.fecha],
     ['Premio comprado', e.compradoEl],
     ['En camino', e.enviadoEl],
     ['Entregado', e.entregadoEl],
@@ -157,7 +158,9 @@ function dibujar(r) {
   contenedor.innerHTML = `
     <div class="detalle">
       <div>
-        <div class="detalle-media" aria-hidden="true"><span>${r.producto.emoji}</span></div>
+        ${r.producto.imagen
+          ? `<div class="detalle-media detalle-foto"><img src="${esc(recurso(r.producto.imagen))}" alt="${esc(r.producto.nombre)}"></div>`
+          : `<div class="detalle-media" aria-hidden="true"><span>${r.producto.emoji}</span></div>`}
         <div class="detalle-info">
           <p class="detalle-cat">${esc(r.categoria)}</p>
           <h1>${esc(r.producto.nombre)}</h1>
@@ -169,6 +172,12 @@ function dibujar(r) {
             <p class="detalle-id">ID: ${esc(r.codigo)}</p>
             <button type="button" class="btn btn-ghost btn-sm" data-compartir>Compartir ↗</button>
           </div>
+          ${r.producto.descripcion ? `
+          <section class="detalle-descripcion" aria-labelledby="descripcion-titulo">
+            <h2 id="descripcion-titulo">Descripción del producto</h2>
+            <p>${esc(r.producto.descripcion)}</p>
+            <p class="detalle-fuente">Información referencial tomada de la tienda. El premio puede ser este producto o uno equivalente de igual o mayor valor.</p>
+          </section>` : ''}
         </div>
       </div>
       <div class="detalle-lado">${bloqueAccion(r, a)}</div>
@@ -189,10 +198,8 @@ async function mostrarParticipacion(r) {
       <div class="detalle-mio">
         ${p.retenido ? `<p>Tus Chances aquí: <b>${puntos(p.retenido)}</b> (retenidas)</p>` : ''}
         ${p.tickets.length ? `<p>Tus opciones: <b>${opciones(p.tickets.length)}</b> · ${esc(listaTickets(p.tickets, 6))}</p>` : ''}
-        ${p.puedeRetirar ? '<button type="button" class="enlace detalle-retirar" data-retirar>Retirar mis Chances</button>' : ''}
         <a class="enlace" href="${url('misTickets', { codigo: r.codigo })}">Ver mis tickets</a>
       </div>`;
-    el.querySelector('[data-retirar]')?.addEventListener('click', () => abrirModalRetiro({ rifa: r, retenido: p.retenido, alTerminar: cargar }));
   } catch { /* sin participación visible: no se muestra el bloque */ }
 }
 

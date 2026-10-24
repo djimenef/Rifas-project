@@ -18,14 +18,14 @@
  * @property {() => Promise<Categoria[]>} listarCategorias
  * @property {(rifaId: string) => Promise<Participacion>} miParticipacion   Puntos retenidos, tickets y cuánto más puedo poner.
  * @property {(rifaId: string, opciones: number, claveIdempotencia: string) => Promise<Comprobante>} comprometer
- *   Poner puntos (CAPTANDO o ARMANDO). Si con esto se cubre la meta, la rifa se confirma.
+ *   Poner puntos (CAPTANDO o ARMANDO). Quedan retenidos y NO se pueden retirar: solo vuelven si la rifa se descarta.
+ *   Si con esto se cubre la meta, la rifa se confirma.
  *   Errores: SIN_SESION, SALDO_INSUFICIENTE, ESTADO_NO_ACEPTA_PUNTOS, LINK_EN_REVISION, BAJO_MINIMO, SUPERA_MAXIMO.
- * @property {(rifaId: string) => Promise<Comprobante>} retirarCompromiso
- *   Errores: RETIRO_NO_PERMITIDO, SIN_COMPROMISO.
  * @property {(rifaId: string, opciones: number, claveIdempotencia: string) => Promise<Comprobante>} comprar
  *   Compra directa en una rifa ABIERTA. Errores: SALDO_INSUFICIENTE, ESTADO_NO_ACEPTA_PUNTOS, SUPERA_MAXIMO, TOPE_ALCANZADO.
  * @property {() => Promise<{ grupo: 'ARMANDO'|'ABIERTAS'|'FINALIZADAS', rifa: Rifa, retenido: number, tickets: number[] }[]>} misRifas
  * @property {(codigo: string) => Promise<{ rifa: Rifa, retenido: number, tickets: number[] }>} misTickets
+ * @property {() => Promise<Rifa[]>} destacadas   Rifas del carrusel de Inicio, en su orden. Solo rifas listadas.
  * @property {() => Promise<Rifa[]>} ganadores   Rifas sorteadas, más reciente primero.
  * @property {(link: string) => Promise<{ nombre: string|null, precio: number|null, emoji: string, tiendaConfiable: boolean, motivoRevision: string|null }>} leerLink
  *   Fase 2: lectura (simulada) del título, imagen y precio desde el link.
@@ -37,6 +37,6 @@
 
 export const METODOS_RIFAS = Object.freeze([
   'listar', 'obtenerPorSlug', 'obtenerPorCodigo', 'listarCategorias', 'miParticipacion',
-  'comprometer', 'retirarCompromiso', 'comprar', 'misRifas', 'misTickets', 'ganadores',
+  'comprometer', 'comprar', 'misRifas', 'misTickets', 'destacadas', 'ganadores',
   'leerLink', 'proponer', 'misPropuestas',
 ]);

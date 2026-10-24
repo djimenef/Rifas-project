@@ -48,6 +48,7 @@
   /* --- Efectos --- */
   --glass: color-mix(in srgb, var(--bg) 85%, transparent);
   --blur-glass: blur(10px);
+  --blur-fondo: blur(2px);            /* foto o ícono de fondo desenfocado (carrusel de destacadas) */
   --radius: 18px;
   --shadow: 0 10px 30px -12px rgba(40, 25, 10, .18);
   --shadow-accent: 0 8px 20px -8px var(--accent);
@@ -55,6 +56,15 @@
   --focus-offset: 1px;
 
   /* --- Marca de Google (botón "Continuar con Google") --- */
+  --foto-fondo: #ffffff;              /* fondo detrás de fotos de producto (las tiendas las publican sobre blanco) */
+
+  /* --- Ticket de rifas destacadas (Inicio): base blanca fija en ambos temas, como las fotos de producto ---
+     Contraste sobre blanco: texto 17.3:1 · secundario 5.8:1 · verde profundo 5.4:1 (el verde de marca da 3.9:1). */
+  --ticket-bg: var(--foto-fondo);
+  --ticket-ink: var(--ink-oscuro);
+  --ticket-muted: #6b645a;            /* gris cálido del sitio (el --muted del tema claro), fijo */
+  --ticket-acento: #0f7a4b;           /* verde profundo: mismo tono con que empieza --grad-ticket */
+  --ticket-linea: #e6dfd3;            /* línea punteada: el --border del tema claro, fijo */
   --google-bg: #fff;
   --google-bg-hover: #f8faff;
   --google-ink: #1f1f1f;
@@ -92,7 +102,10 @@
   --fs-4xl: 1.9rem;
   --fs-5xl: 2rem;
   --fs-display: 3.2rem;
+  --fs-logo: 2.1rem;          /* logo del header (+50 % sobre el tamaño original de 1.4rem) */
+  --fs-logo-movil: 1.4rem;    /* logo en celular: tamaño original; más grande choca con el saldo en 360 px */
   --fs-ilustracion: 4rem;
+  --fs-fondo-destacada: 11rem;        /* ícono gigante desenfocado de fondo, mientras no haya foto */
 
   /* --- Espaciado (px exactos usados en las pantallas) --- */
   --sp-4: 4px;
@@ -134,6 +147,7 @@
   --gutter-mobile: 16px;
   --header-h: 68px;
   --size-control: 44px;
+  --size-control-sm: 36px;
   --size-icon: 28px;
   --size-icon-sm: 22px;
 

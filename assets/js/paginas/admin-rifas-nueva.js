@@ -16,7 +16,6 @@ document.getElementById('cancelar').href = url('adminRifas');
 
 const CAMPOS_CONFIG = ['margenPct', 'ventanaArmadoDias', 'tiempoAbiertaDias', 'maxPorParticipantePct', 'minPorParticipante'];
 CAMPOS_CONFIG.forEach(c => { form.elements[c].value = CONFIG_POR_DEFECTO[c]; });
-form.permiteRetiro.checked = CONFIG_POR_DEFECTO.permiteRetiro;
 
 const { permitido } = await listo;
 
@@ -67,7 +66,7 @@ if (permitido) {
     errorGeneral.hidden = true;
 
     // Validación de formato de la configuración; las reglas de la rifa las aplica el servicio.
-    const config = { permiteRetiro: form.permiteRetiro.checked };
+    const config = {};
     let invalido = false;
     for (const c of CAMPOS_CONFIG) {
       const n = Number(form.elements[c].value);

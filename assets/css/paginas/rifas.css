@@ -1,5 +1,10 @@
 /* Listado de rifas: estilos propios. Todo sale de los tokens. */
 
+/* Listado agrupado por categoría */
+.grupo-categoria + .grupo-categoria { margin-top: var(--sp-40); }
+.grupo-titulo { font-size: var(--fs-xl); margin: 0 0 var(--sp-16); display: flex; align-items: center; gap: var(--sp-8); }
+.grupo-titulo span { color: var(--muted); font-size: var(--fs-small); font-weight: var(--fw-medium); }
+
 /* En tablet, dos tarjetas por fila */
 @media (min-width: 521px) and (max-width: 900px) {
   .listado-rifas .draws { grid-template-columns: repeat(2, 1fr); }

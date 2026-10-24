@@ -9,7 +9,11 @@ export const ESTADOS_RIFA = Object.freeze([
   'EN_REVISION', 'PROGRAMADA', 'SORTEADA', 'COMPRANDO', 'EN_CAMINO', 'ENTREGADA', 'CANCELADA', 'DESCARTADA',
 ]);
 
-/** Estados en los que se ponen puntos como compromiso (quedan retenidos). Invariante 10. */
+/**
+ * Estados en los que se ponen puntos como compromiso (quedan retenidos). Invariante 10.
+ * Las Chances retenidas quedan BLOQUEADAS: no se pueden retirar. Solo vuelven si la rifa se descarta;
+ * si se confirma, se vuelven opciones de ganar y quedan asociadas a la rifa para siempre (invariantes 23 y 24).
+ */
 export const ESTADOS_COMPROMISO = Object.freeze(['CAPTANDO', 'ARMANDO']);
 /** Estados en los que se compran opciones directamente. Invariante 10. */
 export const ESTADOS_COMPRA = Object.freeze(['ABIERTA']);
@@ -17,10 +21,30 @@ export const ESTADOS_COMPRA = Object.freeze(['ABIERTA']);
 export const ESTADOS_SOLO_ENLACE = Object.freeze(['REVISION_LINK', 'CAPTANDO', 'PROPUESTA']);
 /** Solo los ven su autor y los administradores (README §6). */
 export const ESTADOS_SOLO_AUTOR = Object.freeze(['BORRADOR', 'REVISION_LINK', 'DESCARTADA']);
-/** Ya alcanzaron la meta: el avance público es 100 %. */
+/** Ya alcanzaron la meta: el avance público es 100 %. Una Rifa Confirmada SIEMPRE se rifa (solo se cancela por fuerza mayor legal). */
 export const ESTADOS_CONFIRMADOS = Object.freeze(['ABIERTA', 'CERRADA', 'EN_REVISION', 'PROGRAMADA', 'SORTEADA', 'COMPRANDO', 'EN_CAMINO', 'ENTREGADA']);
 /** Tienen ganador. */
 export const ESTADOS_CON_GANADOR = Object.freeze(['SORTEADA', 'COMPRANDO', 'EN_CAMINO', 'ENTREGADA']);
+
+/**
+ * Estados VISIBLES para el público. Cada uno agrupa uno o más estados internos (README §7.4 y §7.13).
+ * Los internos se mantienen porque el equipo los necesita para validar, revisar, comprar y entregar.
+ * En los textos visibles no se usa "sortear/sorteo": se dice "rifar" y "Rifa Realizada".
+ */
+export const ESTADOS_VISIBLES = Object.freeze({
+  SUGERIDA: { nombre: 'Rifa Sugerida', internos: ['CAPTANDO'] },
+  VALIDANDO: { nombre: 'Validando producto', internos: ['REVISION_LINK', 'PROPUESTA'] },
+  ARMANDOSE: { nombre: 'Rifa Armándose', internos: ['ARMANDO'] },
+  CONFIRMADA: { nombre: 'Rifa Confirmada', internos: ['ABIERTA'] },
+  CERRADA: { nombre: 'Rifa Cerrada', internos: ['CERRADA', 'EN_REVISION', 'PROGRAMADA'] },
+  REALIZADA: { nombre: 'Rifa Realizada', internos: ['SORTEADA', 'COMPRANDO', 'EN_CAMINO'] },
+  ENTREGADA: { nombre: 'Premio Entregado', internos: ['ENTREGADA'] },
+  DESCARTADA: { nombre: 'Rifa Descartada', internos: ['NO_SE_ARMO', 'CANCELADA', 'DESCARTADA'] },
+});
+
+/** @param {EstadoRifa} estado @returns {keyof typeof ESTADOS_VISIBLES | null} (BORRADOR no es visible) */
+export const estadoVisible = estado =>
+  Object.keys(ESTADOS_VISIBLES).find(k => ESTADOS_VISIBLES[k].internos.includes(estado)) ?? null;
 
 /** Pestañas de "Mis rifas". */
 export const GRUPOS_MIS_RIFAS = Object.freeze({
@@ -33,7 +57,7 @@ export const GRUPOS_MIS_RIFAS = Object.freeze({
 export const TRANSICIONES = Object.freeze({
   BORRADOR: ['ARMANDO'],
   REVISION_LINK: ['CAPTANDO', 'DESCARTADA'],
-  CAPTANDO: ['PROPUESTA', 'NO_SE_ARMO', 'DESCARTADA'],
+  CAPTANDO: ['PROPUESTA', 'NO_SE_ARMO', 'DESCARTADA', 'CANCELADA'],
   PROPUESTA: ['ARMANDO', 'DESCARTADA'],
   ARMANDO: ['ABIERTA', 'NO_SE_ARMO', 'CANCELADA'],
   ABIERTA: ['CERRADA', 'CANCELADA'],
@@ -53,8 +77,9 @@ export const TRANSICIONES = Object.freeze({
  * Configuración por rifa (README §7.9). Solo la cambian los administradores.
  * @typedef {{
  *   margenPct: number, ventanaArmadoDias: number, tiempoAbiertaDias: number, topeTickets: number|null,
- *   minPorParticipante: number, maxPorParticipantePct: number, permiteRetiro: boolean,
+ *   minPorParticipante: number, maxPorParticipantePct: number,
  *   umbralPct: number, umbralMinParticipantes: number, ventanaCaptacionDias: number, puntosMinAutorPct: number,
+ *   ventanaFinalMin: number, personasPorExtension: number, minutosPorExtension: number,
  * }} ConfiguracionRifa
  */
 export const CONFIG_POR_DEFECTO = Object.freeze({
@@ -64,11 +89,14 @@ export const CONFIG_POR_DEFECTO = Object.freeze({
   topeTickets: null,
   minPorParticipante: 1,
   maxPorParticipantePct: 20,
-  permiteRetiro: true,
   umbralPct: 20,
   umbralMinParticipantes: 10,
   ventanaCaptacionDias: 7,
   puntosMinAutorPct: 1,
+  // Tiempo extra al final de una Rifa Confirmada (README §7.13)
+  ventanaFinalMin: 5,          // se activa cuando faltan 5 minutos o menos
+  personasPorExtension: 5,     // cada 5 personas distintas (no tickets) que pongan Chances en esa ventana…
+  minutosPorExtension: 5,      // …suman 5 minutos al tiempo que quedaba
 });
 
 /** Propuestas activas por autor (README §7.9). */
@@ -88,8 +116,10 @@ export const calcularMaximo = (meta, maxPct) => Math.floor(meta * maxPct / 100);
  */
 
 /**
- * Producto en la vista pública. `emoji` es un marcador visual solo para la Fase 0 (no hay imágenes reales).
- * @typedef {{ nombre: string, imagen: string|null, emoji: string, precioTienda: number, linkTienda: string }} ProductoPublico
+ * Producto en la vista pública.
+ * - `imagen`: foto referencial (ruta desde la raíz del sitio o URL). Si no hay, se usa `emoji` como marcador visual.
+ * - `descripcion`: resumen tomado de la tienda; empieza con el color o modelo específico. null si no se pudo leer.
+ * @typedef {{ nombre: string, imagen: string|null, emoji: string, descripcion: string|null, precioTienda: number, linkTienda: string }} ProductoPublico
  */
 
 /**
@@ -97,8 +127,8 @@ export const calcularMaximo = (meta, maxPct) => Math.floor(meta * maxPct / 100);
  * @typedef {{
  *   id: string, codigo: string, slug: string, categoria: string, categoriaId: string,
  *   producto: ProductoPublico, estado: EstadoRifa, visibilidad: Visibilidad,
- *   progreso: number, participantes: number, permiteRetiro: boolean,
- *   fechaLimiteArmado?: string, fechaCierre?: string, fechaSorteo?: string,
+ *   progreso: number, participantes: number,
+ *   fechaLimiteArmado?: string, fechaCierre?: string, fechaSorteo?: string, minutosExtra?: number,
  *   hashLista?: string, ganadorApodo?: string,
  *   sorteo?: { semilla: string, ticketGanador: number, fecha: string },
  *   entrega?: { compradoEl?: string, enviadoEl?: string, entregadoEl?: string },   // solo fechas: el detalle es interno
@@ -157,7 +187,7 @@ export const MODALIDADES_ENVIO = Object.freeze(['RECOJO', 'COURIER']);
 
 /**
  * Lo que un participante tiene en una rifa.
- * @typedef {{ retenido: number, tickets: number[], maxPuedoPoner: number, puedeRetirar: boolean }} Participacion
+ * @typedef {{ retenido: number, tickets: number[], maxPuedoPoner: number }} Participacion
  */
 
 /**

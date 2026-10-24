@@ -20,7 +20,9 @@
  * @property {(rifaId: string) => Promise<RifaAdmin>} publicarRifa   BORRADOR → ARMANDO; empieza la ventana de armado.
  * @property {() => Promise<RifaAdmin[]>} colaRevision   Rifas CERRADAS o EN_REVISION.
  * @property {(rifaId: string, fechaSorteo: string) => Promise<RifaAdmin>} aprobarYProgramar   → PROGRAMADA con hash público.
- * @property {(rifaId: string, motivo: string) => Promise<RifaAdmin>} cancelarRifa
+ * @property {(rifaId: string, motivo: string, opciones?: { fuerzaMayorLegal?: boolean }) => Promise<RifaAdmin>} cancelarRifa
+ *   Antes de confirmarse: libera lo retenido. Una Rifa Confirmada solo se cancela con `fuerzaMayorLegal: true`
+ *   (error RIFA_CONFIRMADA_NO_SE_CANCELA); en ese caso se reembolsa todo.
  *   Libera lo retenido y reembolsa lo consumido. Error: MOTIVO_OBLIGATORIO.
  * @property {(rifaId: string, opciones?: { ticketGanador?: number }) => Promise<RifaAdmin>} sortear
  *   `ticketGanador` existe solo en la Fase 0 para poder mostrar "Ganaste".
@@ -49,6 +51,7 @@
  * Simulación de procesos automáticos (solo Fase 0; en la Fase 1 los ejecuta el servidor):
  * @property {(rifaId: string, puntos: number, personas: number) => Promise<RifaAdmin>} simularAporteExterno
  *   Simula que otras personas ponen puntos o compran opciones.
+ * @property {(rifaId: string, minutos: number) => Promise<RifaAdmin>} simularTiempoRestante   Rifa Confirmada: fija los minutos que le quedan.
  * @property {(rifaId: string) => Promise<RifaAdmin>} vencerVentana   ARMANDO/CAPTANDO → NO_SE_ARMO.
  * @property {(rifaId: string) => Promise<RifaAdmin>} cerrarRifa   ABIERTA → CERRADA → EN_REVISION.
  */
@@ -57,5 +60,5 @@ export const METODOS_ADMIN = Object.freeze([
   'dashboard', 'listarRifas', 'obtenerRifa', 'crearRifa', 'publicarRifa', 'colaRevision', 'aprobarYProgramar',
   'cancelarRifa', 'sortear', 'registrarCompra', 'registrarEnvio', 'registrarEntrega', 'validarLink',
   'moderarPropuesta', 'listarPropuestas', 'actualizarProducto', 'listarUsuarios', 'obtenerUsuario',
-  'ajustarSaldo', 'listarCategorias', 'guardarCategoria', 'simularAporteExterno', 'vencerVentana', 'cerrarRifa',
+  'ajustarSaldo', 'listarCategorias', 'guardarCategoria', 'simularAporteExterno', 'simularTiempoRestante', 'vencerVentana', 'cerrarRifa',
 ]);
