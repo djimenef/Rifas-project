@@ -78,6 +78,7 @@ Stack actual: **HTML, CSS y JavaScript estáticos**, sin framework.
 | `README.md` | Este documento: especificación funcional completa (qué se construye y cómo funciona). |
 | `PROMPT-FASE0.md` | Plan paso a paso para que Claude Code construya todos los mockups conectados. |
 | `docs/PROGRESO.md` | Bitácora compartida del equipo: paso actual, hecho, pendiente y decisiones. Se lee al empezar y se actualiza al terminar cada paso. |
+| `docs/diagramas/` | Diagramas en Mermaid (ciclo de vida, opciones y transparencia, billetera, recorrido, mapa de pantallas, arquitectura). Índice y cómo verlos en [`docs/diagramas/README.md`](docs/diagramas/README.md). En VS Code: extensión **Markdown Preview Mermaid Support** (recomendada en `.vscode/extensions.json`) y `Ctrl+Shift+V`. |
 
 Para empezar, en la terminal del proyecto: `claude` y luego
 `Lee CLAUDE.md, README.md y PROMPT-FASE0.md. Ejecuta el Paso 0 y espera mi aprobación.`
@@ -88,31 +89,23 @@ Para empezar, en la terminal del proyecto: `claude` y luego
 
 El proyecto avanza separando **cómo se ve**, **qué significa** y **cómo funciona**. Cada capa se completa sin depender de la siguiente.
 
-```
-┌───────────────────────────────────────────────────────────────┐
-│ CAPA 1 · VISUAL (Fase 0 — AHORA)                              │
-│ Mockups navegables con datos falsos. Sin backend.             │
-│ Vive en: web/  ·  Datos en: web/src/mocks                     │
-├───────────────────────────────────────────────────────────────┤
-│ CAPA 2 · SEMÁNTICA (en paralelo a la Fase 0)                  │
-│ Qué entidades existen, qué estados tienen, qué acciones       │
-│ las cambian y qué reglas nunca se rompen. Agnóstica de        │
-│ tecnología.                                                   │
-│ Vive en: docs/semantica  ·  Resumen en la sección 7           │
-├───────────────────────────────────────────────────────────────┤
-│ CAPA 3 · FUNCIONAL (Fase 1 — DESPUÉS)                         │
-│ Implementación real: API, base de datos, pagos, jobs.         │
-│ Se construye traduciendo la Capa 2 a código.                  │
-│ Vive en: api/  ·  Referencia en la sección 9                  │
-└───────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    C1["<b>Capa 1 · Visual</b> — Fase 0, ahora<br/>Mockups navegables con datos falsos, sin backend<br/>Vive en: pantallas + assets/ · datos en assets/js/mocks"]
+    C2["<b>Capa 2 · Semántica</b> — en paralelo a la Fase 0<br/>Entidades, estados, acciones y reglas que nunca se rompen<br/>Agnóstica de tecnología · vive en README §7 y docs/"]
+    C3["<b>Capa 3 · Funcional</b> — Fase 1, después<br/>API, base de datos, pagos y procesos automáticos<br/>Se construye traduciendo la Capa 2 a código · README §9"]
+    C1 -- "se apoya en" --> C2
+    C2 -- "se traduce a" --> C3
 ```
 
 **El puente entre capas son los servicios con interfaz.** En la Fase 0, cada pantalla obtiene sus datos de un servicio *mock* que respeta exactamente la misma interfaz que tendrá el servicio real. Cuando llegue la Fase 1, se cambia la implementación del servicio y las pantallas no se tocan.
 
-```
-Pantalla ──► useRifas() ──► RifasService (interfaz)
-                                 ├── RifasServiceMock   ← Fase 0
-                                 └── RifasServiceHttp   ← Fase 1
+```mermaid
+flowchart LR
+    P["Pantalla<br/>assets/js/paginas"] --> S["services/index.js"]
+    S --> I["RifasService<br/>(interfaz)"]
+    I --> M["Mock<br/>Fase 0 · hoy"]
+    I -.-> H["HTTP<br/>Fase 1"]
 ```
 
 ---
@@ -869,17 +862,24 @@ export interface BilleteraService {
 
 ### 9.2 Modelo de datos (resumen)
 
+```mermaid
+erDiagram
+    users ||--|| wallets : "tiene"
+    wallets ||--o{ wallet_movements : "ledger inmutable"
+    users ||--o{ payments : "paga"
+    payments ||--|| invoices : "comprobante"
+    products ||--o{ raffles : "se rifa en"
+    raffles ||--o{ pledges : "compromisos (Chances retenidas)"
+    raffles ||--o{ tickets : "opciones (número + código)"
+    users ||--o{ pledges : "pone"
+    users ||--o{ tickets : "es dueño"
+    raffles ||--o| draws : "sorteo"
+    draws ||--|| winners : "ganador"
+    raffles ||--o{ raffle_status_history : "historial de estados"
+    raffles ||--o| author_links : "código de atribución (Fase 2)"
 ```
-users ─1:1─ wallets ─1:N─ wallet_movements (ledger inmutable)
-users ─1:N─ payments ─1:1─ invoices
-products ─1:N─ raffles ─1:N─ pledges (compromisos)
-                       ─1:N─ tickets
-                       ─1:1─ draws ─1:1─ winners
-                       ─1:N─ raffle_status_history
-raffles ─1:1─ author_links (código de atribución)        (Fase 2)
-idempotency_keys (operación, usuario, resultado)
-complaints (Libro de Reclamaciones) · audit_logs · terms_acceptances · recharge_packages
-```
+
+Además: `idempotency_keys` (operación, usuario, resultado) · `complaints` (Libro de Reclamaciones) · `audit_logs` · `terms_acceptances` · `recharge_packages`.
 
 Puntos técnicos obligatorios:
 - Toda operación de billetera dentro de una transacción con bloqueo de fila (`SELECT … FOR UPDATE`).

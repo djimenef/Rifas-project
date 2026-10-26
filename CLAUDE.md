@@ -30,6 +30,7 @@ Si algo no está definido en estas fuentes, **pregunta** antes de inventar. Si e
 - Mobile-first: probar a 360 px, 768 px y 1280 px.
 - Accesibilidad: `label` en inputs, foco visible, contraste suficiente, navegable con teclado.
 - Nunca borres archivos existentes sin preguntar.
+- **Diagramas en Mermaid** (bloques ```` ```mermaid ````): flujos, estados, secuencias y modelos no se dibujan con caracteres (los árboles de carpetas y los bocetos de interfaz sí pueden quedar en texto). Viven en `docs/diagramas/` (con su índice) o en el README; comprueba que se dibujan en la vista previa antes de hacer commit.
 
 ## Flujo de trabajo
 

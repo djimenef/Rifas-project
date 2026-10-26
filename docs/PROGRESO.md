@@ -52,6 +52,7 @@
 | Ajustes | Panel admin sin "sorteo" en textos visibles | `850881d` |
 | Ajustes | Sorteo con opciones mezcladas al azar (reproducible) | `c062e0e` |
 | Ajustes | Código por opción, lista pública anónima (CSV), Mis tickets y "Rifa en vivo" | `147425b` |
+| Docs | Diagramas en Mermaid: índice `docs/diagramas/README.md`, mapa de pantallas, opciones y transparencia, capas y modelo de datos del README; extensión recomendada en `.vscode/extensions.json` | el commit que agregó esta fila |
 
 Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos revisados en Chrome a 1280 px y 360 px (visitante → login → regresa con el modal abierto → poner Chances; saldo insuficiente → recargar → volver; recarga con éxito y rechazo; verificar con código incorrecto y correcto; admin: aporte simulado → rifa confirmada → cerrar → aprobar y programar; crear borrador).
 
