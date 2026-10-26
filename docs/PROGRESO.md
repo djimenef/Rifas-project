@@ -7,11 +7,11 @@
 
 | | |
 |---|---|
-| **Paso actual** | **Paso 4 (pantallas P1) terminado** en `feature/paso4-pantallas-p1`, pendiente de Pull Request hacia `main`. Siguiente: Paso 5 (pantallas P2). |
-| **Responsable del Paso 4** | **David** |
-| **Rama del Paso 4** | `feature/paso4-pantallas-p1` (creada desde `main` actualizado, ya publicada en GitHub) |
-| **Revisión** | David abre el Pull Request hacia `main` y lo revisa el otro integrante del equipo. |
-| **Última actualización** | 2026-10-23 |
+| **Paso actual** | Paso 4 (pantallas P1) **fusionado en `main`** (PR #5). Ajustes de Inicio, estados y opciones en `feature/ajustes-inicio-y-estados`, **pendiente de Pull Request** hacia `main`. Siguiente: **Paso 5 (pantallas P2)**. |
+| **Rama en curso** | `feature/ajustes-inicio-y-estados` (publicada en GitHub; trabajada por elagrioagrio). No hay cambios sin subir. |
+| **Revisión** | Se abre el PR hacia `main` y lo revisa **David**. Después del merge, el Paso 5 empieza en una rama nueva desde `main` actualizado (`feature/paso5-pantallas-p2`). |
+| **Para continuar (David)** | `git pull` en `main` → revisar el PR de esta rama → merge → crear `feature/paso5-pantallas-p2`. Si hay que seguir en esta misma rama antes del merge: `git switch feature/ajustes-inicio-y-estados` + `git pull` (una sola persona por rama a la vez). |
+| **Última actualización** | 2026-10-23 (ajustes de Inicio, estados y opciones: **56/56 pruebas**) |
 
 > **Excepción temporal (23/10/2026):** el PR #4 (Fase 0, Pasos 0–3) se fusionó en `main` **sin la revisión del compañero**, por acuerdo del equipo. David puede revisar la Fase 0 directamente en `main`. A partir del Paso 4 vuelve la regla normal: todo PR lo revisa la otra persona.
 
@@ -44,6 +44,14 @@
 | 4 | Mis rifas | `2f92ec3` |
 | 4 | Admin: Rifas (listado, detalle, nueva) y Cola de revisión; arreglo de margen lateral de `.pagina` | `6c7d725` |
 | 4 | Cierre del Paso 4: esta bitácora | el commit que agregó esta fila |
+| Merge | PR #5 "Paso 4: pantallas P1" fusionado en `main` | `d25e450` |
+| Ajustes | Servidor local sin caché (`dev/servidor.py`) | `e92444e` |
+| Ajustes | Estados visibles, Chances bloqueadas, tiempo extra, cancelar con motivo / por fuerza mayor, productos reales | `6a06451` |
+| Ajustes | Inicio: logo, carrusel de destacadas, Rifas confirmadas (cuenta regresiva) y Rifas armándose con fotos; /rifas por categoría | `85f6c74` |
+| Docs | Ciclo de vida de la rifa, flujo de Chances y diagramas | `98cfd20` |
+| Ajustes | Panel admin sin "sorteo" en textos visibles | `850881d` |
+| Ajustes | Sorteo con opciones mezcladas al azar (reproducible) | `c062e0e` |
+| Ajustes | Código por opción, lista pública anónima (CSV), Mis tickets y "Rifa en vivo" | `147425b` |
 
 Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos revisados en Chrome a 1280 px y 360 px (visitante → login → regresa con el modal abierto → poner Chances; saldo insuficiente → recargar → volver; recarga con éxito y rechazo; verificar con código incorrecto y correcto; admin: aporte simulado → rifa confirmada → cerrar → aprobar y programar; crear borrador).
 
