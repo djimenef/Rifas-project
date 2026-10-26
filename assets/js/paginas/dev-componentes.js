@@ -22,7 +22,7 @@ const t = document.getElementById('tabs');
 t.innerHTML = tabs('mis-rifas', [
   { id: 'armando', texto: 'Armando', contenido: '<p>Rifas donde tus Chances están retenidas.</p>' },
   { id: 'abiertas', texto: 'Abiertas', contenido: '<p>Rifas confirmadas donde ya tienes tickets.</p>' },
-  { id: 'finalizadas', texto: 'Finalizadas', contenido: '<p>Rifas sorteadas, entregadas, canceladas o que no se armaron.</p>' },
+  { id: 'finalizadas', texto: 'Finalizadas', contenido: '<p>Rifas realizadas, premios entregados y rifas descartadas.</p>' },
 ]);
 montarTabs(t.querySelector('[data-tabs]'));
 

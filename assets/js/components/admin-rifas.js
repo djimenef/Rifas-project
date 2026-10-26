@@ -61,18 +61,18 @@ function fechaSorteoSugerida() {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-/** Aprobar la revisión y programar el sorteo (→ PROGRAMADA con hash público). */
+/** Aprobar la revisión y anunciar la fecha en que se rifa (→ PROGRAMADA con hash público). */
 export function modalProgramar(rifa, alTerminar) {
   modalAccion({
-    titulo: 'Aprobar y programar sorteo',
+    titulo: 'Aprobar y anunciar la fecha',
     contenido: `
-      <p class="modal-texto">Al aprobar, <b>${esc(rifa.producto.nombre)}</b> pasa a <b>Sorteo programado</b> y se publica la huella de la lista de opciones.</p>
-      <label>Fecha y hora del sorteo<input type="datetime-local" name="fechaSorteo" value="${fechaSorteoSugerida()}" required></label>`,
-    textoBoton: 'Aprobar y programar',
+      <p class="modal-texto">Al aprobar, <b>${esc(rifa.producto.nombre)}</b> queda con la <b>fecha en que se rifa</b> anunciada y se publica la huella de la lista de opciones.</p>
+      <label>Fecha y hora en que se rifa<input type="datetime-local" name="fechaSorteo" value="${fechaSorteoSugerida()}" required></label>`,
+    textoBoton: 'Aprobar y anunciar',
     enviar: async dialog => {
       const valor = dialog.querySelector('[name="fechaSorteo"]').value;
       const r = await adminService.aprobarYProgramar(rifa.id, valor ? new Date(valor).toISOString() : '');
-      return `Sorteo programado para el ${fechaHora(r.fechaSorteo)}`;
+      return `Se rifa el ${fechaHora(r.fechaSorteo)}`;
     },
     alTerminar,
   });

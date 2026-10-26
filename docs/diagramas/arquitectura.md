@@ -11,10 +11,10 @@ flowchart TB
     end
 
     L["layout.js<br/>sesión · protección de rutas · header/footer · panel de demo"]
-    C["components/<br/>badge · barra de avance · modal · tabs · estados · toast"]
+    C["components/<br/>tarjeta de rifa · carrusel · cuenta regresiva · badge<br/>barra de avance · modal · tabs · estados · toast"]
     S["services/index.js<br/>único punto de acceso"]
     I["services/interfaces<br/>auth · billetera · rifas · admin"]
-    D["domain/<br/>tipos y reglas puras"]
+    D["domain/<br/>tipos y reglas puras<br/>rifa (estados) · billetera · sorteo (códigos, lista, mezcla)"]
 
     subgraph FASE0["Fase 0 · hoy"]
         M["services/mock<br/>motor.js = reglas de negocio"]
@@ -32,6 +32,8 @@ flowchart TB
     PANTALLAS --> L
     PANTALLAS --> C
     PANTALLAS --> S
+    PANTALLAS --> LIB["lib/<br/>rutas · formato · ids · hash · descarga"]
+    PANTALLAS -. "verificar mis opciones<br/>(en el navegador)" .-> D
     S -. "cumple" .-> I
     S --> M
     M --> D

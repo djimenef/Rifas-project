@@ -10,6 +10,7 @@ import { apodosRellenoMock } from '../../mocks/catalogos.js';
 import { leerSesion } from '../../session.js';
 import { alIniciarOperacion } from './db.js';
 import { sha256 } from '../../lib/hash.js';
+import { codigoOpcion, listaOpcionesCsv } from '../../domain/sorteo.js';
 import { nuevoId } from '../../lib/ids.js';
 
 export const ahora = () => new Date().toISOString();
@@ -163,12 +164,17 @@ export function apodoDeTicket(db, rifa, numero) {
   return apodosRellenoMock[(numero * 7919 + semilla) % apodosRellenoMock.length];
 }
 
-/** Lista congelada de tickets (número;apodo), una línea por ticket (README §7.8). */
-export function snapshot(db, rifa) {
-  const lineas = [];
-  for (let n = 1; n <= opcionesVendidas(rifa); n++) lineas.push(`${n};${apodoDeTicket(db, rifa, n)}`);
-  return lineas.join('\n');
-}
+/**
+ * Sal secreta de la rifa para los códigos de sus opciones. Nunca sale del servidor.
+ * En la Fase 0 se deriva del id; en la Fase 1 será un valor aleatorio guardado al crear la rifa.
+ */
+const salOpciones = rifa => (rifa.salOpciones ??= sha256(`sal:${rifa.id}:${rifa.codigo}`));
+
+/** Código alfanumérico de cada opción (README §7.8). */
+export const codigosOpciones = (rifa, numeros) => numeros.map(numero => ({ numero, codigo: codigoOpcion(salOpciones(rifa), numero) }));
+
+/** Lista congelada de opciones en CSV: número y código, sin datos de quién es cada una (README §7.8). */
+export const snapshot = (db, rifa) => listaOpcionesCsv(opcionesVendidas(rifa), salOpciones(rifa));
 
 /** Calcula y guarda la huella de la lista si la rifa ya cerró. */
 export function asegurarHash(db, rifa) {

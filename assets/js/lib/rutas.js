@@ -47,7 +47,7 @@ export const RUTAS = Object.freeze({
   adminRifaNueva: { archivo: 'admin/rifas/nueva/', nombre: 'Nueva rifa', acceso: 'admin', layout: 'admin', seccion: 'rifas' },
   adminRevision: { archivo: 'admin/revision/', nombre: 'Cola de revisión', acceso: 'admin', layout: 'admin', seccion: 'revision' },
   adminSorteos: { archivo: 'admin/sorteos/', nombre: 'Sorteos', acceso: 'admin', layout: 'admin', seccion: 'sorteos' },
-  adminSorteo: { archivo: 'admin/sorteo/', nombre: 'Ejecutar sorteo', acceso: 'admin', layout: 'admin', seccion: 'sorteos' },          // ?codigo=
+  adminSorteo: { archivo: 'admin/sorteo/', nombre: 'Rifar (elegir ganador)', acceso: 'admin', layout: 'admin', seccion: 'sorteos' },          // ?codigo=
   adminEntregas: { archivo: 'admin/entregas/', nombre: 'Compras y entregas', acceso: 'admin', layout: 'admin', seccion: 'entregas' },
   adminEntrega: { archivo: 'admin/entrega/', nombre: 'Compra y entrega', acceso: 'admin', layout: 'admin', seccion: 'entregas' },      // ?codigo=
   adminProductos: { archivo: 'admin/productos/', nombre: 'Productos', acceso: 'admin', layout: 'admin', seccion: 'productos' },

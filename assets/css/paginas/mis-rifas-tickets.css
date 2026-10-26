@@ -1,0 +1,25 @@
+/* Mis tickets en una rifa: estilos propios. Todo sale de los tokens. */
+
+.tickets-volver { margin: 0 0 var(--sp-12); }
+#mis-tickets { display: grid; gap: var(--sp-20); }
+.tickets-rifa, .tickets-verificar { display: grid; gap: var(--sp-14); }
+.tickets-cabecera { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-12); }
+.tickets-cabecera h2, .tickets-verificar h2 { margin: 0; font-size: var(--fs-xl); }
+.tickets-id, .tickets-vacio, .tickets-verificar > p { margin: 0; color: var(--muted); }
+.tickets-subtitulo { margin: var(--sp-6) 0 0; font-size: var(--fs-lg); }
+
+/* Cada opción: número y código */
+.tickets-lista {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: var(--sp-10);
+}
+.tickets-lista li {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-8);
+  padding: var(--sp-10) var(--sp-14); border-radius: var(--radius-12);
+  background: var(--surface-2); border: 1px solid var(--border);
+}
+.tickets-numero { color: var(--muted); font-weight: var(--fw-semibold); }
+
+.tickets-acciones { display: flex; flex-wrap: wrap; gap: var(--sp-10); }
+.tickets-ayuda { background: var(--surface-2); }
+.tickets-ayuda ol { margin: var(--sp-10) 0 0; padding-left: var(--sp-20); color: var(--muted); display: grid; gap: var(--sp-8); }

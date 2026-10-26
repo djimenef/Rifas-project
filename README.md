@@ -78,6 +78,7 @@ Stack actual: **HTML, CSS y JavaScript estáticos**, sin framework.
 | `README.md` | Este documento: especificación funcional completa (qué se construye y cómo funciona). |
 | `PROMPT-FASE0.md` | Plan paso a paso para que Claude Code construya todos los mockups conectados. |
 | `docs/PROGRESO.md` | Bitácora compartida del equipo: paso actual, hecho, pendiente y decisiones. Se lee al empezar y se actualiza al terminar cada paso. |
+| `docs/diagramas/` | Diagramas en Mermaid (ciclo de vida, opciones y transparencia, billetera, recorrido, mapa de pantallas, arquitectura). Índice y cómo verlos en [`docs/diagramas/README.md`](docs/diagramas/README.md). En VS Code: extensión **Markdown Preview Mermaid Support** (recomendada en `.vscode/extensions.json`) y `Ctrl+Shift+V`. |
 
 Para empezar, en la terminal del proyecto: `claude` y luego
 `Lee CLAUDE.md, README.md y PROMPT-FASE0.md. Ejecuta el Paso 0 y espera mi aprobación.`
@@ -88,31 +89,23 @@ Para empezar, en la terminal del proyecto: `claude` y luego
 
 El proyecto avanza separando **cómo se ve**, **qué significa** y **cómo funciona**. Cada capa se completa sin depender de la siguiente.
 
-```
-┌───────────────────────────────────────────────────────────────┐
-│ CAPA 1 · VISUAL (Fase 0 — AHORA)                              │
-│ Mockups navegables con datos falsos. Sin backend.             │
-│ Vive en: web/  ·  Datos en: web/src/mocks                     │
-├───────────────────────────────────────────────────────────────┤
-│ CAPA 2 · SEMÁNTICA (en paralelo a la Fase 0)                  │
-│ Qué entidades existen, qué estados tienen, qué acciones       │
-│ las cambian y qué reglas nunca se rompen. Agnóstica de        │
-│ tecnología.                                                   │
-│ Vive en: docs/semantica  ·  Resumen en la sección 7           │
-├───────────────────────────────────────────────────────────────┤
-│ CAPA 3 · FUNCIONAL (Fase 1 — DESPUÉS)                         │
-│ Implementación real: API, base de datos, pagos, jobs.         │
-│ Se construye traduciendo la Capa 2 a código.                  │
-│ Vive en: api/  ·  Referencia en la sección 9                  │
-└───────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    C1["<b>Capa 1 · Visual</b> — Fase 0, ahora<br/>Mockups navegables con datos falsos, sin backend<br/>Vive en: pantallas + assets/ · datos en assets/js/mocks"]
+    C2["<b>Capa 2 · Semántica</b> — en paralelo a la Fase 0<br/>Entidades, estados, acciones y reglas que nunca se rompen<br/>Agnóstica de tecnología · vive en README §7 y docs/"]
+    C3["<b>Capa 3 · Funcional</b> — Fase 1, después<br/>API, base de datos, pagos y procesos automáticos<br/>Se construye traduciendo la Capa 2 a código · README §9"]
+    C1 -- "se apoya en" --> C2
+    C2 -- "se traduce a" --> C3
 ```
 
 **El puente entre capas son los servicios con interfaz.** En la Fase 0, cada pantalla obtiene sus datos de un servicio *mock* que respeta exactamente la misma interfaz que tendrá el servicio real. Cuando llegue la Fase 1, se cambia la implementación del servicio y las pantallas no se tocan.
 
-```
-Pantalla ──► useRifas() ──► RifasService (interfaz)
-                                 ├── RifasServiceMock   ← Fase 0
-                                 └── RifasServiceHttp   ← Fase 1
+```mermaid
+flowchart LR
+    P["Pantalla<br/>assets/js/paginas"] --> S["services/index.js"]
+    S --> I["RifasService<br/>(interfaz)"]
+    I --> M["Mock<br/>Fase 0 · hoy"]
+    I -.-> H["HTTP<br/>Fase 1"]
 ```
 
 ---
@@ -263,7 +256,7 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 | 14 | Recargar Chances | `/billetera/recargar` | Atajos 5/10/15/20 o monto libre de 5 a 500 (aviso junto al campo si sale del rango) · medio de pago · procesando · éxito · rechazado | P1 |
 | 15 | Comprometer / comprar opciones | Modal desde detalle | Selector de cantidad · saldo insuficiente · confirmación · éxito | P1 |
 | 16 | Mis rifas | `/mis-rifas` | Pestañas: Armando · Abiertas · Finalizadas · vacío | P1 |
-| 17 | Mis tickets en una rifa | `/mis-rifas/[codigo]` | Números de ticket · compromiso retenido | P2 |
+| 17 | Mis tickets en una rifa | `/mis-rifas/[codigo]` | Opciones con número y código · Chances retenidas · descargar la lista pública (CSV) y verificar mis opciones | P2 (hecha) |
 | 18 | Perfil | `/perfil` | Datos (DNI enmascarado) · editar apodo | P2 |
 | 19 | Proponer rifa | `/crear-rifa` | Formulario: link del producto, foto/referencia, precio según la tienda, categoría · enviado | P3 |
 | 20 | Mis rifas propuestas | `/mis-propuestas` | Calentando (privada, con enlace para compartir y avance hacia el umbral) · armando (pública) · no se armó · descartada | P3 |
@@ -344,7 +337,8 @@ Reglas visuales de la tarjeta:
 | **Enlace de rifa** | URL pública y compartible de una rifa (`/r/slug`). |
 | **Categoría** | Agrupación de rifas: zapatillas, ropa, relojes, consolas, TVs, etc. |
 | **Punto** | Nombre **interno** (código y especificación) de la Chance. 1 punto = S/ 1. En pantalla siempre se muestra como "Chance". |
-| **Opción / ticket** | Una participación en una rifa. Cuesta 1 Chance. |
+| **Opción / ticket** | Una participación en una rifa. Cuesta 1 Chance: 10 Chances puestas = 10 opciones de ganar, cada una con su número. |
+| **Rifa / sorteo** | **Rifa** es el hecho en general (la rifa se arma, se confirma, se cierra, se rifa). **Sorteo** es solo el acto técnico de elegir al ganador al azar entre todas las opciones (§7.8). En los textos visibles se dice "se rifa", **"Rifa en vivo"** o "cómo se eligió al ganador". |
 | **Saldo disponible** | Puntos libres para usar. |
 | **Saldo retenido** | Puntos comprometidos en rifas aún no confirmadas. Bloqueados pero no gastados. |
 | **Compromiso** | Puntos que un participante pone en una rifa que aún se está armando. Quedan retenidos. |
@@ -374,7 +368,7 @@ Reglas visuales de la tarjeta:
 | **Rifa** | producto, autor (admin, participante o creador), estado, meta, margen (interno), opciones comprometidas, opciones vendidas, número de participantes, configuración (§7.9), fechas | **Código** alfanumérico único y visible (ej. `RF-7K3Q9XM2`) + **slug** para su enlace |
 | **Compromiso** | rifa, participante, cantidad de opciones, estado | — |
 | **Ticket** | rifa, participante, número correlativo | Número único dentro de su rifa |
-| **Sorteo** | rifa, snapshot, huella (hash), método, ticket ganador | Uno por rifa |
+| **Sorteo** | rifa, snapshot, huella (hash), semilla, ticket ganador, posición en la lista mezclada | Uno por rifa |
 | **Ganador** | sorteo, participante, estado de entrega, evidencia | — |
 | **Enlace de autor** *(Fase 2)* | rifa, autor, código de atribución, visitas, registros y puntos generados | Código único |
 
@@ -575,10 +569,21 @@ El participante ve estos movimientos en **Mi historial de puntos**, con la rifa 
 
 ### 7.8 Transparencia al elegir al ganador
 
-1. Al cerrar la rifa se congela la lista de tickets (número + apodo).
-2. Se calcula una huella digital (hash) de esa lista y se **publica antes de rifar**.
-3. El ganador se elige con una fuente aleatoria verificable (Random.org firmado, o semilla comprometida de antemano).
-4. Se publica el resultado junto con la evidencia para que cualquiera pueda verificarlo.
+1. Cada Chance que entra en una Rifa Confirmada se convierte en una **opción** con un **número** correlativo dentro de la rifa y un **código alfanumérico** (p. ej. `K7Q2-M9XD`, sin caracteres confusos). El código sale de una sal secreta de la rifa: no se puede adivinar, y solo su dueño lo ve en **Mis tickets**.
+   Al pasar a **Rifa Cerrada** se congela la **lista pública de opciones** en un CSV (`opcion,codigo`), **sin datos de quién es cada opción**: nadie sabe qué opciones tienen los demás. Cualquiera puede descargarla desde el detalle de la rifa, y cada participante puede comprobar que sus códigos están en ella (botón "Verificar mis opciones" o buscando con Ctrl+F).
+2. La huella publicada es el **SHA-256 del archivo CSV** y se **publica antes de rifar**. Para comprobarla: `certutil -hashfile opciones-RF-XXXX.csv SHA256` (Windows) o `shasum -a 256 opciones-RF-XXXX.csv` (Mac/Linux).
+3. **Sorteo** (el acto técnico de elegir al ganador): cada Chance es una opción numerada. Antes de elegir, la lista completa de opciones se **mezcla al azar** ("se chocolatea", algoritmo Fisher–Yates), así las opciones de una misma persona no quedan juntas; después se elige **una posición** de la lista mezclada y gana la opción que está ahí.
+4. La mezcla y la elección salen de una **semilla aleatoria** (en la Fase 1, de una fuente verificable como Random.org firmado o una semilla comprometida de antemano) y de la **huella publicada**: cada paso usa SHA-256(semilla : huella : paso). Implementación: `assets/js/domain/sorteo.js`.
+5. Se publican la semilla, la opción ganadora y su posición en la lista mezclada: con la huella y la semilla, cualquiera puede repetir la mezcla y obtener el mismo ganador.
+
+```mermaid
+flowchart LR
+    A["Lista congelada<br/>1 opción por cada Chance"] --> B["Huella SHA-256<br/>publicada antes de rifar"]
+    B --> C["Semilla aleatoria"]
+    C --> D["Mezcla al azar<br/>(Fisher–Yates)"]
+    D --> E["Se elige 1 posición<br/>de la lista mezclada"]
+    E --> F(["Opción ganadora<br/>y su dueño"])
+```
 
 ### 7.9 Configuración por rifa (solo administradores)
 
@@ -857,17 +862,24 @@ export interface BilleteraService {
 
 ### 9.2 Modelo de datos (resumen)
 
+```mermaid
+erDiagram
+    users ||--|| wallets : "tiene"
+    wallets ||--o{ wallet_movements : "ledger inmutable"
+    users ||--o{ payments : "paga"
+    payments ||--|| invoices : "comprobante"
+    products ||--o{ raffles : "se rifa en"
+    raffles ||--o{ pledges : "compromisos (Chances retenidas)"
+    raffles ||--o{ tickets : "opciones (número + código)"
+    users ||--o{ pledges : "pone"
+    users ||--o{ tickets : "es dueño"
+    raffles ||--o| draws : "sorteo"
+    draws ||--|| winners : "ganador"
+    raffles ||--o{ raffle_status_history : "historial de estados"
+    raffles ||--o| author_links : "código de atribución (Fase 2)"
 ```
-users ─1:1─ wallets ─1:N─ wallet_movements (ledger inmutable)
-users ─1:N─ payments ─1:1─ invoices
-products ─1:N─ raffles ─1:N─ pledges (compromisos)
-                       ─1:N─ tickets
-                       ─1:1─ draws ─1:1─ winners
-                       ─1:N─ raffle_status_history
-raffles ─1:1─ author_links (código de atribución)        (Fase 2)
-idempotency_keys (operación, usuario, resultado)
-complaints (Libro de Reclamaciones) · audit_logs · terms_acceptances · recharge_packages
-```
+
+Además: `idempotency_keys` (operación, usuario, resultado) · `complaints` (Libro de Reclamaciones) · `audit_logs` · `terms_acceptances` · `recharge_packages`.
 
 Puntos técnicos obligatorios:
 - Toda operación de billetera dentro de una transacción con bloqueo de fila (`SELECT … FOR UPDATE`).

@@ -138,7 +138,7 @@ function accionesPorEstado(r, recargar) {
       acciones.push(['Ir a la cola de revisión', 'primary', url('adminRevision')]);
       break;
     case 'PROGRAMADA':
-      acciones.push(['Ejecutar sorteo', 'primary', url('adminSorteo', { codigo: r.codigo })]);
+      acciones.push(['Rifar (elegir ganador)', 'primary', url('adminSorteo', { codigo: r.codigo })]);
       acciones.push(['Cancelar por fuerza mayor', 'ghost', () => modalCancelarFuerzaMayor(r, recargar)]);
       break;
     case 'SORTEADA': case 'COMPRANDO': case 'EN_CAMINO':

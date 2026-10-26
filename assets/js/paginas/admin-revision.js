@@ -1,5 +1,5 @@
 // Admin · Cola de revisión (/admin/revision): rifas CERRADAS o EN_REVISION.
-// Aprobar y programar → PROGRAMADA (y sale de la cola) · Cancelar por fuerza mayor → CANCELADA con reembolso total.
+// Aprobar y anunciar la fecha → PROGRAMADA (y sale de la cola) · Cancelar por fuerza mayor → CANCELADA con reembolso total.
 import { listo } from '../layout.js';
 import { adminService } from '../services/index.js';
 import { url } from '../lib/rutas.js';
@@ -35,7 +35,7 @@ function item(r) {
         </ul>
       </div>
       <div class="admin-acciones">
-        <button type="button" class="btn btn-primary" data-programar="${esc(r.id)}">Aprobar y programar</button>
+        <button type="button" class="btn btn-primary" data-programar="${esc(r.id)}">Aprobar y anunciar la fecha</button>
         <button type="button" class="btn btn-ghost" data-cancelar="${esc(r.id)}">Cancelar por fuerza mayor</button>
       </div>
     </article>`;
