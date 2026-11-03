@@ -139,6 +139,9 @@ section { padding: var(--sp-56) 0; }
 @media (max-width: 520px) {
   /* En el diseño original, el padding móvil de .wrap reemplazaba al del hero (sin espacio superior) */
   .hero { padding: 0 var(--gutter-mobile); }
+  /* Los semicírculos del ticket sobresalen 17 px y el margen móvil es de 16 px: sin esto, la página se desplaza 1 px de lado.
+     El borde del hero coincide con el de la pantalla, así que el recorte no cambia lo que se ve. */
+  .hero { overflow-x: clip; }
   .buy { padding: var(--sp-22); }
   .destacada { padding-bottom: calc(var(--sp-24) + var(--size-control-sm) + var(--sp-18)); }   /* en celular los controles van en su propia fila */
   .destacada .destacada-detalle, .destacada .divider, .destacada .countdown, .destacada small:not(:first-of-type) { max-width: none; }
