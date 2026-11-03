@@ -232,11 +232,11 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 | 1 | Inicio | `/` | ✅ existe | — |
 | 2 | Listado de rifas | `/rifas` | Con resultados · vacío · filtro por estado · filtro por categoría | P1 |
 | 3 | Detalle público de rifa (enlace compartible) | `/r/[slug]` | Una variante por estado (§7.4) · visitante sin sesión · botón "Comprar opciones" que lleva a login/registro y **regresa a la misma rifa** · botón compartir | P1 |
-| 4 | Ganadores | `/ganadores` | Lista · vacío | P2 |
+| 4 | Ganadores | `/ganadores` | Lista · vacío | P2 (hecha) |
 | 5 | Cómo funciona | `/como-funciona` | Explicación paso a paso de Chances, estados de la rifa y cómo se elige al ganador | P1 |
-| 6 | Preguntas frecuentes | `/preguntas-frecuentes` | Acordeón | P2 |
-| 7 | Términos, privacidad, reglamento | `/legal/*` | Texto largo | P2 |
-| 8 | Libro de Reclamaciones | `/libro-de-reclamaciones` | Formulario · enviado | P2 |
+| 6 | Preguntas frecuentes | `/preguntas-frecuentes` | Acordeón | P2 (hecha) |
+| 7 | Términos, privacidad, reglamento | `/legal/*` | Texto largo | P2 (hecha) |
+| 8 | Libro de Reclamaciones | `/libro-de-reclamaciones` | Formulario · enviado | P2 (hecha) |
 
 ### Autenticación
 
@@ -245,7 +245,7 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 | 9 | Inicio de sesión | `/login` | ✅ existe · agregar estado de error | — |
 | 10 | Crear cuenta | `/registro` | ✅ existe · agregar errores por campo, DNI ya registrado, menor de edad | — |
 | 11 | Verificar correo / celular | `/verificar` | Ingresar código · código incorrecto · reenviar | P1 |
-| 12 | Recuperar contraseña | `/recuperar` | Solicitar · enlace enviado · nueva contraseña | P2 |
+| 12 | Recuperar contraseña | `/recuperar` | Solicitar · enlace enviado · nueva contraseña | P2 (hecha) |
 
 ### Usuario (con sesión)
 
@@ -257,7 +257,7 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 | 15 | Comprometer / comprar opciones | Modal desde detalle | Selector de cantidad · saldo insuficiente · confirmación · éxito | P1 |
 | 16 | Mis rifas | `/mis-rifas` | Pestañas: Armando · Abiertas · Finalizadas · vacío | P1 |
 | 17 | Mis tickets en una rifa | `/mis-rifas/[codigo]` | Opciones con número y código · Chances retenidas · descargar la lista pública (CSV) y verificar mis opciones | P2 (hecha) |
-| 18 | Perfil | `/perfil` | Datos (DNI enmascarado) · editar apodo | P2 |
+| 18 | Perfil | `/perfil` | Datos (DNI enmascarado) · editar apodo | P2 (hecha) |
 | 19 | Proponer rifa | `/crear-rifa` | Formulario: link del producto, foto/referencia, precio según la tienda, categoría · enviado | P3 |
 | 20 | Mis rifas propuestas | `/mis-propuestas` | Calentando (privada, con enlace para compartir y avance hacia el umbral) · armando (pública) · no se armó · descartada | P3 |
 
@@ -265,14 +265,14 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 
 | # | Pantalla | Ruta sugerida | Estados | Prioridad |
 |---|----------|---------------|---------|-----------|
-| 21 | Dashboard | `/admin` | Recaudado · retenido total · rifas por estado | P2 |
-| 22 | Productos | `/admin/productos` | Listado · crear/editar | P2 |
+| 21 | Dashboard | `/admin` | Recaudado · retenido total · rifas por estado | P2 (hecha) |
+| 22 | Productos | `/admin/productos` | Listado · crear (va a Nueva rifa) · editar título y precio | P2 (hecha) |
 | 23 | Rifas | `/admin/rifas` | Listado por estado · crear · publicar · configuración por rifa (§7.9) | P1 |
 | 24 | Cola de revisión | `/admin/revision` | Rifas cerradas por revisar · aprobar y anunciar la fecha en que se rifa · cancelar por fuerza mayor | P1 |
-| 25 | Rifar (elegir ganador) | `/admin/rifas/[codigo]/sorteo` | Snapshot + hash · ejecutar · resultado | P2 |
-| 25b | Compra y entrega | `/admin/rifas/[codigo]/entrega` | Registrar compra (datos y comprobante) · envío · entrega con DNI verificado y evidencia (§7.12) | P2 |
-| 25c | Categorías | `/admin/categorias` | Listado · crear/editar | P2 |
-| 26 | Usuarios | `/admin/usuarios` | Listado · detalle · ajuste de saldo con motivo | P2 |
+| 25 | Rifar (elegir ganador) | `/admin/sorteo/?codigo=` | Snapshot + hash · ejecutar · resultado | P2 (hecha) |
+| 25b | Compra y entrega | `/admin/entrega/?codigo=` | Registrar compra (datos y comprobante) · envío · entrega con DNI verificado y evidencia (§7.12) | P2 (hecha) |
+| 25c | Categorías | `/admin/categorias` | Listado · crear/editar | P2 (hecha) |
+| 26 | Usuarios | `/admin/usuarios` | Listado · detalle · ajuste de saldo con motivo | P2 (hecha) |
 | 27 | Moderar propuestas | `/admin/propuestas` | Propuestas que alcanzaron el umbral · aprobar (pasa a pública) · descartar con motivo · denuncias | P3 |
 
 ### Componente clave: tarjeta de rifa
@@ -954,7 +954,7 @@ Puntos técnicos obligatorios:
 - [x] Tokens de diseño y `components/ui` extraídos de las pantallas existentes
 - [x] Tipos de dominio (`src/domain`) y servicios mock (`src/services/mock`)
 - [x] Mockups P1 del inventario (sección 6)
-- [ ] Mockups P2 del inventario
+- [x] Mockups P2 del inventario
 - [ ] Documentos de `docs/semantica/` completos y revisados por negocio
 - [ ] Demo navegable del flujo completo: registro → recarga → comprometer → rifa abierta → ganador
 

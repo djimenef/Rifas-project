@@ -32,7 +32,7 @@ function bloqueEjecutar(r) {
         <li>Con la semilla y la huella, las opciones se mezclan al azar y se elige una posición de la lista mezclada.</li>
         <li>Se publican la semilla, la opción ganadora, su posición y el apodo de quien ganó.</li>
       </ol>
-      ${antes ? aviso('oro', '!', `La fecha anunciada es el <b>${esc(fechaHora(r.fechaSorteo))}</b>. En la Fase 0 puedes rifar antes para la demostración.`) : ''}
+      ${antes ? aviso('oro', '!', `En la Fase 0 puedes rifar antes de la fecha anunciada (<b>${esc(fechaHora(r.fechaSorteo))}</b>) para la demostración.`) : ''}
       <div class="admin-acciones"><button type="button" class="btn btn-primary" id="rifar">🎲 Rifar ahora</button></div>
     </section>`;
 }
