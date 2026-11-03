@@ -1,6 +1,6 @@
 # Opciones, lista pública y elección del ganador
 
-Cómo una Chance se convierte en una opción, cómo se publica la lista sin revelar de quién es cada opción, cómo cada persona verifica las suyas y cómo se elige al ganador. Especificación: README §7.8. Código: [`assets/js/domain/sorteo.js`](../../assets/js/domain/sorteo.js).
+Cómo una Chance se convierte en una opción, cómo se publica la lista sin revelar de quién es cada opción, cómo cada persona verifica las suyas y cómo se elige al ganador. Especificación: [`docs/semantica/04-sorteo.md`](../semantica/04-sorteo.md) (§7.8). Código: [`assets/js/domain/sorteo.js`](../../assets/js/domain/sorteo.js).
 
 ## 1. De Chance a opción
 

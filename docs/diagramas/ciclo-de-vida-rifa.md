@@ -1,7 +1,7 @@
 # Ciclo de vida de una rifa
 
 Lo que ve el público (estados visibles), cómo se mueven las Chances, el tiempo extra y las dos formas de cancelar.
-La especificación completa está en el README §7.4, §7.5 y §7.13.
+La especificación completa está en [`docs/semantica/03-rifas.md`](../semantica/03-rifas.md) (§7.4, §7.5 y §7.13).
 
 ## 1. Estados visibles
 
@@ -110,4 +110,4 @@ Cada estado interno se muestra al público con su estado visible.
 | Rifa Descartada | `NO_SE_ARMO`, `CANCELADA`, `DESCARTADA` |
 | *(no visible)* | `BORRADOR` |
 
-El diagrama de estados internos, con todas sus transiciones, está en el README §7.4.
+El diagrama de estados internos, con todas sus transiciones, está en [`docs/semantica/03-rifas.md`](../semantica/03-rifas.md) (§7.4).

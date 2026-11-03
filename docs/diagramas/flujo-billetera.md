@@ -1,6 +1,6 @@
 # Flujo de la billetera
 
-Dónde está cada Chance en todo momento (README §7.7 y §7.10). Cada flecha es un **movimiento** inmutable del historial; el saldo siempre es la suma de los movimientos.
+Dónde está cada Chance en todo momento ([`docs/semantica/02-billetera.md`](../semantica/02-billetera.md), §7.7 y §7.10). Cada flecha es un **movimiento** inmutable del historial; el saldo siempre es la suma de los movimientos.
 
 ```mermaid
 flowchart LR

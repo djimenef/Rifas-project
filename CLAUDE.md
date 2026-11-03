@@ -11,7 +11,7 @@ Plataforma web de rifas a demanda (Perú, soles). Los participantes se registran
 ## Fuentes de verdad (en este orden)
 
 1. **Pantallas ya construidas en el repo** (inicio, login, registro): fuente de verdad **visual**.
-2. **`README.md`**: fuente de verdad **funcional**. Sección 6 = inventario de pantallas; sección 7 = semántica (estados, acciones, reglas); sección 8 = tipos y datos de ejemplo.
+2. **`README.md`** y **`docs/semantica/`**: fuente de verdad **funcional**. README sección 6 = inventario de pantallas (lo construido, en `docs/pantallas/inventario.md`); sección 7 = resumen de la semántica, cuyo detalle (estados, acciones, reglas, con los mismos números §7.x) vive en `docs/semantica/`; sección 8 = tipos y datos de ejemplo.
 3. **`PROMPT-FASE0.md`**: plan de trabajo paso a paso de la Fase 0.
 
 Si algo no está definido en estas fuentes, **pregunta** antes de inventar. Si encuentras una contradicción entre ellas, detente y repórtala.
