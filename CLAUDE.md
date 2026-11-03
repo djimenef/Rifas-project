@@ -57,6 +57,7 @@ Stack: HTML, CSS y JavaScript estáticos con módulos ES, sin dependencias. Los 
 
 Catálogo de componentes: http://localhost:8000/dev/componentes/
 Pruebas de reglas de negocio (servicios mock): http://localhost:8000/dev/pruebas/ — al terminar restauran los datos de ejemplo.
+Revisión de rutas (todas las pantallas con su rol, a 1280 y 360 px, y enlaces internos): http://localhost:8000/dev/rutas/
 
 ## Panel de administración (`/admin/*`)
 

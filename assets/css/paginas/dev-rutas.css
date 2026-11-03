@@ -1,0 +1,14 @@
+/* Revisión de rutas (desarrollo): estilos propios. Todo sale de los tokens. */
+main { padding: var(--sp-40) 0; }
+h1 { font-size: var(--fs-h2); letter-spacing: var(--ls-tight); margin: 0 0 var(--sp-8); }
+h2 { font-size: var(--fs-lg); margin: var(--sp-32) 0 var(--sp-8); }
+.aviso { color: var(--muted); margin: 0 0 var(--sp-24); }
+#resumen { font-weight: var(--fw-bold); font-size: var(--fs-md); margin: 0 0 var(--sp-16); }
+.tabla-scroll { overflow-x: auto; }
+.revision { width: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+.revision th, .revision td { padding: var(--sp-8) var(--sp-12); text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+.revision .ok { color: var(--ok); font-weight: var(--fw-bold); }
+.revision .falla { color: var(--error); font-weight: var(--fw-bold); }
+/* El marco donde se abre cada pantalla queda fuera de la vista: solo sirve para medirla. */
+.marco { position: fixed; left: 0; top: 0; height: 900px; overflow: hidden; opacity: 0; pointer-events: none; }
+.marco iframe { height: 900px; border: 0; }

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DaleChance · Revisión de rutas</title>
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/paginas/dev-rutas.css">
+</head>
+<body>
+<main>
+  <div class="wrap">
+    <h1>Revisión de rutas</h1>
+    <p class="aviso">Abre cada pantalla del mapa de rutas con el rol que pide, a 1280 px y a 360 px, y revisa: errores de JavaScript, secciones con error, marcadores "En construcción", desborde horizontal y enlaces internos rotos. Al terminar, restaura los datos de ejemplo y cierra la sesión.</p>
+    <p id="resumen" role="status">Preparando…</p>
+    <div class="tabla-scroll">
+      <table class="revision">
+        <thead><tr><th scope="col">Pantalla</th><th scope="col">Rol</th><th scope="col">1280 px</th><th scope="col">360 px</th><th scope="col">Detalle</th></tr></thead>
+        <tbody id="filas"></tbody>
+      </table>
+    </div>
+    <h2>Enlaces internos</h2>
+    <p id="enlaces">—</p>
+    <div class="marco" aria-hidden="true"><iframe id="marco" title="Pantalla en revisión" tabindex="-1"></iframe></div>
+  </div>
+</main>
+
+<script type="module" src="../../assets/js/paginas/dev-rutas.js"></script>
+</body>
+</html>

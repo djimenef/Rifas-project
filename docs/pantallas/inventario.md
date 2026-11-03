@@ -66,6 +66,7 @@ Pantallas construidas como mockups navegables, con su ruta, quién puede entrar 
 |--------|------|----------|
 | Catálogo de componentes | `/dev/componentes/` | Componentes compartidos en todos sus estados |
 | Pruebas de reglas de negocio | `/dev/pruebas/` | Ejecuta los servicios mock contra las reglas de la semántica; al terminar restaura los datos de ejemplo |
+| Revisión de rutas | `/dev/rutas/` | Abre cada ruta con su rol a 1280 px y 360 px; revisa errores de JavaScript, secciones con error, "En construcción", desborde horizontal y enlaces internos rotos; al terminar restaura los datos y cierra la sesión |
 
 ## Capturas
 
