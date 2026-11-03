@@ -6,6 +6,8 @@
 //   participante sin movimientos → carlos@dalechance.pe / demo123
 
 export const CODIGO_VERIFICACION_DEMO = '123456';
+/** Fase 0: token del enlace "Crear una contraseña nueva" que se "envía" por correo. */
+export const TOKEN_RECUPERACION_DEMO = 'demo';
 
 export const usuariosMock = [
   {

@@ -1,5 +1,5 @@
 // Pruebas de reglas de negocio (desarrollo).
-import { authService, billeteraService, rifasService, adminService, nuevaClaveIdempotencia } from '../services/index.js';
+import { authService, billeteraService, rifasService, adminService, reclamosService, nuevaClaveIdempotencia } from '../services/index.js';
 import { reiniciarDatos, configurarLatencia, leerAhora } from '../services/mock/db.js';
 import { ESTADOS_RIFA } from '../domain/rifa.js';
 import { TIPOS_MOVIMIENTO } from '../domain/billetera.js';
@@ -472,6 +472,39 @@ await prueba('Google (simulado): inicia sesión sin scripts externos', async () 
   const s = await authService.iniciarSesionConGoogle();
   esperar(s.usuario.id === 'u-lucia', 'google');
   await authService.cerrarSesion();
+});
+
+await prueba('Recuperar contraseña: misma respuesta exista o no la cuenta; el enlace sirve una sola vez', async () => {
+  await esperarError(authService.solicitarRecuperacion('no-es-correo'), 'VALIDACION');
+  await authService.solicitarRecuperacion('nadie@correo.pe');
+  await esperarError(authService.restablecerContrasena('demo', 'nueva123', 'nueva123'), 'ENLACE_INVALIDO');
+  await authService.solicitarRecuperacion('CARLOS@dalechance.pe');
+  const e = await esperarError(authService.restablecerContrasena('demo', 'abc', 'otra'), 'VALIDACION');
+  esperar(e.campos.contrasena && e.campos.confirmacionContrasena, JSON.stringify(e.campos));
+  await authService.restablecerContrasena('demo', 'nueva123', 'nueva123');
+  await esperarError(authService.restablecerContrasena('demo', 'otra123', 'otra123'), 'ENLACE_INVALIDO');
+  await esperarError(entrar('carlos@dalechance.pe'), 'CREDENCIALES_INVALIDAS');
+  esperar((await entrar('carlos@dalechance.pe', 'nueva123')).usuario.apodo === 'carlos_r', 'login con la nueva');
+});
+await prueba('Perfil: cambiar apodo valida formato y que no esté en uso', async () => {
+  await esperarError(authService.cambiarApodo('a b'), 'VALIDACION');
+  await esperarError(authService.cambiarApodo('LUCIA_Q'), 'APODO_EN_USO');
+  const u = await authService.cambiarApodo('carlitos.r');
+  esperar(u.apodo === 'carlitos.r' && !('dni' in u), JSON.stringify(u));
+  esperar((await authService.cambiarApodo('carlitos.r')).apodo === 'carlitos.r', 'mantener el mismo apodo');
+  await authService.cerrarSesion();
+  await esperarError(authService.cambiarApodo('otro_apodo'), 'SIN_SESION');
+});
+await prueba('Libro de Reclamaciones: valida campos y numera las hojas con plazo de 15 días hábiles', async () => {
+  const base = { nombres: 'Rosa', apellidos: 'Paz', tipoDocumento: 'DNI', numeroDocumento: '41234567', domicilio: 'Av. Lima 123, Lima', celular: '987000111',
+    correo: 'rosa@correo.pe', tipoBien: 'SERVICIO', descripcionBien: 'Recarga de 20 Chances', tipo: 'RECLAMO', detalle: 'No se acreditó', pedido: 'Acreditar', aceptaRespuestaCorreo: true };
+  const e = await esperarError(reclamosService.registrar({ ...base, numeroDocumento: '12', esMenor: true, detalle: '', aceptaRespuestaCorreo: false }), 'VALIDACION');
+  esperar(e.campos.numeroDocumento && e.campos.apoderado && e.campos.detalle && e.campos.aceptaRespuestaCorreo, JSON.stringify(e.campos));
+  const h1 = await reclamosService.registrar(base);
+  const h2 = await reclamosService.registrar({ ...base, tipo: 'QUEJA', montoReclamado: '' });
+  esperar(/^LR-\d{4}-000001$/.test(h1.numero) && h2.numero.endsWith('000002') && h2.tipo === 'QUEJA', h1.numero + ' ' + h2.numero);
+  const habiles = (desde, hasta) => { let n = 0; const f = new Date(desde); while (f < new Date(hasta)) { f.setDate(f.getDate() + 1); if (f.getDay() % 6) n++; } return n; };
+  esperar(habiles(h1.fecha, h1.respuestaHasta) === 15 && new Date(h1.respuestaHasta).getDay() % 6 !== 0, h1.respuestaHasta);
 });
 
 // --- Restaurar ---

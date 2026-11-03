@@ -5,7 +5,7 @@ import { usuariosMock } from './usuarios.js';
 import { rifasMock } from './rifas.js';
 import { recargasMock, movimientosMock, compromisosMock, ticketsMock } from './participaciones.js';
 
-export const VERSION_DATOS = 8;   // súbela si cambia la forma de los datos: el navegador vuelve a los de ejemplo
+export const VERSION_DATOS = 9;   // súbela si cambia la forma de los datos: el navegador vuelve a los de ejemplo
 
 /** @param {number} ahora milisegundos */
 export function crearSemilla(ahora = Date.now()) {
@@ -23,7 +23,9 @@ export function crearSemilla(ahora = Date.now()) {
     movimientos: movimientosMock(t),
     compromisos: compromisosMock(t),
     tickets: ticketsMock(),
+    recuperaciones: [],
+    reclamos: [],
     idempotencia: {},
-    secuencias: { operacion: 500 },
+    secuencias: { operacion: 500, reclamo: 0 },
   };
 }

@@ -20,9 +20,14 @@
  * @property {() => Promise<Sesion|null>} sesionActual   Sin latencia: se usa para dibujar el header.
  * @property {(correo: string) => Promise<void>} solicitarRecuperacion
  *   Responde igual exista o no la cuenta (no revela qué correos están registrados).
+ *   Si la cuenta existe, "envía" un enlace con un token para crear una contraseña nueva.
+ * @property {(token: string, contrasena: string, confirmacionContrasena: string) => Promise<void>} restablecerContrasena
+ *   Errores: ENLACE_INVALIDO (no existe, ya se usó o venció), VALIDACION (con `campos`).
+ * @property {(apodo: string) => Promise<Usuario>} cambiarApodo
+ *   Errores: SIN_SESION, VALIDACION (con `campos`), APODO_EN_USO.
  */
 
 export const METODOS_AUTH = Object.freeze([
   'registrar', 'iniciarSesion', 'iniciarSesionConGoogle', 'cerrarSesion',
-  'verificarCodigo', 'reenviarCodigo', 'sesionActual', 'solicitarRecuperacion',
+  'verificarCodigo', 'reenviarCodigo', 'sesionActual', 'solicitarRecuperacion', 'restablecerContrasena', 'cambiarApodo',
 ]);

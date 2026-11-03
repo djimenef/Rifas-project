@@ -83,6 +83,15 @@ export function url(id, parametros = {}) {
   return ruta(r.archivo) + (query ? '?' + query : '');
 }
 
+/**
+ * Arma los enlaces internos escritos en el HTML como <a data-enlace="<id>" data-ancla="#seccion">.
+ * El href relativo del HTML queda como respaldo; aquí se reemplaza por el del mapa de rutas.
+ * @param {ParentNode} [raiz]
+ */
+export function enlazarRutas(raiz = document) {
+  raiz.querySelectorAll('a[data-enlace]').forEach(a => { a.href = url(a.dataset.enlace) + (a.dataset.ancla ?? ''); });
+}
+
 /** Ruta actual (camino + parámetros), para usarla como ?volver=. */
 export const rutaActual = () => location.pathname + location.search;
 
