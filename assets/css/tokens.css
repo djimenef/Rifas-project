@@ -150,6 +150,7 @@
   --size-control-sm: 36px;
   --size-icon: 28px;
   --size-icon-sm: 22px;
+  --size-thumb: 64px;          /* miniatura de producto (lo leído del link, propuestas) */
 
   /* --- Estados de rifa (badge): fondo y texto ---
      Salen solo de la paleta existente. */

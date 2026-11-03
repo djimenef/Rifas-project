@@ -10,15 +10,27 @@
   <link rel="stylesheet" href="../assets/css/tokens.css">
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/paginas/mis-propuestas.css">
 </head>
 <body data-ruta="misPropuestas">
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <div class="wrap pagina">
+    <div class="propuestas-titulo">
+      <div>
+        <h1 class="pagina-titulo">Mis rifas propuestas</h1>
+        <p class="pagina-sub">Las rifas que sugeriste. Comparte el enlace de cada Rifa Sugerida para juntar el apoyo mínimo.</p>
+      </div>
+      <a class="btn btn-primary" data-enlace="crearRifa" href="../crear-rifa/">+ Proponer rifa</a>
+    </div>
+    <div id="propuestas"></div>
+  </div>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../assets/js/paginas/mis-propuestas.js"></script>
 </body>
 </html>

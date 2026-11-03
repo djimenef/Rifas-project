@@ -258,8 +258,8 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 | 16 | Mis rifas | `/mis-rifas` | Pestañas: Armando · Abiertas · Finalizadas · vacío | P1 |
 | 17 | Mis tickets en una rifa | `/mis-rifas/[codigo]` | Opciones con número y código · Chances retenidas · descargar la lista pública (CSV) y verificar mis opciones | P2 (hecha) |
 | 18 | Perfil | `/perfil` | Datos (DNI enmascarado) · editar apodo | P2 (hecha) |
-| 19 | Proponer rifa | `/crear-rifa` | Formulario: link del producto, foto/referencia, precio según la tienda, categoría · enviado | P3 |
-| 20 | Mis rifas propuestas | `/mis-propuestas` | Calentando (privada, con enlace para compartir y avance hacia el umbral) · armando (pública) · no se armó · descartada | P3 |
+| 19 | Proponer rifa | `/crear-rifa` | Formulario: link del producto, foto/referencia, precio según la tienda, categoría · link en revisión · enviado | P3 (hecha) |
+| 20 | Mis rifas propuestas | `/mis-propuestas` | Calentando (privada, con enlace para compartir y avance hacia el umbral) · armando (pública) · no se armó · descartada | P3 (hecha) |
 
 ### Administración
 
@@ -273,7 +273,7 @@ Estructura propuesta. Las carpetas marcadas con *(Fase 1)* se crean cuando empie
 | 25b | Compra y entrega | `/admin/entrega/?codigo=` | Registrar compra (datos y comprobante) · envío · entrega con DNI verificado y evidencia (§7.12) | P2 (hecha) |
 | 25c | Categorías | `/admin/categorias` | Listado · crear/editar | P2 (hecha) |
 | 26 | Usuarios | `/admin/usuarios` | Listado · detalle · ajuste de saldo con motivo | P2 (hecha) |
-| 27 | Moderar propuestas | `/admin/propuestas` | Propuestas que alcanzaron el umbral · aprobar (pasa a pública) · descartar con motivo · denuncias | P3 |
+| 27 | Moderar propuestas | `/admin/propuestas` | Links en revisión (validar, reemplazar o rechazar) · propuestas que alcanzaron el umbral · aprobar (pasa a pública) · descartar con motivo · denuncias (pendiente de definir) | P3 (hecha, sin denuncias) |
 
 ### Componente clave: tarjeta de rifa
 

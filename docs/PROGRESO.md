@@ -7,11 +7,11 @@
 
 | | |
 |---|---|
-| **Paso actual** | **Paso 5 (pantallas P2) terminado** en `feature/paso5-pantallas-p2`, **pendiente de Pull Request** hacia `main`. Siguiente: **Paso 6 (pantallas P3)**. |
-| **Rama en curso** | `feature/paso5-pantallas-p2` (trabajada por David, publicada en GitHub). No hay cambios sin subir. |
-| **Revisión** | Se abre el PR hacia `main` cuando se pida y lo revisa la otra persona del equipo. Después del merge, el Paso 6 empieza en `feature/paso6-pantallas-p3` desde `main` actualizado. |
-| **Para continuar** | `git pull` en `main` → revisar el PR del Paso 5 → merge → crear `feature/paso6-pantallas-p3`. |
-| **Última actualización** | 2026-11-03 (cierre del Paso 5: **59/59 pruebas**) |
+| **Paso actual** | **Paso 6 (pantallas P3) terminado** en `feature/paso6-pantallas-p3`. El Paso 5 sigue en revisión (PR #8). Siguiente: **Paso 7 (documentación semántica)**. |
+| **Rama en curso** | `feature/paso6-pantallas-p3` (David), **apilada sobre `feature/paso5-pantallas-p2`** porque el PR #8 aún no se fusiona (decisión del equipo, 03/11/2026). |
+| **Revisión** | PR #8 (Paso 5) abierto. El PR del Paso 6 se abre hacia `main` **después** de fusionar el #8 (así solo muestra los cambios del Paso 6); lo revisa la otra persona del equipo. |
+| **Para continuar** | Revisar y fusionar el PR #8 → abrir el PR del Paso 6 → `git pull` en `main` → crear `docs/semantica` para el Paso 7. |
+| **Última actualización** | 2026-11-03 (cierre del Paso 6: **59/59 pruebas**) |
 
 > **Excepción temporal (23/10/2026):** el PR #4 (Fase 0, Pasos 0–3) se fusionó en `main` **sin la revisión del compañero**, por acuerdo del equipo. David puede revisar la Fase 0 directamente en `main`. A partir del Paso 4 vuelve la regla normal: todo PR lo revisa la otra persona.
 
@@ -57,11 +57,28 @@
 | 5 | Servicios: recuperar contraseña, cambiar apodo y Libro de Reclamaciones (`ReclamosService`) | `0ef3739` |
 | 5 | Público: ganadores, preguntas frecuentes, legales, Libro de Reclamaciones, recuperar y perfil | `c887c70` |
 | 5 | Admin: dashboard, sorteos, rifar, compras y entregas, productos, categorías y usuarios | `04fd88d` |
-| 5 | Cierre del Paso 5: esta bitácora, inventario del README y doble punto tras la hora en textos de fecha | el commit que agregó esta fila |
+| 5 | Cierre del Paso 5: esta bitácora, inventario del README y doble punto tras la hora en textos de fecha | `f15c201` |
+| 6 | Proponer rifa, Mis rifas propuestas y Admin · Propuestas (validar, reemplazar o rechazar link; aprobar o descartar); esta bitácora | el commit que agregó esta fila |
 
 Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos revisados en Chrome a 1280 px y 360 px (visitante → login → regresa con el modal abierto → poner Chances; saldo insuficiente → recargar → volver; recarga con éxito y rechazo; verificar con código incorrecto y correcto; admin: aporte simulado → rifa confirmada → cerrar → aprobar y programar; crear borrador).
 
 Verificación al cierre del Paso 5: **59/59 pruebas** en `dev/pruebas/`; todas las rutas del mapa cargan sin errores de JavaScript con el rol que piden (solo Proponer rifa, Mis propuestas y Admin · Propuestas siguen "En construcción", son P3); pantallas P2 sin desborde horizontal a 360 px; flujo admin revisado en Chrome a 1280 px: Sorteos → Rifar ahora (confirmación → resultado con semilla, posición y ganador) → Registrar compra y entrega.
+
+Verificación al cierre del Paso 6: **59/59 pruebas** en `dev/pruebas/` (los servicios de propuestas ya tenían sus pruebas desde el Paso 2); las 3 pantallas sin desborde horizontal a 360 px y 768 px; flujos revisados en Chrome a 1280 px: link acortado → aviso "Link en revisión" → enviado en Validando producto; límite de propuestas activas; link confiable → título y precio leídos → mínimo del autor y saldo insuficiente → Rifa Sugerida con enlace para copiar; admin: reemplazar link (rechaza tienda no confiable) → aprobar propuesta (rechaza margen inválido) → rechazar sin motivo y con motivo → lista vacía.
+
+### Paso 6: qué se construyó
+
+| Pantalla | Ruta | Estados |
+|----------|------|---------|
+| Proponer rifa | `/crear-rifa` | Pegar link → leído (imagen de referencia, título y precio, tienda confiable) · **Link en revisión** (acortado, tienda desconocida o sin datos: se envía sin Chances) · errores por campo (link, categoría, nombre, precio fuera de rango, mínimo del autor, saldo) · límite de propuestas activas · cuenta sin verificar · enviado (Rifa Sugerida con enlace para copiar, o Validando producto) |
+| Mis rifas propuestas | `/mis-propuestas` | Rifa Sugerida (privada, enlace para copiar, avance hacia el apoyo mínimo en %, personas que faltan y tiempo restante) · Validando producto (link o moderación) · pública (Armándose / Confirmada) · no se armó · descartada con motivo · vacío |
+| Admin · Propuestas | `/admin/propuestas/?estado=&q=` | Tabla con filtro (link en revisión · en moderación) y búsqueda · **Validar link**: aprobar, **reemplazar** por un link equivalente de tienda confiable o rechazar con motivo · **Moderar**: aprobar fijando el margen (→ Rifa Armándose) o descartar con motivo · vacío. "Ver detalle" abre Admin · Rifas, que ahora también tiene estas dos acciones |
+
+**Decisiones del Paso 6**
+- La rama del Paso 6 sale de la del Paso 5 (apilada) porque el PR #8 sigue abierto; su PR se abre después del merge del #8.
+- La "imagen" leída del link es el ícono de referencia del mock (la lectura simulada no trae foto); en la Fase 1 será la foto real.
+- El participante ve su avance hacia el apoyo mínimo **solo en % y personas**: el umbral, la meta y el margen siguen siendo internos.
+- Compartir enlace pasó a `components/compartir.js` (lo usan el detalle de rifa, Proponer rifa y Mis propuestas). Los modales de validar link y moderar viven en `components/admin-rifas.js`. Nuevo token `--size-thumb`.
 
 ### Paso 5: qué se construyó
 
@@ -113,13 +130,16 @@ Verificación al cierre del Paso 5: **59/59 pruebas** en `dev/pruebas/`; todas l
 
 ## Sigue
 
-1. **Pull Request del Paso 5** hacia `main` con la plantilla (cuando se pida); lo revisa la otra persona del equipo.
-2. **Paso 6 — Pantallas P3** (ver `PROMPT-FASE0.md`): Proponer rifa, Mis rifas propuestas y Admin · Moderar propuestas, en `feature/paso6-pantallas-p3` desde `main` actualizado.
+1. **Revisión y merge del PR #8 (Paso 5)**; luego el PR del Paso 6 hacia `main` (cuando se pida).
+2. **Paso 7 — Documentación semántica** (ver `PROMPT-FASE0.md`): dividir README §7 en `docs/semantica/` y crear `docs/pantallas/inventario.md`.
+3. **Paso 8 — Verificación final.**
 
 ### Pendientes anotados
 - **Header con sesión a 360 px:** con barra de desplazamiento visible, el header de participante desborda unos 5 px (saldo + botón de usuario). En móviles reales la barra no ocupa espacio; revisar si hace falta ajustarlo.
 - **Toast detrás del modal:** el aviso "¡Listo!" queda detrás del fondo del modal abierto; el modal ya muestra el éxito, así que no se pierde información.
 - **Textos legales:** son borradores; necesitan revisión legal antes de cualquier lanzamiento.
+- **Denuncias de propuestas:** README §6 #27 menciona "denuncias" en Moderar propuestas, pero no hay contrato ni regla definida (quién denuncia, qué efecto tiene). No se construyó; definir antes de implementarlo.
+- **`paginas/en-construccion.js`** ya no lo usa ninguna pantalla. Se conserva (no se borran archivos sin preguntar); decidir si se elimina.
 
 ## Traspaso: cómo arrancar el Paso 4 (David)
 
