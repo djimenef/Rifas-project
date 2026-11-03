@@ -1,0 +1,12 @@
+/* Preguntas frecuentes: estilos propios. El acordeón (.faq) vive en components.css. Todo sale de los tokens. */
+.preguntas .pagina-titulo, .preguntas .pagina-sub { max-width: 760px; margin-left: auto; margin-right: auto; }
+.preguntas-temas { max-width: 760px; margin: 0 auto var(--sp-32); display: flex; flex-wrap: wrap; gap: var(--sp-8); }
+.preguntas-temas a {
+  padding: var(--sp-6) var(--sp-14); border-radius: var(--radius-pill); border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font-size: var(--fs-small); font-weight: var(--fw-medium); text-decoration: none;
+}
+.preguntas-temas a:hover { border-color: var(--accent); }
+.preguntas-temas a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.preguntas-grupo { scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
+.preguntas-grupo + .preguntas-grupo { margin-top: var(--sp-40); }
+.preguntas-grupo h2 { max-width: 760px; margin: 0 auto var(--sp-14); font-size: var(--fs-xl); }

@@ -134,6 +134,35 @@ select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(-
 .aviso-oro { background: color-mix(in srgb, var(--gold) 14%, var(--surface)); }
 .aviso-error { background: color-mix(in srgb, var(--error) 12%, var(--surface)); }
 
+/* --- Preguntas en acordeón (extraídas tal cual de la página de inicio) --- */
+.faq { max-width: 760px; margin: 0 auto; display: grid; gap: var(--sp-10); }
+.faq details { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-14); padding: var(--sp-18) var(--sp-22); }
+.faq summary { cursor: pointer; font-weight: var(--fw-semibold); }
+.faq details p { color: var(--muted); margin: var(--sp-10) 0 0; }
+
+/* --- Texto legal largo (Términos, Privacidad, Reglamento) --- */
+.legal { max-width: 760px; }
+.legal-meta { margin: 0 0 var(--sp-20); color: var(--muted); font-size: var(--fs-small); }
+.legal .aviso { margin-bottom: var(--sp-24); }
+.legal-indice { margin: 0 0 var(--sp-32); padding: var(--sp-20) var(--sp-24); }
+.legal-indice h2 { margin: 0 0 var(--sp-10); font-size: var(--fs-md); }
+.legal-indice ol { margin: 0; padding-left: var(--sp-20); columns: 2; column-gap: var(--sp-32); }
+.legal-indice li { padding: var(--sp-4) 0; break-inside: avoid; }
+.legal-indice a { color: var(--text); text-decoration: none; }
+.legal-indice a:hover { color: var(--accent); text-decoration: underline; }
+.legal-indice a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.legal section { scroll-margin-top: calc(var(--header-h) + var(--sp-16)); }
+.legal section + section { margin-top: var(--sp-32); }
+.legal h2 { margin: 0 0 var(--sp-10); font-size: var(--fs-xl); }
+.legal p, .legal li { color: var(--muted); line-height: var(--lh-body); }
+.legal p { margin: 0 0 var(--sp-10); }
+.legal ul { margin: 0 0 var(--sp-10); padding-left: var(--sp-20); display: grid; gap: var(--sp-6); }
+.legal b { color: var(--text); }
+.legal-pendiente { padding: var(--sp-4) var(--sp-8); border-radius: var(--radius-12); background: color-mix(in srgb, var(--gold) 14%, var(--surface)); color: var(--text); }
+@media (max-width: 620px) {
+  .legal-indice ol { columns: 1; }
+}
+
 /* --- Lista de datos (etiqueta · valor) --- */
 .datos { display: grid; gap: 0; margin: 0; }
 .datos > div { display: flex; justify-content: space-between; gap: var(--sp-16); padding: var(--sp-10) 0; border-bottom: 1px dashed var(--border); }

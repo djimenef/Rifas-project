@@ -1,0 +1,22 @@
+/* Ganadores: estilos propios. Todo sale de los tokens. */
+.ganadores { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-20); }
+.ganador { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.ganador-img { height: 150px; display: grid; place-items: center; background: var(--foto-fondo); padding: var(--sp-10); font-size: var(--fs-ilustracion); }
+.ganador-img img { width: 100%; height: 100%; object-fit: contain; }
+.ganador-cuerpo { padding: var(--sp-22); display: grid; gap: var(--sp-10); flex: 1; align-content: start; }
+.ganador-cuerpo h2 { margin: 0; font-size: var(--fs-xl); }
+.ganador-cuerpo h2 a { color: inherit; text-decoration: none; }
+.ganador-cuerpo h2 a:hover { text-decoration: underline; }
+.ganador-cuerpo h2 a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.ganador-categoria { margin: 0; color: var(--muted); font-size: var(--fs-sm); }
+.ganador-apodo { margin: 0; font-size: var(--fs-lg); }
+.ganador-premio { margin: 0; color: var(--muted); font-size: var(--fs-small); }
+.ganador-pie { display: flex; flex-wrap: wrap; gap: var(--sp-10); align-items: center; justify-content: space-between; }
+.ganador-id { margin: 0; color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+
+@media (max-width: 1000px) {
+  .ganadores { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 620px) {
+  .ganadores { grid-template-columns: 1fr; }
+}

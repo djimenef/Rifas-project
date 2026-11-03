@@ -12,6 +12,7 @@ export const MENSAJES_ERROR = Object.freeze({
   MENOR_DE_EDAD: 'Debes ser mayor de 18 años para registrarte.',
   CREDENCIALES_INVALIDAS: 'El correo, DNI o contraseña no son correctos.',
   CODIGO_INCORRECTO: 'El código no es correcto. Revísalo e inténtalo de nuevo.',
+  ENLACE_INVALIDO: 'El enlace no es válido o ya venció. Pide uno nuevo.',
   CUENTA_NO_VERIFICADA: 'Primero verifica tu cuenta.',
   SALDO_INSUFICIENTE: 'No tienes Chances suficientes. Recarga para continuar.',
   ESTADO_NO_ACEPTA_PUNTOS: 'Esta rifa no está recibiendo Chances en este momento.',

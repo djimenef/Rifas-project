@@ -59,6 +59,7 @@
 .tabla-rifa a { color: var(--text); font-weight: var(--fw-semibold); text-decoration: none; }
 .tabla-rifa a:hover { text-decoration: underline; }
 .tabla-rifa a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.tabla-rifa .tabla-nombre { color: var(--text); font-weight: var(--fw-semibold); }
 .tabla-rifa small { display: block; color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
 .tabla-acciones { display: flex; gap: var(--sp-6); justify-content: flex-end; flex-wrap: wrap; }
 .tabla .btn-sm { padding: var(--sp-6) var(--sp-12); font-size: var(--fs-label); box-shadow: none; white-space: nowrap; }
@@ -81,6 +82,11 @@
 .admin-form .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-12); align-items: start; }
 .admin-form .check { display: flex; gap: var(--sp-8); align-items: center; font-weight: var(--fw-regular); }
 .admin-form-acciones { display: flex; gap: var(--sp-12); flex-wrap: wrap; }
+
+/* --- Grupo de opciones dentro de un modal del panel --- */
+.ajuste-tipo { border: 0; margin: 0; padding: 0; display: flex; gap: var(--sp-16); flex-wrap: wrap; min-width: 0; }
+.ajuste-tipo legend { padding: 0; margin-bottom: var(--sp-6); font-size: var(--fs-label); font-weight: var(--fw-semibold); }
+.ajuste-tipo .check { display: flex; gap: var(--sp-8); align-items: center; font-weight: var(--fw-regular); }
 
 /* --- Cola de revisión --- */
 .cola { display: grid; gap: var(--sp-16); }

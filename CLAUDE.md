@@ -98,7 +98,7 @@ Regla desde el Paso 3 en adelante:
 │       ├── domain/               tipos (JSDoc) y reglas puras del negocio
 │       ├── services/
 │       │   ├── index.js          ÚNICO punto que importan las pantallas
-│       │   ├── interfaces/       contratos (auth, billetera, rifas, admin)
+│       │   ├── interfaces/       contratos (auth, billetera, rifas, admin, reclamos)
 │       │   └── mock/             implementación Fase 0 (motor.js = reglas, db.js = persistencia)
 │       ├── mocks/                datos falsos; solo los lee services/mock
 │       └── lib/                  utilidades: rutas.js (MAPA DE RUTAS y acceso), formato, ids, hash, html, demo

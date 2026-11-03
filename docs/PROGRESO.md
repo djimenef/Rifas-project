@@ -7,11 +7,11 @@
 
 | | |
 |---|---|
-| **Paso actual** | Paso 4 (pantallas P1) **fusionado en `main`** (PR #5). Ajustes de Inicio, estados y opciones en `feature/ajustes-inicio-y-estados`, **pendiente de Pull Request** hacia `main`. Siguiente: **Paso 5 (pantallas P2)**. |
-| **Rama en curso** | `feature/ajustes-inicio-y-estados` (publicada en GitHub; trabajada por elagrioagrio). No hay cambios sin subir. |
-| **Revisión** | Se abre el PR hacia `main` y lo revisa **David**. Después del merge, el Paso 5 empieza en una rama nueva desde `main` actualizado (`feature/paso5-pantallas-p2`). |
-| **Para continuar (David)** | `git pull` en `main` → revisar el PR de esta rama → merge → crear `feature/paso5-pantallas-p2`. Si hay que seguir en esta misma rama antes del merge: `git switch feature/ajustes-inicio-y-estados` + `git pull` (una sola persona por rama a la vez). |
-| **Última actualización** | 2026-10-23 (ajustes de Inicio, estados y opciones: **56/56 pruebas**) |
+| **Paso actual** | **Paso 5 (pantallas P2) terminado** en `feature/paso5-pantallas-p2`, **pendiente de Pull Request** hacia `main`. Siguiente: **Paso 6 (pantallas P3)**. |
+| **Rama en curso** | `feature/paso5-pantallas-p2` (trabajada por David, publicada en GitHub). No hay cambios sin subir. |
+| **Revisión** | Se abre el PR hacia `main` cuando se pida y lo revisa la otra persona del equipo. Después del merge, el Paso 6 empieza en `feature/paso6-pantallas-p3` desde `main` actualizado. |
+| **Para continuar** | `git pull` en `main` → revisar el PR del Paso 5 → merge → crear `feature/paso6-pantallas-p3`. |
+| **Última actualización** | 2026-11-03 (cierre del Paso 5: **59/59 pruebas**) |
 
 > **Excepción temporal (23/10/2026):** el PR #4 (Fase 0, Pasos 0–3) se fusionó en `main` **sin la revisión del compañero**, por acuerdo del equipo. David puede revisar la Fase 0 directamente en `main`. A partir del Paso 4 vuelve la regla normal: todo PR lo revisa la otra persona.
 
@@ -52,9 +52,40 @@
 | Ajustes | Panel admin sin "sorteo" en textos visibles | `850881d` |
 | Ajustes | Sorteo con opciones mezcladas al azar (reproducible) | `c062e0e` |
 | Ajustes | Código por opción, lista pública anónima (CSV), Mis tickets y "Rifa en vivo" | `147425b` |
-| Docs | Diagramas en Mermaid: índice `docs/diagramas/README.md`, mapa de pantallas, opciones y transparencia, capas y modelo de datos del README; extensión recomendada en `.vscode/extensions.json` | el commit que agregó esta fila |
+| Docs | Diagramas en Mermaid: índice `docs/diagramas/README.md`, mapa de pantallas, opciones y transparencia, capas y modelo de datos del README; extensión recomendada en `.vscode/extensions.json` | `574e52a` |
+| Merge | PR #7 "Ajustes de Inicio y estados" fusionado en `main` | `2b1c8ad` |
+| 5 | Servicios: recuperar contraseña, cambiar apodo y Libro de Reclamaciones (`ReclamosService`) | `0ef3739` |
+| 5 | Público: ganadores, preguntas frecuentes, legales, Libro de Reclamaciones, recuperar y perfil | `c887c70` |
+| 5 | Admin: dashboard, sorteos, rifar, compras y entregas, productos, categorías y usuarios | `04fd88d` |
+| 5 | Cierre del Paso 5: esta bitácora, inventario del README y doble punto tras la hora en textos de fecha | el commit que agregó esta fila |
 
 Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos revisados en Chrome a 1280 px y 360 px (visitante → login → regresa con el modal abierto → poner Chances; saldo insuficiente → recargar → volver; recarga con éxito y rechazo; verificar con código incorrecto y correcto; admin: aporte simulado → rifa confirmada → cerrar → aprobar y programar; crear borrador).
+
+Verificación al cierre del Paso 5: **59/59 pruebas** en `dev/pruebas/`; todas las rutas del mapa cargan sin errores de JavaScript con el rol que piden (solo Proponer rifa, Mis propuestas y Admin · Propuestas siguen "En construcción", son P3); pantallas P2 sin desborde horizontal a 360 px; flujo admin revisado en Chrome a 1280 px: Sorteos → Rifar ahora (confirmación → resultado con semilla, posición y ganador) → Registrar compra y entrega.
+
+### Paso 5: qué se construyó
+
+| Pantalla | Ruta | Estados |
+|----------|------|---------|
+| Ganadores | `/ganadores` | Lista con premio, apodo del ganador y estado de entrega (comprando, en camino, entregado) · vacío |
+| Preguntas frecuentes | `/preguntas-frecuentes` | Acordeón (el mismo de Inicio, ahora en `components.css`) |
+| Legales | `/legal/terminos` · `/legal/privacidad` · `/legal/reglamento` | Texto largo en borrador con los puntos pendientes marcados |
+| Libro de Reclamaciones | `/libro-de-reclamaciones` | Formulario con errores por campo · enviado (hoja numerada, plazo de 15 días hábiles) |
+| Recuperar contraseña | `/recuperar` | Solicitar · enlace enviado · nueva contraseña (enlace de un solo uso) |
+| Perfil | `/perfil` | Datos con DNI enmascarado · editar apodo · cuenta sin verificar |
+| Admin · Dashboard | `/admin` | Recaudado, Chances retenidas, rifas por estado y pendientes del equipo |
+| Admin · Sorteos | `/admin/sorteos/?vista=` | Por rifar · realizadas · búsqueda · vacío |
+| Admin · Rifar | `/admin/sorteo/?codigo=` | Lista congelada con huella comprobable · Rifa en vivo · confirmación · resultado verificable |
+| Admin · Compras y entregas | `/admin/entregas` y `/admin/entrega/?codigo=` | Listado · compra (datos, comprobante, producto equivalente) · envío · entrega con DNI verificado y evidencia (§7.12) |
+| Admin · Productos | `/admin/productos` | Listado · editar título y precio (el precio solo antes de que la rifa sea pública) · crear lleva a Nueva rifa |
+| Admin · Categorías | `/admin/categorias` | Crear · editar · activar/desactivar |
+| Admin · Usuarios | `/admin/usuarios` | Listado con filtros · detalle con movimientos · ajuste de saldo con motivo |
+
+**Decisiones del Paso 5**
+- El header ya lleva "Preguntas" a `/preguntas-frecuentes` también desde Inicio (pendiente del Paso 4 resuelto).
+- Rifar y Compra y entrega usan `?codigo=` (`/admin/sorteo/`, `/admin/entrega/`), no rutas anidadas; el README §6 quedó así.
+- En la Fase 0 se puede rifar antes de la fecha anunciada, con un aviso, para la demostración.
+- Nuevo contrato `services/interfaces/reclamos` y `components/formulario.js` (errores por campo compartidos).
 
 ### Paso 4: qué se construyó
 
@@ -82,14 +113,13 @@ Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos 
 
 ## Sigue
 
-1. **Pull Request del Paso 4** hacia `main` con la plantilla; lo revisa el otro integrante del equipo.
-2. **Paso 5 — Pantallas P2** (ver `PROMPT-FASE0.md`) en una rama nueva `feature/paso5-pantallas-p2` creada desde `main` actualizado.
+1. **Pull Request del Paso 5** hacia `main` con la plantilla (cuando se pida); lo revisa la otra persona del equipo.
+2. **Paso 6 — Pantallas P3** (ver `PROMPT-FASE0.md`): Proponer rifa, Mis rifas propuestas y Admin · Moderar propuestas, en `feature/paso6-pantallas-p3` desde `main` actualizado.
 
-### Pendientes anotados para el Paso 5
-- **Header de Inicio:** "Preguntas" todavía baja a `#faq` de la misma página porque `/preguntas-frecuentes` está en construcción. Al construirla, cambiarlo en `assets/js/components/header.js` (buscar `PENDIENTE`). "Cómo funciona" ya va a su página.
-- **Enlaces que ya apuntan a pantallas P2:** "Rifar (elegir ganador)" (`/admin/sorteo/?codigo=`) y "Registrar compra y entrega" (`/admin/entrega/?codigo=`) muestran "En construcción" hasta el Paso 5.
+### Pendientes anotados
 - **Header con sesión a 360 px:** con barra de desplazamiento visible, el header de participante desborda unos 5 px (saldo + botón de usuario). En móviles reales la barra no ocupa espacio; revisar si hace falta ajustarlo.
 - **Toast detrás del modal:** el aviso "¡Listo!" queda detrás del fondo del modal abierto; el modal ya muestra el éxito, así que no se pierde información.
+- **Textos legales:** son borradores; necesitan revisión legal antes de cualquier lanzamiento.
 
 ## Traspaso: cómo arrancar el Paso 4 (David)
 

@@ -123,11 +123,7 @@ section { padding: var(--sp-56) 0; }
 .register-cta { display: flex; justify-content: center; }
 .register-cta .btn { padding: var(--sp-16) var(--sp-40); font-size: var(--fs-md); }
 
-/* FAQ */
-.faq { max-width: 760px; margin: 0 auto; display: grid; gap: var(--sp-10); }
-details { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-14); padding: var(--sp-18) var(--sp-22); }
-summary { cursor: pointer; font-weight: var(--fw-semibold); }
-details p { color: var(--muted); margin: var(--sp-10) 0 0; }
+/* FAQ (.faq) vive en components.css: la usan Inicio y Preguntas frecuentes */
 
 /* Con el ticket angosto (entre celular y escritorio), los controles van en su propia fila */
 @media (max-width: 1100px) {

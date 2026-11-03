@@ -15,10 +15,117 @@
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <article class="wrap pagina legal">
+    <h1 class="pagina-titulo">Reglamento de rifas</h1>
+    <p class="legal-meta">Última actualización: 2 de noviembre de 2026 · Versión borrador</p>
+    <div class="aviso aviso-oro" role="note">
+      <span class="aviso-icono" aria-hidden="true">⚖️</span>
+      <p><b>Texto de ejemplo para la maqueta.</b> Debe revisarlo y aprobarlo un abogado antes de cualquier lanzamiento. Los valores indicados son los que se usan por defecto; cada rifa puede tener los suyos y se informan en su página.</p>
+    </div>
+
+    <nav class="card legal-indice" aria-labelledby="indice-titulo">
+      <h2 id="indice-titulo">Contenido</h2>
+      <ol>
+        <li><a href="#objeto">Objeto</a></li>
+        <li><a href="#chances">Chances y opciones</a></li>
+        <li><a href="#armado">Rifa Armándose</a></li>
+        <li><a href="#confirmada">Rifa Confirmada y tiempo extra</a></li>
+        <li><a href="#cerrada">Rifa Cerrada</a></li>
+        <li><a href="#en-vivo">Rifa en vivo: elección del ganador</a></li>
+        <li><a href="#publicacion">Publicación del resultado</a></li>
+        <li><a href="#entrega">Compra y entrega del premio</a></li>
+        <li><a href="#descarte">Rifa Descartada y devoluciones</a></li>
+        <li><a href="#comunidad">Rifas de la comunidad</a></li>
+      </ol>
+    </nav>
+
+    <section id="objeto" aria-labelledby="r-objeto">
+      <h2 id="r-objeto">1. Objeto</h2>
+      <p>Este reglamento explica cómo se arma, se confirma y se realiza cada rifa en DaleChance, y cómo se entrega el premio. Complementa los <a class="enlace" data-enlace="terminos" href="../terminos/">Términos y condiciones</a>.</p>
+    </section>
+
+    <section id="chances" aria-labelledby="r-chances">
+      <h2 id="r-chances">2. Chances y opciones</h2>
+      <ul>
+        <li>1 Chance = S/ 1 = 1 opción de ganar.</li>
+        <li>Cada rifa tiene un <b>mínimo</b> (por defecto, 1 Chance) y un <b>máximo por persona</b>, para que nadie acapare las opciones.</li>
+        <li>Cada opción de una Rifa Confirmada tiene un número correlativo y un código alfanumérico que solo ve su dueño, en Mis tickets.</li>
+      </ul>
+    </section>
+
+    <section id="armado" aria-labelledby="r-armado">
+      <h2 id="r-armado">3. Rifa Armándose</h2>
+      <ul>
+        <li>Una rifa publicada empieza como <b>Rifa Armándose</b> y tiene un plazo para llegar al 100 % (por defecto, 7 días).</li>
+        <li>Las Chances que pones quedan <b>retenidas y bloqueadas</b>: no se pueden retirar.</li>
+        <li>El público ve la cantidad de personas y el porcentaje de avance, nunca montos.</li>
+        <li>Al llegar al 100 %, la rifa se confirma en ese momento, aunque quede plazo.</li>
+      </ul>
+    </section>
+
+    <section id="confirmada" aria-labelledby="r-confirmada">
+      <h2 id="r-confirmada">4. Rifa Confirmada y tiempo extra</h2>
+      <ul>
+        <li>Al confirmarse, todas las Chances retenidas se vuelven opciones de ganar.</li>
+        <li>La rifa sigue abierta un tiempo (por defecto, 3 días) para que más personas se unan comprando opciones.</li>
+        <li><b>Tiempo extra:</b> si faltan 5 minutos o menos, cada 5 personas distintas que pongan Chances suman 5 minutos al tiempo que quedaba.</li>
+        <li>Si la rifa tiene un tope de opciones y se alcanza, se cierra antes.</li>
+      </ul>
+    </section>
+
+    <section id="cerrada" aria-labelledby="r-cerrada">
+      <h2 id="r-cerrada">5. Rifa Cerrada</h2>
+      <ul>
+        <li>Cuando se agota el tiempo, la rifa queda como <b>Rifa Cerrada</b> y ya no recibe Chances.</li>
+        <li>Se congela la <b>lista pública de opciones</b> (número y código, sin datos de quién es cada una) y se publica su huella digital (SHA-256) antes de rifar.</li>
+        <li>El equipo revisa que el producto y la recaudación estén en orden y anuncia la fecha y hora en que se rifa.</li>
+      </ul>
+    </section>
+
+    <section id="en-vivo" aria-labelledby="r-en-vivo">
+      <h2 id="r-en-vivo">6. Rifa en vivo: elección del ganador</h2>
+      <ul>
+        <li>La lista completa de opciones se mezcla al azar, para que las opciones de una misma persona no queden juntas.</li>
+        <li>Luego se elige una posición de la lista mezclada: gana la opción que está ahí.</li>
+        <li>La mezcla y la elección salen de una <b>semilla aleatoria</b> y de la <b>huella publicada</b>. Con esos dos datos, cualquiera puede repetir el cálculo y obtener el mismo ganador.</li>
+        <li><span class="legal-pendiente">Pendiente</span>: constatación notarial de cada rifa realizada.</li>
+      </ul>
+    </section>
+
+    <section id="publicacion" aria-labelledby="r-publicacion">
+      <h2 id="r-publicacion">7. Publicación del resultado</h2>
+      <p>La rifa queda como <b>Rifa Realizada</b>. Publicamos la semilla, la opción ganadora, su posición en la lista mezclada y el <b>apodo</b> de quien ganó. Avisamos al ganador por WhatsApp y correo, y a los demás participantes por correo.</p>
+    </section>
+
+    <section id="entrega" aria-labelledby="r-entrega">
+      <h2 id="r-entrega">8. Compra y entrega del premio</h2>
+      <ul>
+        <li>Compramos el premio en una tienda, <b>a nombre del ganador</b>.</li>
+        <li>Lo entregamos en tienda o por courier, solo al <b>titular del DNI</b> de la cuenta ganadora, que debe mostrar su DNI físico.</li>
+        <li>Entregamos el mismo producto o uno <b>equivalente de igual o mayor valor</b> si el original cambió de precio o ya no existe.</li>
+        <li>En la página de la rifa publicamos las fechas de compra, envío y entrega. Al entregarlo, la rifa queda como <b>Premio Entregado</b>.</li>
+        <li><span class="legal-pendiente">Pendiente</span>: plazo para que el ganador responda y recoja el premio.</li>
+      </ul>
+    </section>
+
+    <section id="descarte" aria-labelledby="r-descarte">
+      <h2 id="r-descarte">9. Rifa Descartada y devoluciones</h2>
+      <ul>
+        <li>Si la rifa no llega al 100 % a tiempo, o se cancela antes de confirmarse, queda como <b>Rifa Descartada</b> y las Chances retenidas vuelven completas.</li>
+        <li>Una Rifa Confirmada solo se cancela por fuerza mayor legal; en ese caso se devuelven íntegramente todas las Chances.</li>
+      </ul>
+    </section>
+
+    <section id="comunidad" aria-labelledby="r-comunidad">
+      <h2 id="r-comunidad">10. Rifas de la comunidad</h2>
+      <p>Próximamente, los participantes podrán proponer rifas. Empiezan como <b>Rifa Sugerida</b>, privadas y solo por enlace, y quien la propone pone sus propias Chances. Al juntar el apoyo mínimo (por defecto, 20 % del avance y 10 personas), el equipo la revisa: si la aprueba, pasa a Rifa Armándose y aparece en el portal; si no, queda como Rifa Descartada y las Chances vuelven.</p>
+    </section>
+  </article>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../../assets/js/paginas/legal-reglamento.js"></script>
 </body>
 </html>

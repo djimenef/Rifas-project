@@ -1,11 +1,11 @@
 // AuthService — implementación mock (Fase 0).
 import { operacion, leerAhora } from './db.js';
-import { usuarioActual, exigirSesion, vistaUsuario } from './motor.js';
+import { usuarioActual, exigirSesion, vistaUsuario, ahora } from './motor.js';
 import { ErrorDominio } from '../../domain/errores.js';
 import {
   EDAD_MINIMA, LARGO_MIN_CONTRASENA, edad, esDniValido, esCelularValido, esCorreoValido, esApodoValido,
 } from '../../domain/usuario.js';
-import { CODIGO_VERIFICACION_DEMO } from '../../mocks/usuarios.js';
+import { CODIGO_VERIFICACION_DEMO, TOKEN_RECUPERACION_DEMO } from '../../mocks/usuarios.js';
 import { guardarSesion, borrarSesion } from '../../session.js';
 import { nuevoId } from '../../lib/ids.js';
 
@@ -106,9 +106,36 @@ export const authServiceMock = {
   },
 
   solicitarRecuperacion(correo) {
-    return operacion(() => {
-      if (!esCorreoValido((correo ?? '').trim())) throw new ErrorDominio('VALIDACION', { campos: { correo: 'Ingresa un correo válido.' } });
-      // Misma respuesta exista o no la cuenta.
+    return operacion(db => {
+      const c = (correo ?? '').trim();
+      if (!esCorreoValido(c)) throw new ErrorDominio('VALIDACION', { campos: { correo: 'Ingresa un correo válido.' } });
+      // Misma respuesta exista o no la cuenta. Fase 0: el enlace "enviado" siempre lleva el token de demo.
+      const u = db.usuarios.find(x => mismoTexto(x.correo, c));
+      if (u) db.recuperaciones.push({ token: TOKEN_RECUPERACION_DEMO, usuarioId: u.id, fecha: ahora(), vence: new Date(Date.now() + 3600000).toISOString(), usado: false });
+    });
+  },
+
+  restablecerContrasena(token, contrasena, confirmacionContrasena) {
+    return operacion(db => {
+      const r = db.recuperaciones.findLast(x => x.token === String(token ?? '').trim() && !x.usado && x.vence > ahora());
+      if (!r) throw new ErrorDominio('ENLACE_INVALIDO');
+      const campos = {};
+      if ((contrasena ?? '').length < LARGO_MIN_CONTRASENA) campos.contrasena = `La contraseña debe tener al menos ${LARGO_MIN_CONTRASENA} caracteres.`;
+      if (confirmacionContrasena !== contrasena) campos.confirmacionContrasena = 'Las contraseñas no coinciden.';
+      if (Object.keys(campos).length) throw new ErrorDominio('VALIDACION', { campos });
+      db.usuarios.find(u => u.id === r.usuarioId).contrasena = contrasena;
+      r.usado = true;
+    });
+  },
+
+  cambiarApodo(apodo) {
+    return operacion(db => {
+      const u = exigirSesion(db);
+      const nuevo = String(apodo ?? '').trim();
+      if (!esApodoValido(nuevo)) throw new ErrorDominio('VALIDACION', { campos: { apodo: 'Usa de 3 a 20 caracteres: letras, números, punto o guion bajo.' } });
+      if (db.usuarios.some(x => x.id !== u.id && mismoTexto(x.apodo, nuevo))) throw new ErrorDominio('APODO_EN_USO', { campos: { apodo: 'Ese apodo ya está en uso.' } });
+      u.apodo = nuevo;
+      return vistaUsuario(u);
     });
   },
 };

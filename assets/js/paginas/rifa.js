@@ -39,7 +39,7 @@ function accionPorEstado(r) {
     };
     case 'ABIERTA': return {
       titulo: '🟢 Rifa Confirmada',
-      texto: `Llegó al 100 % y sigue abierta${r.fechaCierre ? ` hasta el ${esc(fechaHora(r.fechaCierre))}` : ''}${r.minutosExtra ? ` (con ${r.minutosExtra} min de tiempo extra)` : ''}. Cada Chance que pongas ahora es una opción de ganar. <b>Tiempo extra:</b> si faltan 5 minutos o menos, cada 5 personas que se unan suman 5 minutos más.`,
+      texto: `Llegó al 100 % y sigue abierta${r.fechaCierre ? ` hasta el ${esc(fechaHora(r.fechaCierre))}` : ''}${r.minutosExtra ? ` (con ${r.minutosExtra} min de tiempo extra)` : ''}${r.fechaCierre && !r.minutosExtra ? '' : '.'} Cada Chance que pongas ahora es una opción de ganar. <b>Tiempo extra:</b> si faltan 5 minutos o menos, cada 5 personas que se unan suman 5 minutos más.`,
       boton: { modo: 'comprar', texto: 'Comprar opciones' },
     };
     case 'PROPUESTA': return {
@@ -57,7 +57,7 @@ function accionPorEstado(r) {
     };
     case 'PROGRAMADA': return {
       titulo: `📅 Rifa Cerrada · se rifa el ${esc(fechaLarga(r.fechaSorteo))}`,
-      texto: `Rifa en vivo: ${esc(fechaHora(r.fechaSorteo))}. Ya publicamos la lista de opciones y su huella para que cualquiera pueda verificarla.`,
+      texto: `Rifa en vivo: ${esc(fechaHora(r.fechaSorteo))} Ya publicamos la lista de opciones y su huella para que cualquiera pueda verificarla.`,
     };
     case 'SORTEADA': case 'COMPRANDO': case 'EN_CAMINO': return {
       titulo: `🏆 Rifa Realizada · Ganador: ${esc(r.ganadorApodo ?? '—')}`,

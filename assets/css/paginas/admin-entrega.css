@@ -1,0 +1,37 @@
+/* Admin · Compra y entrega: estilos propios. Todo sale de los tokens. */
+.entrega-pasos { list-style: none; margin: 0 0 var(--sp-12); padding: 0; display: flex; gap: var(--sp-8); flex-wrap: wrap; }
+.entrega-pasos li {
+  display: flex; align-items: center; gap: var(--sp-8); padding: var(--sp-6) var(--sp-14) var(--sp-6) var(--sp-6);
+  border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-weight: var(--fw-semibold);
+}
+.entrega-pasos li span {
+  width: var(--size-icon-sm); height: var(--size-icon-sm); border-radius: var(--radius-circle); display: grid; place-items: center;
+  background: var(--surface-2); font-size: var(--fs-sm);
+}
+.entrega-pasos li[data-estado="hecho"] { color: var(--text); }
+.entrega-pasos li[data-estado="hecho"] span { background: var(--accent); color: var(--accent-ink); }
+.entrega-pasos li[data-estado="actual"] { color: var(--text); border-color: var(--accent); }
+.entrega-nota { margin-bottom: var(--sp-20); }
+
+.entrega-registros { display: grid; gap: var(--sp-20); max-width: 760px; margin-bottom: var(--sp-16); }
+.entrega-registros .card { display: grid; gap: var(--sp-12); padding: var(--sp-24); min-width: 0; }
+.entrega-registros h2 { margin: 0; font-size: var(--fs-lg); display: flex; gap: var(--sp-10); align-items: center; }
+.entrega-registros .card[data-estado="pendiente"] { background: transparent; }
+.entrega-registros .card[data-estado="pendiente"] h2 { color: var(--muted); }
+
+.entrega-form { display: grid; gap: var(--sp-14); }
+.entrega-form input[type="text"], .entrega-form input[type="date"], .entrega-form textarea { width: 100%; }
+.entrega-form input[type="file"] { max-width: 100%; min-width: 0; font: inherit; font-size: var(--fs-sm); color: var(--muted); }
+.entrega-form label[hidden], .entrega-form div[hidden] { display: none; }
+.entrega-form .check { display: flex; gap: var(--sp-8); align-items: flex-start; font-weight: var(--fw-regular); }
+.entrega-form .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-12); align-items: start; }
+.entrega-form > .btn { justify-self: start; }
+.entrega-titular, .entrega-opciones { border: 0; margin: 0; padding: 0; display: grid; gap: var(--sp-8); min-width: 0; }
+.entrega-titular legend, .entrega-opciones legend { font-size: var(--fs-label); font-weight: var(--fw-semibold); margin-bottom: var(--sp-6); padding: 0; }
+.entrega-titular p { margin: 0; }
+
+@media (max-width: 620px) {
+  .entrega-registros .card { padding: var(--sp-22); }
+  .entrega-form .two, .entrega-form .tres { grid-template-columns: 1fr; }
+  .entrega-form > .btn { justify-self: stretch; }
+}
