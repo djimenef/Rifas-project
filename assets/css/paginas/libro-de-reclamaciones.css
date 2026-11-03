@@ -1,0 +1,24 @@
+/* Libro de Reclamaciones: estilos propios. Todo sale de los tokens. */
+.reclamos { max-width: 760px; }
+.reclamos-proveedor { margin-bottom: var(--sp-20); padding: var(--sp-16) var(--sp-24); }
+.reclamos-form { display: grid; gap: var(--sp-20); }
+.reclamos-form > .card { margin: 0; display: grid; gap: var(--sp-14); min-width: 0; }
+.reclamos-form > .card > legend { float: left; width: 100%; padding: 0; font-size: var(--fs-lg); font-weight: var(--fw-bold); }
+.reclamos-form label[hidden] { display: none; }
+.reclamos-form input[type="text"], .reclamos-form input[type="email"], .reclamos-form input[type="tel"], .reclamos-form select, .reclamos-form textarea { width: 100%; }
+.reclamos-form .check { display: flex; gap: var(--sp-10); align-items: flex-start; font-weight: var(--fw-regular); color: var(--muted); }
+.reclamos-form .check b { color: var(--text); }
+.reclamos-opciones { border: 0; margin: 0; padding: 0; display: grid; gap: var(--sp-8); min-width: 0; }
+.reclamos-opciones legend { font-size: var(--fs-label); font-weight: var(--fw-semibold); margin-bottom: var(--sp-6); }
+.reclamos-form > .field-hint { margin: 0; }
+.reclamos-form > .btn { justify-self: start; }
+.reclamos-enviado { display: grid; gap: var(--sp-14); justify-items: center; text-align: center; }
+.reclamos-enviado h2 { margin: 0; font-size: var(--fs-2xl); }
+.reclamos-enviado p { margin: 0; color: var(--muted); }
+.reclamos-enviado .datos { width: 100%; text-align: left; }
+
+@media (max-width: 520px) {
+  .reclamos-form .two { grid-template-columns: 1fr; }
+  .reclamos-form > .card, .reclamos-proveedor { padding: var(--sp-22); }
+  .reclamos-form > .btn { justify-self: stretch; }
+}

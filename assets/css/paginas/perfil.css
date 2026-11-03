@@ -1,0 +1,16 @@
+/* Perfil: estilos propios. Todo sale de los tokens. */
+.perfil { max-width: 640px; }
+#perfil { display: grid; gap: var(--sp-20); }
+#perfil .aviso { margin: 0; }
+.perfil .card { display: grid; gap: var(--sp-12); }
+.perfil .card h2 { margin: 0; font-size: var(--fs-lg); }
+.perfil-nota { margin: 0; color: var(--muted); font-size: var(--fs-small); }
+.perfil-apodo { display: grid; grid-template-columns: 1fr auto; gap: var(--sp-12); align-items: start; }
+.perfil-apodo input { width: 100%; }
+.perfil-apodo .btn { margin-top: calc(var(--fs-label) * 1.5 + var(--sp-6)); }
+
+@media (max-width: 520px) {
+  .perfil .card { padding: var(--sp-22); }
+  .perfil-apodo { grid-template-columns: 1fr; }
+  .perfil-apodo .btn { margin-top: 0; }
+}

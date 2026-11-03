@@ -10,15 +10,86 @@
   <link rel="stylesheet" href="../assets/css/tokens.css">
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/paginas/libro-de-reclamaciones.css">
 </head>
 <body data-ruta="reclamaciones">
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <div class="wrap pagina reclamos">
+    <h1 class="pagina-titulo">Libro de Reclamaciones</h1>
+    <p class="pagina-sub">Conforme al Código de Protección y Defensa del Consumidor, este establecimiento cuenta con un Libro de Reclamaciones virtual. Te respondemos por correo en un plazo máximo de 15 días hábiles.</p>
+
+    <div id="contenido">
+      <dl class="card datos reclamos-proveedor" aria-label="Datos del proveedor">
+        <div><dt>Proveedor</dt><dd><span class="legal-pendiente">pendiente: razón social</span></dd></div>
+        <div><dt>RUC</dt><dd><span class="legal-pendiente">pendiente</span></dd></div>
+        <div><dt>Domicilio</dt><dd><span class="legal-pendiente">pendiente</span></dd></div>
+        <div><dt>Fecha</dt><dd id="fecha-hoy">—</dd></div>
+      </dl>
+
+      <form id="form" class="reclamos-form" novalidate>
+        <fieldset class="card">
+          <legend>1. Tus datos</legend>
+          <div class="two">
+            <label>Nombres<input type="text" name="nombres" autocomplete="given-name" required></label>
+            <label>Apellidos<input type="text" name="apellidos" autocomplete="family-name" required></label>
+          </div>
+          <div class="two">
+            <label>Tipo de documento
+              <select name="tipoDocumento">
+                <option value="DNI">DNI</option>
+                <option value="CE">Carné de extranjería</option>
+              </select>
+            </label>
+            <label>Número de documento<input type="text" name="numeroDocumento" inputmode="numeric" maxlength="12" required></label>
+          </div>
+          <label>Domicilio<input type="text" name="domicilio" autocomplete="street-address" required placeholder="Calle, número, distrito y provincia"></label>
+          <div class="two">
+            <label>Celular<input type="tel" name="celular" inputmode="numeric" maxlength="9" autocomplete="tel-national" required placeholder="9XXXXXXXX"></label>
+            <label>Correo electrónico<input type="email" name="correo" autocomplete="email" required></label>
+          </div>
+          <label class="check"><input type="checkbox" name="esMenor" id="es-menor"> Soy menor de edad</label>
+          <label id="campo-apoderado" hidden>Nombre de tu padre, madre o apoderado<input type="text" name="apoderado"></label>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>2. Lo que contrataste</legend>
+          <fieldset class="reclamos-opciones">
+            <legend>¿Es un producto o un servicio?</legend>
+            <label class="check"><input type="radio" name="tipoBien" value="SERVICIO" checked> Servicio <span class="field-hint">(recargas, rifas, la plataforma)</span></label>
+            <label class="check"><input type="radio" name="tipoBien" value="PRODUCTO"> Producto <span class="field-hint">(un premio)</span></label>
+          </fieldset>
+          <div class="two">
+            <label>ID de la rifa (opcional)<input type="text" name="codigoRifa" placeholder="RF-XXXXXXXX" autocomplete="off"></label>
+            <label>Monto reclamado en S/ (opcional)<input type="text" name="montoReclamado" inputmode="decimal" placeholder="0.00"></label>
+          </div>
+          <label>Descripción<textarea name="descripcionBien" maxlength="500" required placeholder="Ej.: recarga de 20 Chances del 1 de noviembre."></textarea></label>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>3. Detalle</legend>
+          <fieldset class="reclamos-opciones">
+            <legend>Tipo</legend>
+            <label class="check"><input type="radio" name="tipo" value="RECLAMO" checked> <span><b>Reclamo:</b> no estás conforme con el producto o el servicio.</span></label>
+            <label class="check"><input type="radio" name="tipo" value="QUEJA"> <span><b>Queja:</b> no estás conforme con la atención, sin relación con el producto o el servicio.</span></label>
+          </fieldset>
+          <label>¿Qué pasó?<textarea name="detalle" maxlength="2000" required></textarea></label>
+          <label>¿Qué solicitas?<textarea name="pedido" maxlength="1000" required></textarea></label>
+          <label class="check"><input type="checkbox" name="aceptaRespuestaCorreo"> Acepto recibir la respuesta en el correo que indiqué.</label>
+        </fieldset>
+
+        <p class="field-hint">La presentación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito previo para interponer una denuncia ante el INDECOPI.</p>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+        <button class="btn btn-primary" type="submit" id="enviar">Enviar hoja de reclamación</button>
+      </form>
+    </div>
+  </div>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../assets/js/paginas/libro-de-reclamaciones.js"></script>
 </body>
 </html>

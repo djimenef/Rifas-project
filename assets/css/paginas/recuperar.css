@@ -1,0 +1,12 @@
+/* Recuperar contraseña: estilos propios. Todo sale de los tokens. */
+.recuperar { max-width: 440px; }
+.recuperar form { display: grid; gap: var(--sp-14); }
+.recuperar input[type="email"], .recuperar input[type="password"], .recuperar input[type="text"] { width: 100%; }
+.recuperar .check { display: flex; gap: var(--sp-8); align-items: center; font-weight: var(--fw-regular); color: var(--muted); }
+.recuperar-listo { display: grid; gap: var(--sp-14); justify-items: center; text-align: center; }
+.recuperar-listo h2 { margin: 0; font-size: var(--fs-xl); }
+.recuperar-listo p { margin: 0; color: var(--muted); }
+
+@media (max-width: 520px) {
+  .recuperar .card { padding: var(--sp-22); }
+}

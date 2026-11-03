@@ -10,15 +10,136 @@
   <link rel="stylesheet" href="../assets/css/tokens.css">
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/paginas/preguntas-frecuentes.css">
 </head>
 <body data-ruta="preguntas">
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <div class="wrap pagina preguntas">
+    <h1 class="pagina-titulo">Preguntas frecuentes</h1>
+    <p class="pagina-sub">Todo lo que necesitas saber sobre las Chances, las rifas y los premios. ¿No encuentras tu respuesta? Revisa <a class="enlace" data-enlace="comoFunciona" href="../como-funciona/">Cómo funciona</a>.</p>
+
+    <nav class="preguntas-temas" aria-label="Temas">
+      <a href="#chances">Chances y recargas</a>
+      <a href="#rifas">Rifas</a>
+      <a href="#ganador">Ganador y premio</a>
+      <a href="#cuenta">Cuenta y seguridad</a>
+    </nav>
+
+    <section class="preguntas-grupo" id="chances" aria-labelledby="chances-titulo">
+      <h2 id="chances-titulo">Chances y recargas</h2>
+      <div class="faq">
+        <details open>
+          <summary>¿Cuánto cuesta una Chance?</summary>
+          <p>1 Chance = S/ 1 = 1 opción de ganar. Recarga con los atajos de 5, 10, 15 o 20 Chances, o cualquier cantidad de 5 a 500, con Yape o tarjeta.</p>
+        </details>
+        <details>
+          <summary>¿Dónde veo mis Chances?</summary>
+          <p>En Mi billetera ves tus Chances disponibles (libres para usar) y tus Chances retenidas, con el detalle de en qué rifas están. En Mi historial ves cada movimiento con su número de operación: recargas, Chances puestas, devueltas y usadas.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa si mi pago es rechazado?</summary>
+          <p>No se descuenta nada y tus Chances no cambian. Puedes intentarlo de nuevo con otro medio de pago.</p>
+        </details>
+        <details>
+          <summary>¿Hay un máximo de Chances por rifa?</summary>
+          <p>Sí. Cada rifa tiene un máximo por persona para que nadie acapare las opciones. Si llegas al máximo, te lo avisamos al poner tus Chances.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="preguntas-grupo" id="rifas" aria-labelledby="rifas-titulo">
+      <h2 id="rifas-titulo">Rifas</h2>
+      <div class="faq">
+        <details>
+          <summary>¿Qué significa "Rifa Armándose"?</summary>
+          <p>Es una rifa que todavía no llega al 100 % de lo que necesita. Cuando llega, pasa a Rifa Confirmada. Mientras tanto, tus Chances quedan retenidas: no se gastan hasta que la rifa se confirma.</p>
+        </details>
+        <details>
+          <summary>¿Puedo retirar las Chances que puse en una rifa?</summary>
+          <p>No. Desde que pones tus Chances en una rifa quedan bloqueadas. Si la rifa se confirma, se vuelven opciones de ganar; si se descarta, vuelven completas a tu billetera.</p>
+        </details>
+        <details>
+          <summary>¿Y si la rifa no se arma?</summary>
+          <p>Tus Chances vuelven completas a tu billetera para que las uses en otra rifa. La rifa queda como Rifa Descartada.</p>
+        </details>
+        <details>
+          <summary>¿Qué es el tiempo extra?</summary>
+          <p>Una Rifa Confirmada sigue abierta un tiempo para que más personas se unan. Si faltan 5 minutos o menos, cada 5 personas que pongan Chances suman 5 minutos más. Cuando el tiempo se agota, pasa a Rifa Cerrada y ya no recibe Chances.</p>
+        </details>
+        <details>
+          <summary>¿Por qué no veo cuánto dinero tiene cada rifa?</summary>
+          <p>Para no desanimar a nadie, en cada rifa solo mostramos cuántas personas participan y una barra con el porcentaje de avance. Nunca mostramos montos.</p>
+        </details>
+        <details>
+          <summary>¿Se puede cancelar una Rifa Confirmada?</summary>
+          <p>Una Rifa Confirmada siempre se rifa. Si el producto cambia de precio o ya no existe, entregamos uno equivalente de igual o mayor valor. Solo se cancela por fuerza mayor legal, y en ese caso devolvemos íntegramente todas las Chances.</p>
+        </details>
+        <details>
+          <summary>¿Puedo proponer una rifa?</summary>
+          <p>Pronto. Las propuestas empiezan como Rifa Sugerida, privadas y solo por enlace: quien la sugiere es responsable de juntar el apoyo mínimo. Al lograrlo, pasan a Rifa Armándose y aparecen en el portal.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="preguntas-grupo" id="ganador" aria-labelledby="ganador-titulo">
+      <h2 id="ganador-titulo">Ganador y premio</h2>
+      <div class="faq">
+        <details>
+          <summary>¿Cómo se elige al ganador?</summary>
+          <p>Cada Chance es una opción con su número. Al cerrar la rifa congelamos la lista de opciones y publicamos su huella digital. En la Rifa en vivo mezclamos todas las opciones al azar y elegimos una. Con la huella y la semilla publicadas, cualquiera puede repetir la mezcla y obtener el mismo ganador.</p>
+        </details>
+        <details>
+          <summary>¿Cómo compruebo que mis opciones están en la lista?</summary>
+          <p>En Mis tickets ves el número y el código de cada una de tus opciones. Desde que la rifa se cierra puedes descargar la lista pública de opciones (sin datos de quién es cada una) y usar "Verificar mis opciones".</p>
+        </details>
+        <details>
+          <summary>¿Cómo sé si gané?</summary>
+          <p>Las rifas se realizan en vivo y avisamos a los ganadores por WhatsApp y correo. En Ganadores publicamos el apodo de quien ganó.</p>
+        </details>
+        <details>
+          <summary>¿Cómo recibo el premio?</summary>
+          <p>Compramos el premio a nombre del ganador y lo entregamos solo al titular del DNI de la cuenta ganadora, que debe mostrar su DNI físico. Por eso es importante registrarte con tu propio DNI.</p>
+        </details>
+        <details>
+          <summary>¿Me entregan exactamente el producto del enlace?</summary>
+          <p>Entregamos el premio rifado: el mismo producto o uno equivalente de igual o mayor valor, si el original cambió o ya no existe.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="preguntas-grupo" id="cuenta" aria-labelledby="cuenta-titulo">
+      <h2 id="cuenta-titulo">Cuenta y seguridad</h2>
+      <div class="faq">
+        <details>
+          <summary>¿Quién puede participar?</summary>
+          <p>Personas mayores de 18 años, registradas con su propio DNI.</p>
+        </details>
+        <details>
+          <summary>¿Para qué verifican mi correo y mi celular?</summary>
+          <p>Para asegurarnos de que eres tú y para avisarte si ganas. Te enviamos un código de 6 dígitos al crear tu cuenta.</p>
+        </details>
+        <details>
+          <summary>Olvidé mi contraseña, ¿qué hago?</summary>
+          <p>Entra a <a class="enlace" data-enlace="recuperar" href="../recuperar/">Recuperar contraseña</a>, escribe tu correo y te enviaremos un enlace para crear una nueva.</p>
+        </details>
+        <details>
+          <summary>¿Quién ve mis datos?</summary>
+          <p>En la plataforma apareces con tu apodo y nadie ve tu DNI completo. Si ganas, publicamos solo tu apodo. Más detalles en la <a class="enlace" data-enlace="privacidad" href="../legal/privacidad/">Política de privacidad</a>.</p>
+        </details>
+        <details>
+          <summary>¿Dónde presento un reclamo?</summary>
+          <p>En nuestro <a class="enlace" data-enlace="reclamaciones" href="../libro-de-reclamaciones/">Libro de Reclamaciones</a> virtual. Te respondemos por correo.</p>
+        </details>
+      </div>
+    </section>
+  </div>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../assets/js/paginas/preguntas-frecuentes.js"></script>
 </body>
 </html>

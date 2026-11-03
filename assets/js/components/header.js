@@ -41,11 +41,8 @@ function menuUsuario(usuario, enPanel = false) {
 }
 
 function headerPublico(usuario, idRuta) {
-  // PENDIENTE (docs/PROGRESO.md): en Inicio, "Preguntas" baja a su sección mientras /preguntas-frecuentes
-  // esté en construcción (Paso 5). Al construirla, usar url('preguntas') también aquí.
-  const enInicio = idRuta === 'inicio';
   const comoFunciona = url('comoFunciona');
-  const preguntas = enInicio ? '#faq' : url('preguntas');
+  const preguntas = url('preguntas');
   let enlaces;
   if (!usuario) {
     enlaces = `
