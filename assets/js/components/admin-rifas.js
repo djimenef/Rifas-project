@@ -24,7 +24,7 @@ const errorEn = (dialog, e) => {
  * @param {{ titulo: string, contenido: string, textoBoton: string, enviar: (dialog: HTMLDialogElement) => Promise<string>, alTerminar?: () => void }} o
  *   `enviar` devuelve el texto del toast de éxito.
  */
-function modalAccion({ titulo, contenido, textoBoton, enviar, alTerminar }) {
+export function modalAccion({ titulo, contenido, textoBoton, enviar, alTerminar }) {
   const { dialog } = abrirModal({
     titulo,
     contenido: `${contenido}<div data-error role="status" aria-live="polite"></div>`,

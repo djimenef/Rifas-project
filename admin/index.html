@@ -11,15 +11,27 @@
   <link rel="stylesheet" href="../assets/css/base.css">
   <link rel="stylesheet" href="../assets/css/components.css">
   <link rel="stylesheet" href="../assets/css/admin.css">
+  <link rel="stylesheet" href="../assets/css/paginas/admin.css">
 </head>
 <body data-ruta="admin">
 
 <header data-layout="header"></header>
 
-<main></main>
+<main>
+  <div class="wrap pagina">
+    <div class="admin-titulo">
+      <div>
+        <h1 class="pagina-titulo">Dashboard</h1>
+        <p class="pagina-sub">Resumen de la plataforma y lo que necesita tu atención.</p>
+      </div>
+      <a class="btn btn-primary" href="rifas/nueva/" data-enlace="adminRifaNueva">+ Nueva rifa</a>
+    </div>
+    <div id="dashboard"></div>
+  </div>
+</main>
 
 <footer data-layout="footer"></footer>
 
-<script type="module" src="../assets/js/paginas/en-construccion.js"></script>
+<script type="module" src="../assets/js/paginas/admin.js"></script>
 </body>
 </html>

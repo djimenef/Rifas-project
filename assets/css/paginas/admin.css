@@ -1,0 +1,28 @@
+/* Admin · Dashboard: estilos propios. Todo sale de los tokens. */
+.dash-cifras { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-16); margin-bottom: var(--sp-20); }
+.dash-cifra { display: grid; gap: var(--sp-6); padding: var(--sp-22); }
+.dash-cifra small { color: var(--muted); text-transform: uppercase; letter-spacing: var(--ls-caps); font-size: var(--fs-xs); font-weight: var(--fw-semibold); }
+.dash-cifra b { font-size: var(--fs-3xl); line-height: var(--lh-snug); font-variant-numeric: tabular-nums; }
+.dash-cifra p { margin: 0; color: var(--muted); font-size: var(--fs-sm); }
+.dash-cifra:first-child { background: var(--grad-ticket); border: 0; color: var(--ink-on-color); }
+.dash-cifra:first-child small, .dash-cifra:first-child p { color: var(--ink-on-color); opacity: .85; }
+
+.dash-pendientes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-8); }
+.dash-pendientes a {
+  display: flex; justify-content: space-between; align-items: center; gap: var(--sp-12);
+  padding: var(--sp-12) var(--sp-16); border: 1px solid var(--border); border-radius: var(--radius-14);
+  background: var(--surface-2); color: var(--text); text-decoration: none; font-weight: var(--fw-medium);
+}
+.dash-pendientes a:hover { border-color: var(--accent); }
+.dash-pendientes a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.dash-pendientes b { font-size: var(--fs-lg); font-variant-numeric: tabular-nums; }
+.dash-pendientes .dash-cero { background: transparent; color: var(--muted); }
+.dash-estados .dash-interno { padding-left: var(--sp-16); font-size: var(--fs-small); }
+.dash-estados .dash-interno dd { font-weight: var(--fw-medium); }
+
+@media (max-width: 1100px) {
+  .dash-cifras { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .dash-cifras { grid-template-columns: 1fr; }
+}

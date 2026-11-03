@@ -1,0 +1,4 @@
+/* Admin · Rifar (elegir ganador): estilos propios. Todo sale de los tokens. */
+.sorteo-pasos { margin: 0; padding-left: var(--sp-20); color: var(--muted); display: grid; gap: var(--sp-6); }
+.sorteo-ganador { margin: 0; font-size: var(--fs-2xl); }
+.sorteo-resultado .aviso, #huella .aviso { margin: 0; }
