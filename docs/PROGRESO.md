@@ -7,11 +7,11 @@
 
 | | |
 |---|---|
-| **Paso actual** | **Paso 6 (pantallas P3) terminado** en `feature/paso6-pantallas-p3`. El Paso 5 sigue en revisión (PR #8). Siguiente: **Paso 7 (documentación semántica)**. |
-| **Rama en curso** | `feature/paso6-pantallas-p3` (David), **apilada sobre `feature/paso5-pantallas-p2`** porque el PR #8 aún no se fusiona (decisión del equipo, 03/11/2026). |
-| **Revisión** | PR #8 (Paso 5) abierto. El PR del Paso 6 se abre hacia `main` **después** de fusionar el #8 (así solo muestra los cambios del Paso 6); lo revisa la otra persona del equipo. |
-| **Para continuar** | Revisar y fusionar el PR #8 → abrir el PR del Paso 6 → `git pull` en `main` → crear `docs/semantica` para el Paso 7. |
-| **Última actualización** | 2026-11-03 (cierre del Paso 6: **59/59 pruebas**) |
+| **Paso actual** | **Paso 7 (documentación semántica) terminado** en `docs/paso7-semantica`. Pasos 5 y 6 esperan revisión (PR #8 abierto; el del Paso 6, después). Siguiente: **Paso 8 (verificación final)**. |
+| **Rama en curso** | `docs/paso7-semantica` (David), apilada sobre `feature/paso6-pantallas-p3`, que a su vez está apilada sobre `feature/paso5-pantallas-p2` (el PR #8 aún no se fusiona; decisión del equipo, 03/11/2026). |
+| **Revisión** | PR #8 (Paso 5) abierto. Los PR de los Pasos 6 y 7 se abren hacia `main` en orden, cada uno después de fusionar el anterior (así cada uno muestra solo sus cambios); los revisa la otra persona del equipo. |
+| **Para continuar** | Revisar y fusionar el PR #8 → PR del Paso 6 → PR del Paso 7 → Paso 8 desde `main` actualizado. |
+| **Última actualización** | 2026-11-03 (cierre del Paso 7: **59/59 pruebas**) |
 
 > **Excepción temporal (23/10/2026):** el PR #4 (Fase 0, Pasos 0–3) se fusionó en `main` **sin la revisión del compañero**, por acuerdo del equipo. David puede revisar la Fase 0 directamente en `main`. A partir del Paso 4 vuelve la regla normal: todo PR lo revisa la otra persona.
 
@@ -58,13 +58,23 @@
 | 5 | Público: ganadores, preguntas frecuentes, legales, Libro de Reclamaciones, recuperar y perfil | `c887c70` |
 | 5 | Admin: dashboard, sorteos, rifar, compras y entregas, productos, categorías y usuarios | `04fd88d` |
 | 5 | Cierre del Paso 5: esta bitácora, inventario del README y doble punto tras la hora en textos de fecha | `f15c201` |
-| 6 | Proponer rifa, Mis rifas propuestas y Admin · Propuestas (validar, reemplazar o rechazar link; aprobar o descartar); esta bitácora | el commit que agregó esta fila |
+| 6 | Proponer rifa, Mis rifas propuestas y Admin · Propuestas (validar, reemplazar o rechazar link; aprobar o descartar); esta bitácora | `f31b6f9` |
+| 7 | README §7 dividido en `docs/semantica/` (con índice) y `docs/pantallas/inventario.md`; referencias actualizadas; esta bitácora | el commit que agregó esta fila |
 
 Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos revisados en Chrome a 1280 px y 360 px (visitante → login → regresa con el modal abierto → poner Chances; saldo insuficiente → recargar → volver; recarga con éxito y rechazo; verificar con código incorrecto y correcto; admin: aporte simulado → rifa confirmada → cerrar → aprobar y programar; crear borrador).
 
 Verificación al cierre del Paso 5: **59/59 pruebas** en `dev/pruebas/`; todas las rutas del mapa cargan sin errores de JavaScript con el rol que piden (solo Proponer rifa, Mis propuestas y Admin · Propuestas siguen "En construcción", son P3); pantallas P2 sin desborde horizontal a 360 px; flujo admin revisado en Chrome a 1280 px: Sorteos → Rifar ahora (confirmación → resultado con semilla, posición y ganador) → Registrar compra y entrega.
 
 Verificación al cierre del Paso 6: **59/59 pruebas** en `dev/pruebas/` (los servicios de propuestas ya tenían sus pruebas desde el Paso 2); las 3 pantallas sin desborde horizontal a 360 px y 768 px; flujos revisados en Chrome a 1280 px: link acortado → aviso "Link en revisión" → enviado en Validando producto; límite de propuestas activas; link confiable → título y precio leídos → mínimo del autor y saldo insuficiente → Rifa Sugerida con enlace para copiar; admin: reemplazar link (rechaza tienda no confiable) → aprobar propuesta (rechaza margen inválido) → rechazar sin motivo y con motivo → lista vacía.
+
+### Paso 7: documentación semántica
+
+- **`docs/semantica/`**: `00-glosario` (§7.1–§7.3), `01-identidad`, `02-billetera` (§7.7, §7.10, ciclo de las Chances, recargas), `03-rifas` (§7.4, §7.9, §7.11, §7.13), `04-sorteo` (§7.8), `05-propuestas`, `06-administracion` (§7.12, cancelar una rifa) y un `README.md` con el índice y dónde quedó cada sección. **Se conservan los números §7.x**, así que las referencias del código siguen valiendo. Las tablas de acciones (§7.5) y eventos (§7.6) se repartieron fila por fila según el dominio.
+- **Sin pérdida de contenido:** un script comprobó que cada línea de la antigua §7 está en algún archivo nuevo.
+- **Defecto corregido:** en la tabla de estados de §7.4, la fila `ARMANDO` había quedado reemplazada por filas del glosario ("Estados visibles", "Rifa Armándose"… "Rifar"). Esas filas pasaron al glosario (la de "Rifa Armándose" se unió con la que ya existía) y se restauró la fila `ARMANDO` con lo que dicen §7.5 y §7.13: *Rifa Armándose · pública, junta Chances hacia su meta · acepta Chances como compromiso · Disponible → Retenido*. **Revisar que esté bien.**
+- **README §7** quedó como resumen con enlaces; §6 enlaza al inventario. `CLAUDE.md` (fuentes de verdad) y los diagramas apuntan a `docs/semantica/`.
+- **`docs/pantallas/inventario.md`**: todas las pantallas construidas con ruta real, acceso y estados (incluye las páginas `dev/`). Las capturas siguen yendo en cada PR.
+- Verificación: 59/59 pruebas; 0 enlaces rotos en los documentos tocados; los 9 diagramas Mermaid de los archivos tocados se procesan sin errores (Mermaid 11).
 
 ### Paso 6: qué se construyó
 
@@ -130,9 +140,8 @@ Verificación al cierre del Paso 6: **59/59 pruebas** en `dev/pruebas/` (los ser
 
 ## Sigue
 
-1. **Revisión y merge del PR #8 (Paso 5)**; luego el PR del Paso 6 hacia `main` (cuando se pida).
-2. **Paso 7 — Documentación semántica** (ver `PROMPT-FASE0.md`): dividir README §7 en `docs/semantica/` y crear `docs/pantallas/inventario.md`.
-3. **Paso 8 — Verificación final.**
+1. **Revisión y merge del PR #8 (Paso 5)**; luego los PR de los Pasos 6 y 7 hacia `main`, en orden (cuando se pida).
+2. **Paso 8 — Verificación final** (ver `PROMPT-FASE0.md`): recorrer todas las rutas, el flujo completo de punta a punta y cada pantalla a 360 px y 1280 px; resumen final.
 
 ### Pendientes anotados
 - **Header con sesión a 360 px:** con barra de desplazamiento visible, el header de participante desborda unos 5 px (saldo + botón de usuario). En móviles reales la barra no ocupa espacio; revisar si hace falta ajustarlo.

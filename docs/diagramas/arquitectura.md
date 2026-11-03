@@ -50,5 +50,5 @@ flowchart TB
 | Capa | Qué es | Dónde vive |
 |------|--------|------------|
 | Visual | Cómo se ve: pantallas y componentes, con datos falsos | `assets/`, carpetas de cada pantalla (en Fase 1: `web/`) |
-| Semántica | Qué significa: entidades, estados, acciones y reglas | README §7 y `docs/semantica/` |
+| Semántica | Qué significa: entidades, estados, acciones y reglas | [`docs/semantica/`](../semantica/README.md) (resumen en README §7) |
 | Funcional | Cómo funciona de verdad: API, base de datos, pagos | `api/` (Fase 1) |
