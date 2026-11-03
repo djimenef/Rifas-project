@@ -1,0 +1,40 @@
+/* Mis rifas propuestas: estilos propios. Todo sale de los tokens. */
+.propuestas-titulo { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-16); flex-wrap: wrap; }
+.propuestas-titulo .pagina-sub { margin-bottom: var(--sp-24); }
+.propuestas { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-20); align-items: start; }
+
+.propuesta { margin: 0; display: grid; gap: var(--sp-14); min-width: 0; }
+.propuesta p { margin: 0; }
+.propuesta-cabecera { display: flex; gap: var(--sp-16); align-items: flex-start; }
+.propuesta-imagen {
+  flex: none; display: grid; place-items: center; width: var(--size-thumb); height: var(--size-thumb);
+  border-radius: var(--radius-14); background: var(--surface-2); font-size: var(--fs-3xl); object-fit: cover;
+}
+/* Hasta Rifa Armándose el producto se ve desenfocado (misma regla que la tarjeta de rifa) */
+.propuesta-velada { filter: var(--blur-fondo); }
+.propuesta-datos { display: grid; gap: var(--sp-6); min-width: 0; }
+.propuesta-datos h2 { margin: 0; font-size: var(--fs-lg); }
+.propuesta-datos h2 a { color: var(--text); text-decoration: none; }
+.propuesta-datos h2 a:hover { text-decoration: underline; }
+.propuesta-datos h2 a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.propuesta-id { color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+.propuesta-texto { color: var(--muted); font-size: var(--fs-small); }
+.propuesta-texto b { color: var(--text); }
+.propuesta-avance { display: grid; gap: var(--sp-8); }
+.propuesta-etiqueta { font-size: var(--fs-label); font-weight: var(--fw-semibold); }
+.propuesta-meta { color: var(--muted); font-size: var(--fs-sm); }
+.propuesta-compartir { display: grid; gap: var(--sp-8); padding-top: var(--sp-14); border-top: 1px dashed var(--border); }
+.propuesta-compartir p { font-size: var(--fs-label); font-weight: var(--fw-semibold); }
+.propuesta-enlace {
+  display: flex; gap: var(--sp-12); align-items: center; justify-content: space-between;
+  padding: var(--sp-8) var(--sp-8) var(--sp-8) var(--sp-14); border-radius: var(--radius-14); background: var(--surface-2);
+}
+.propuesta-enlace .btn { flex: none; }
+
+@media (max-width: 900px) {
+  .propuestas { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .propuesta { padding: var(--sp-22); }
+  .propuesta-enlace { flex-direction: column; align-items: stretch; padding: var(--sp-10) var(--sp-14); }
+}

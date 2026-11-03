@@ -10,6 +10,7 @@ import { barraAvance } from '../components/barra-avance.js';
 import { badgeRifa } from '../components/tarjeta-rifa.js';
 import { cargarSeccion } from '../components/estados.js';
 import { mostrarToast } from '../components/toast.js';
+import { compartirRifa } from '../components/compartir.js';
 import { descargarTexto } from '../lib/descarga.js';
 import { abrirModalChances, listaTickets } from '../components/modal-chances.js';
 
@@ -200,7 +201,7 @@ function dibujar(r) {
     </div>
     ${secundarias ? `<div class="detalle-secciones">${secundarias}</div>` : ''}`;
 
-  contenedor.querySelector('[data-compartir]').addEventListener('click', () => compartir(r));
+  contenedor.querySelector('[data-compartir]').addEventListener('click', () => compartirRifa(r));
   contenedor.querySelector('[data-lista]')?.addEventListener('click', () => descargarLista(r));
   contenedor.querySelector('[data-accion]')?.addEventListener('click', e => abrir(r, e.currentTarget.dataset.accion));
   if (esParticipante) mostrarParticipacion(r);
@@ -222,16 +223,6 @@ async function mostrarParticipacion(r) {
 
 function abrir(r, modo) {
   abrirModalChances({ rifa: r, modo, alTerminar: cargar });
-}
-
-async function compartir(r) {
-  const enlace = location.origin + url('rifa', { slug: r.slug });
-  try {
-    await navigator.clipboard.writeText(enlace);
-    mostrarToast('Enlace copiado. ¡Compártelo!');
-  } catch {
-    mostrarToast(`Copia este enlace: ${enlace}`, { duracion: 6000 });
-  }
 }
 
 // --- Carga ---

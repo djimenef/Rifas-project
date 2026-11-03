@@ -8,7 +8,8 @@ import { soles, puntos, opciones, fechaHora } from '../lib/formato.js';
 import { barraAvance } from '../components/barra-avance.js';
 import { NOMBRE_ESTADO } from '../components/badge.js';
 import { cargarSeccion } from '../components/estados.js';
-import { badgeAdmin, modalCancelar, modalCancelarFuerzaMayor, modalSimularAporte, modalConfirmar } from '../components/admin-rifas.js';
+import { badgeAdmin, modalCancelar, modalCancelarFuerzaMayor, modalSimularAporte, modalConfirmar,
+  modalValidarLink, modalModerar } from '../components/admin-rifas.js';
 import { ESTADOS_RIFA, ESTADOS_COMPROMISO } from '../domain/rifa.js';
 
 const pagina = document.getElementById('pagina');
@@ -125,6 +126,12 @@ function accionesPorEstado(r, recargar) {
         textoBoton: 'Vencer ventana', accion: async () => { await adminService.vencerVentana(r.id); return 'La rifa no se armó: se liberaron las Chances.'; }, alTerminar: recargar,
       })]);
       acciones.push(['Cancelar con motivo', 'ghost', () => modalCancelar(r, recargar)]);
+      break;
+    case 'REVISION_LINK':
+      acciones.push(['Validar link', 'primary', () => modalValidarLink(r, recargar)]);
+      break;
+    case 'PROPUESTA':
+      acciones.push(['Moderar propuesta', 'primary', () => modalModerar(r, recargar)]);
       break;
     case 'ABIERTA':
       acciones.push([`Simular compras ${demo}`, 'ghost', () => modalSimularAporte(r, recargar)]);

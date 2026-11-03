@@ -1,0 +1,42 @@
+/* Proponer rifa: estilos propios. Todo sale de los tokens. */
+.proponer { max-width: 760px; }
+.proponer-pasos { margin: 0 0 var(--sp-20); padding: var(--sp-16) var(--sp-24) var(--sp-16) var(--sp-40); display: grid; gap: var(--sp-8); color: var(--muted); font-size: var(--fs-small); }
+.proponer-pasos b { color: var(--text); }
+
+.proponer-form, .proponer-form #resto { display: grid; gap: var(--sp-20); }
+.proponer-form [hidden], .proponer-form .card[hidden], .proponer-form #resto[hidden] { display: none; }
+.proponer-form .card { margin: 0; display: grid; gap: var(--sp-14); min-width: 0; }
+.proponer-form .card > legend { float: left; width: 100%; padding: 0; font-size: var(--fs-lg); font-weight: var(--fw-bold); }
+.proponer-form input[type="text"], .proponer-form input[type="url"], .proponer-form select { width: 100%; }
+.proponer-form .field-hint { margin: 0; }
+.proponer-form #resto > .btn { justify-self: start; }
+.proponer-link { display: grid; grid-template-columns: 1fr auto; gap: var(--sp-12); align-items: start; }
+.proponer-link .btn { margin-top: calc(var(--fs-label) * 1.5 + var(--sp-6)); }
+.proponer-nota { margin: 0; color: var(--muted); font-size: var(--fs-small); }
+.proponer-form .aviso div { display: grid; gap: var(--sp-6); }
+
+/* Lo que se leyó del link: imagen (emoji de referencia), título y precio */
+.proponer-leido { display: flex; gap: var(--sp-16); align-items: center; margin: 0; padding: var(--sp-16); background: var(--surface-2); box-shadow: none; }
+.proponer-imagen { flex: none; display: grid; place-items: center; width: var(--size-thumb); height: var(--size-thumb); border-radius: var(--radius-14); background: var(--surface); font-size: var(--fs-3xl); }
+.proponer-leido p { margin: 0; }
+.proponer-leido-titulo { color: var(--muted); font-size: var(--fs-sm); }
+.proponer-ok { color: var(--ok); font-weight: var(--fw-semibold); margin-left: var(--sp-6); }
+.proponer-leido-nombre { font-weight: var(--fw-bold); font-size: var(--fs-lg); }
+.proponer-leido-precio { color: var(--muted); }
+
+/* Enviado */
+.proponer-enviado { display: grid; gap: var(--sp-14); justify-items: center; text-align: center; }
+.proponer-enviado h2 { margin: 0; font-size: var(--fs-2xl); }
+.proponer-enviado p { margin: 0; color: var(--muted); }
+.proponer-enviado p b { color: var(--text); }
+.proponer-enlace { padding: var(--sp-10) var(--sp-14); border-radius: var(--radius-14); background: var(--surface-2); color: var(--text); max-width: 100%; }
+.proponer-acciones { display: flex; gap: var(--sp-12); flex-wrap: wrap; justify-content: center; }
+.proponer-enviado .proponer-id { color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+
+@media (max-width: 520px) {
+  .proponer-form .card, .proponer-pasos { padding: var(--sp-22); }
+  .proponer-pasos { padding-left: var(--sp-40); }
+  .proponer-form .two, .proponer-link { grid-template-columns: 1fr; }
+  .proponer-link .btn { margin-top: 0; }
+  .proponer-form #resto > .btn { justify-self: stretch; }
+}

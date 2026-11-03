@@ -61,6 +61,9 @@
 .tabla-rifa a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
 .tabla-rifa .tabla-nombre { color: var(--text); font-weight: var(--fw-semibold); }
 .tabla-rifa small { display: block; color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+/* Celda con un dato y su aclaración debajo (autor, link, apoyo) */
+.tabla-celda small { display: block; color: var(--muted); font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); margin-top: var(--sp-4); }
+.tabla-celda .texto-mono { white-space: nowrap; }
 .tabla-acciones { display: flex; gap: var(--sp-6); justify-content: flex-end; flex-wrap: wrap; }
 .tabla .btn-sm { padding: var(--sp-6) var(--sp-12); font-size: var(--fs-label); box-shadow: none; white-space: nowrap; }
 .tabla .barra { min-width: 120px; }
@@ -87,6 +90,13 @@
 .ajuste-tipo { border: 0; margin: 0; padding: 0; display: flex; gap: var(--sp-16); flex-wrap: wrap; min-width: 0; }
 .ajuste-tipo legend { padding: 0; margin-bottom: var(--sp-6); font-size: var(--fs-label); font-weight: var(--fw-semibold); }
 .ajuste-tipo .check { display: flex; gap: var(--sp-8); align-items: center; font-weight: var(--fw-regular); }
+
+/* --- Decisión de moderación (validar link, moderar propuesta): opciones en columna con su explicación --- */
+.admin-decision { border: 0; margin: 0; padding: 0; display: grid; gap: var(--sp-8); min-width: 0; }
+.admin-decision legend { padding: 0; margin-bottom: var(--sp-6); font-size: var(--fs-label); font-weight: var(--fw-semibold); }
+.admin-decision .check { display: flex; gap: var(--sp-8); align-items: flex-start; font-weight: var(--fw-regular); color: var(--muted); }
+.admin-decision .check b { color: var(--text); }
+.modal-cuerpo label[hidden] { display: none; }
 
 /* --- Cola de revisión --- */
 .cola { display: grid; gap: var(--sp-16); }

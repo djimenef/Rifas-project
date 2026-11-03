@@ -1,6 +1,6 @@
 import { adminService } from '../services/index.js';
 import { esc } from '../lib/html.js';
-import { fechaHora } from '../lib/formato.js';
+import { fechaHora, soles } from '../lib/formato.js';
 import { abrirModal } from './modal.js';
 import { badgeEstado, NOMBRE_ESTADO } from './badge.js';
 import { datosBadge } from './tarjeta-rifa.js';
@@ -134,6 +134,80 @@ export function modalSimularAporte(rifa, alTerminar) {
     },
     alTerminar,
   });
+}
+
+// --- Propuestas (Fase 2, README §7.5 y §7.11) ---
+
+/**
+ * Validar el link de una propuesta en REVISION_LINK: aprobarlo tal cual, reemplazarlo por uno equivalente
+ * de tienda confiable (el original queda en el historial) o rechazar la propuesta con motivo.
+ * Aprobada o reemplazada pasa a Rifa Sugerida y empieza su ventana de captación.
+ */
+export function modalValidarLink(rifa, alTerminar) {
+  const dialog = modalAccion({
+    titulo: 'Validar link',
+    contenido: `
+      <p class="modal-texto"><b>${esc(rifa.producto.nombre)}</b> · link enviado por su autor:</p>
+      <p class="modal-nota"><span class="texto-mono">${esc(rifa.linkOriginal)}</span></p>
+      <fieldset class="admin-decision">
+        <legend>Decisión</legend>
+        <label class="check"><input type="radio" name="accion" value="APROBAR" checked> <span><b>Aprobar el link</b>: es confiable y el producto existe.</span></label>
+        <label class="check"><input type="radio" name="accion" value="REEMPLAZAR"> <span><b>Reemplazar el link</b> por uno equivalente de una tienda confiable, para garantizar la compra.</span></label>
+        <label class="check"><input type="radio" name="accion" value="RECHAZAR"> <span><b>Rechazar</b>: pasa a Rifa Descartada.</span></label>
+      </fieldset>
+      <label data-si="REEMPLAZAR" hidden>Nuevo link de compra<input type="url" name="nuevoLink" placeholder="https://www.falabella.com.pe/…" autocomplete="off"></label>
+      <label data-si="RECHAZAR" hidden>Motivo (lo verá el autor)<textarea name="motivo" maxlength="300" placeholder="Ej.: no encontramos el producto en ninguna tienda confiable."></textarea></label>
+      <p class="modal-nota">Al aprobar o reemplazar, la propuesta pasa a <b>Rifa Sugerida</b> y empieza su ventana de captación.</p>`,
+    textoBoton: 'Guardar decisión',
+    enviar: async d => {
+      const accion = d.querySelector('[name="accion"]:checked').value;
+      const r = await adminService.validarLink(rifa.id, {
+        accion, nuevoLink: d.querySelector('[name="nuevoLink"]').value.trim(), motivo: d.querySelector('[name="motivo"]').value,
+      });
+      return accion === 'RECHAZAR' ? 'Propuesta rechazada.' : `Link ${accion === 'REEMPLAZAR' ? 'reemplazado' : 'validado'}. Estado: ${NOMBRE_ESTADO[r.estado]}`;
+    },
+    alTerminar,
+  });
+  const mostrarSegunAccion = () => {
+    const accion = dialog.querySelector('[name="accion"]:checked').value;
+    dialog.querySelectorAll('[data-si]').forEach(el => { el.hidden = el.dataset.si !== accion; });
+  };
+  dialog.querySelectorAll('[name="accion"]').forEach(r => r.addEventListener('change', mostrarSegunAccion));
+}
+
+/**
+ * Moderar una propuesta que alcanzó el umbral (PROPUESTA): aprobarla fijando el margen (→ Rifa Armándose,
+ * pública, conserva sus compromisos) o descartarla con motivo (las Chances retenidas vuelven).
+ */
+export function modalModerar(rifa, alTerminar) {
+  const dialog = modalAccion({
+    titulo: 'Moderar propuesta',
+    contenido: `
+      <p class="modal-texto"><b>${esc(rifa.producto.nombre)}</b> juntó el apoyo mínimo. Antes de aprobar, verifica que el producto sea lícito y entregable y que el precio coincida con el link.</p>
+      <fieldset class="admin-decision">
+        <legend>Decisión</legend>
+        <label class="check"><input type="radio" name="accion" value="APROBAR" checked> <span><b>Aprobar</b>: pasa a <b>Rifa Armándose</b>, aparece en el portal y conserva las Chances que ya tiene.</span></label>
+        <label class="check"><input type="radio" name="accion" value="RECHAZAR"> <span><b>Descartar</b>: pasa a <b>Rifa Descartada</b> y todas las Chances retenidas vuelven a las billeteras.</span></label>
+      </fieldset>
+      <label data-si="APROBAR">Margen (%)<input type="text" inputmode="decimal" name="margenPct" value="${rifa.margenPct}">
+        <span class="field-hint">Con el margen se fija la meta. Precio referencial: ${soles(rifa.producto.precioTienda)}.</span></label>
+      <label data-si="RECHAZAR" hidden>Motivo (lo verá el público)<textarea name="motivo" maxlength="300" placeholder="Ej.: el precio no coincide con el del link de la tienda."></textarea></label>`,
+    textoBoton: 'Guardar decisión',
+    enviar: async d => {
+      const accion = d.querySelector('[name="accion"]:checked').value;
+      const margen = d.querySelector('[name="margenPct"]').value.replace(',', '.').trim();
+      const r = await adminService.moderarPropuesta(rifa.id, accion === 'APROBAR'
+        ? { accion, margenPct: margen === '' ? NaN : Number(margen) }
+        : { accion, motivo: d.querySelector('[name="motivo"]').value });
+      return accion === 'APROBAR' ? `Propuesta aprobada. Estado: ${NOMBRE_ESTADO[r.estado]}` : 'Propuesta descartada. Se devolvieron las Chances retenidas.';
+    },
+    alTerminar,
+  });
+  const mostrarSegunAccion = () => {
+    const accion = dialog.querySelector('[name="accion"]:checked').value;
+    dialog.querySelectorAll('[data-si]').forEach(el => { el.hidden = el.dataset.si !== accion; });
+  };
+  dialog.querySelectorAll('[name="accion"]').forEach(r => r.addEventListener('change', mostrarSegunAccion));
 }
 
 /** Confirmación simple para acciones de un clic (publicar, cerrar, vencer ventana). */
