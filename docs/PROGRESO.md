@@ -7,11 +7,11 @@
 
 | | |
 |---|---|
-| **Paso actual** | **Fase 0 completa: Paso 8 (verificación final) terminado** en `fix/paso8-verificacion`. Pasos 5 a 8 esperan revisión (PR #8 abierto; los demás, en orden). |
-| **Rama en curso** | `fix/paso8-verificacion` (David). Cadena de ramas apiladas: `feature/paso5-pantallas-p2` → `feature/paso6-pantallas-p3` → `docs/paso7-semantica` → `fix/paso8-verificacion` (el PR #8 aún no se fusiona; decisión del equipo, 03/11/2026). |
-| **Revisión** | PR #8 (Paso 5) abierto. Los PR de los Pasos 6, 7 y 8 se abren hacia `main` en orden, cada uno después de fusionar el anterior (así cada uno muestra solo sus cambios); los revisa la otra persona del equipo. |
-| **Para continuar** | Revisar y fusionar el PR #8 → PR del Paso 6 → PR del Paso 7 → PR del Paso 8. Luego, definir los pendientes de abajo y la Fase 1. |
-| **Última actualización** | 2026-11-03 (cierre del Paso 8: **59/59 pruebas**, **35/35 pantallas** en `dev/rutas/`) |
+| **Paso actual** | **Fase 0 completa y fusionada en `main`** (Pasos 0 a 8; los Pasos 5 a 8 entraron con los PR #8 a #11). Siguiente: cerrar los pendientes y las dudas abiertas de abajo y planificar la Fase 1. |
+| **Rama en curso** | Ninguna con trabajo abierto: todo está en `main`. Este cierre va en `docs/cierre-fase0`. Las ramas de los Pasos 5 a 8 ya están fusionadas y se pueden borrar. |
+| **Revisión** | Sin PR pendientes de la Fase 0 (salvo el de este cierre). Las ramas de los Pasos 5 a 8 se apilaron una sobre otra porque el PR #8 tardó en fusionarse; se fusionaron en orden el 03/11/2026. |
+| **Para continuar** | `git pull` en `main` → resolver los pendientes anotados → decidir las dudas abiertas → plan de la Fase 1 (backend real, ver README §9). |
+| **Última actualización** | 2026-11-03 (cierre de la Fase 0: **59/59 pruebas**, **35/35 pantallas** en `dev/rutas/`, todo en `main`) |
 
 > **Excepción temporal (23/10/2026):** el PR #4 (Fase 0, Pasos 0–3) se fusionó en `main` **sin la revisión del compañero**, por acuerdo del equipo. David puede revisar la Fase 0 directamente en `main`. A partir del Paso 4 vuelve la regla normal: todo PR lo revisa la otra persona.
 
@@ -43,7 +43,7 @@
 | 4 | Recargar Chances | `14a28c3` |
 | 4 | Mis rifas | `2f92ec3` |
 | 4 | Admin: Rifas (listado, detalle, nueva) y Cola de revisión; arreglo de margen lateral de `.pagina` | `6c7d725` |
-| 4 | Cierre del Paso 4: esta bitácora | el commit que agregó esta fila |
+| 4 | Cierre del Paso 4: esta bitácora | (incluido en el PR #5) |
 | Merge | PR #5 "Paso 4: pantallas P1" fusionado en `main` | `d25e450` |
 | Ajustes | Servidor local sin caché (`dev/servidor.py`) | `e92444e` |
 | Ajustes | Estados visibles, Chances bloqueadas, tiempo extra, cancelar con motivo / por fuerza mayor, productos reales | `6a06451` |
@@ -60,7 +60,12 @@
 | 5 | Cierre del Paso 5: esta bitácora, inventario del README y doble punto tras la hora en textos de fecha | `f15c201` |
 | 6 | Proponer rifa, Mis rifas propuestas y Admin · Propuestas (validar, reemplazar o rechazar link; aprobar o descartar); esta bitácora | `f31b6f9` |
 | 7 | README §7 dividido en `docs/semantica/` (con índice) y `docs/pantallas/inventario.md`; referencias actualizadas; esta bitácora | `7846d4f` |
-| 8 | Verificación final: página `dev/rutas/` (revisa todas las rutas y enlaces), arreglo de 1 px de desborde en Inicio a 360 px, flujo completo recorrido; esta bitácora | el commit que agregó esta fila |
+| 8 | Verificación final: página `dev/rutas/` (revisa todas las rutas y enlaces), arreglo de 1 px de desborde en Inicio a 360 px, flujo completo recorrido; esta bitácora | `c17454f` |
+| Merge | PR #8 "Paso 5: pantallas P2" fusionado en `main` | `ebd8859` |
+| Merge | PR #9 Paso 6 (propuestas) fusionado en `main` | `54a5080` |
+| Merge | PR #10 Paso 7 (documentación semántica) fusionado en `main` | `6004323` |
+| Merge | PR #11 Paso 8 (verificación final) fusionado en `main` · **Fase 0 completa** | `c93e46d` |
+| Docs | Cierre de la Fase 0: esta bitácora | el commit que agregó esta fila |
 
 Verificación al cierre del Paso 4: **50/50 pruebas** en `dev/pruebas/`; flujos revisados en Chrome a 1280 px y 360 px (visitante → login → regresa con el modal abierto → poner Chances; saldo insuficiente → recargar → volver; recarga con éxito y rechazo; verificar con código incorrecto y correcto; admin: aporte simulado → rifa confirmada → cerrar → aprobar y programar; crear borrador).
 
@@ -149,8 +154,10 @@ Verificación al cierre del Paso 6: **59/59 pruebas** en `dev/pruebas/` (los ser
 
 ## Sigue
 
-1. **Revisión y merge del PR #8 (Paso 5)**; luego los PR de los Pasos 6, 7 y 8 hacia `main`, en orden (cuando se pida).
-2. **Cerrar los pendientes anotados** y las dudas abiertas antes de la Fase 1.
+1. **Cerrar los pendientes anotados** (abajo), en especial confirmar la fila `ARMANDO` restaurada en `docs/semantica/03-rifas.md` (§7.4).
+2. **Decidir las dudas abiertas** antes de la Fase 1.
+3. **Planificar la Fase 1** (backend real, README §9) y los pendientes de producción: Google Client ID, backend del inicio de sesión y contraseña en el registro.
+4. Opcional: borrar en GitHub las ramas ya fusionadas de los Pasos 5 a 8.
 
 ### Pendientes anotados
 - ~~**Header con sesión a 360 px**~~ **Resuelto:** en la revisión del Paso 8 (360 px con barra de desplazamiento visible, el caso más estrecho) ninguna pantalla con sesión desborda.
@@ -158,6 +165,8 @@ Verificación al cierre del Paso 6: **59/59 pruebas** en `dev/pruebas/` (los ser
 - **Textos legales:** son borradores; necesitan revisión legal antes de cualquier lanzamiento.
 - **Denuncias de propuestas:** README §6 #27 menciona "denuncias" en Moderar propuestas, pero no hay contrato ni regla definida (quién denuncia, qué efecto tiene). No se construyó; definir antes de implementarlo.
 - **`paginas/en-construccion.js`** ya no lo usa ninguna pantalla. Se conserva (no se borran archivos sin preguntar); decidir si se elimina.
+- **Fila `ARMANDO` de §7.4:** se restauró al separar la semántica (Paso 7); la otra persona del equipo debe confirmar que está bien.
+- **Capturas de los PR #9 a #11:** no se adjuntaron (las capturas de Chrome no respondían); se pueden tomar desde `dev/rutas/` o a mano.
 
 ## Traspaso: cómo arrancar el Paso 4 (David)
 
